@@ -1,0 +1,154 @@
+'use client'
+
+import { memo, useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { cn } from '@/shared/lib/cn'
+import { Container } from '@/shared/ui/Container'
+
+const NAV_LINKS = [
+  { href: '/catalog', label: 'Каталог' },
+  { href: '/about',   label: 'О проекте' },
+  { href: '/contact', label: 'Контакты' },
+] as const
+
+// Mountain SVG icon
+const MountainIcon = () => (
+  <svg
+    width="28"
+    height="22"
+    viewBox="0 0 28 22"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    {/* Back mountain */}
+    <path
+      d="M10 20L18 5L26 20H10Z"
+      fill="currentColor"
+      opacity="0.25"
+    />
+    {/* Snow cap back */}
+    <path
+      d="M18 5L20.5 10H15.5L18 5Z"
+      fill="currentColor"
+      opacity="0.45"
+    />
+    {/* Front mountain */}
+    <path
+      d="M2 20L11 4L20 20H2Z"
+      fill="currentColor"
+    />
+    {/* Snow cap front */}
+    <path
+      d="M11 4L14 9.5H8L11 4Z"
+      fill="var(--color-bg)"
+      opacity="0.7"
+    />
+  </svg>
+)
+
+export const Header = memo(() => {
+  const pathname = usePathname()
+  const [menuOpen, setMenuOpen] = useState(false)
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-surface2/70 bg-bg/90 backdrop-blur-sm">
+      <Container>
+        <div className="flex h-16 items-center justify-between">
+
+          {/* Logo */}
+          <Link
+            href="/"
+            className="flex items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent rounded-sm"
+            aria-label="KavkazLibrary — на главную"
+          >
+            <span className="text-accent">
+              <MountainIcon />
+            </span>
+            <span
+              className="font-display text-xl font-semibold tracking-wide text-ink leading-none"
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              Kavkaz
+              <span className="text-accent italic">Library</span>
+            </span>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-1" aria-label="Основная навигация">
+            {NAV_LINKS.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  'px-4 py-2 rounded-lg text-sm transition-all duration-150',
+                  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+                  pathname === href
+                    ? 'text-accent bg-accent/10 font-medium'
+                    : 'text-ash hover:text-ink hover:bg-surface',
+                )}
+                aria-current={pathname === href ? 'page' : undefined}
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+
+          {/* Mobile burger */}
+          <button
+            className={cn(
+              'md:hidden flex flex-col justify-center gap-[5px] w-10 h-10 rounded-lg',
+              'text-ash hover:text-ink hover:bg-surface',
+              'transition-colors duration-150',
+              'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+              'cursor-pointer items-center',
+            )}
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
+            aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
+          >
+            <span className={cn('block w-5 h-px bg-current transition-all duration-200', menuOpen && 'translate-y-[6px] rotate-45')} />
+            <span className={cn('block w-5 h-px bg-current transition-all duration-200', menuOpen && 'opacity-0')} />
+            <span className={cn('block w-5 h-px bg-current transition-all duration-200', menuOpen && '-translate-y-[6px] -rotate-45')} />
+          </button>
+        </div>
+      </Container>
+
+      {/* Mobile menu */}
+      {menuOpen && (
+        <nav
+          id="mobile-menu"
+          className="md:hidden border-t border-surface2 bg-surface"
+          aria-label="Мобильная навигация"
+        >
+          <Container>
+            <ul className="flex flex-col py-3 gap-1">
+              {NAV_LINKS.map(({ href, label }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    className={cn(
+                      'flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors',
+                      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+                      pathname === href
+                        ? 'text-accent bg-accent/8 font-medium'
+                        : 'text-ash hover:text-ink hover:bg-surface2',
+                    )}
+                    onClick={() => setMenuOpen(false)}
+                    aria-current={pathname === href ? 'page' : undefined}
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </nav>
+      )}
+    </header>
+  )
+})
+
+Header.displayName = 'Header'

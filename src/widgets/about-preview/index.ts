@@ -1,0 +1,1 @@
+export { AboutPreview } from './ui/AboutPreview'
