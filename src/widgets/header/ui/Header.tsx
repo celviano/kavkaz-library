@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/shared/lib/cn'
 import { Container } from '@/shared/ui/Container'
+import { UserAvatar } from '@/entities/user'
 
 const NAV_LINKS = [
   { href: '/catalog', label: 'Каталог' },
@@ -12,39 +13,11 @@ const NAV_LINKS = [
   { href: '/contact', label: 'Контакты' },
 ] as const
 
-// Mountain SVG icon
 const MountainIcon = () => (
-  <svg
-    width="28"
-    height="22"
-    viewBox="0 0 28 22"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    aria-hidden="true"
-  >
-    {/* Back mountain */}
-    <path
-      d="M10 20L18 5L26 20H10Z"
-      fill="currentColor"
-      opacity="0.25"
-    />
-    {/* Snow cap back */}
-    <path
-      d="M18 5L20.5 10H15.5L18 5Z"
-      fill="currentColor"
-      opacity="0.45"
-    />
-    {/* Front mountain */}
-    <path
-      d="M2 20L11 4L20 20H2Z"
-      fill="currentColor"
-    />
-    {/* Snow cap front */}
-    <path
-      d="M11 4L14 9.5H8L11 4Z"
-      fill="var(--color-bg)"
-      opacity="0.7"
-    />
+  <svg width="28" height="22" viewBox="0 0 28 22" fill="none" aria-hidden="true">
+    <path d="M10 20L18 5L26 20H10Z" fill="currentColor" opacity="0.25" />
+    <path d="M2 20L11 4L20 20H2Z" fill="currentColor" />
+    <path d="M11 4L14 9.5H8L11 4Z" fill="var(--color-bg)" opacity="0.7" />
   </svg>
 )
 
@@ -55,12 +28,12 @@ export const Header = memo(() => {
   return (
     <header className="sticky top-0 z-50 border-b border-surface2/70 bg-bg/90 backdrop-blur-sm">
       <Container>
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between gap-4">
 
           {/* Logo */}
           <Link
             href="/"
-            className="flex items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent rounded-sm"
+            className="flex items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent rounded-sm shrink-0"
             aria-label="KavkazLibrary — на главную"
           >
             <span className="text-accent">
@@ -70,13 +43,12 @@ export const Header = memo(() => {
               className="font-display text-xl font-semibold tracking-wide text-ink leading-none"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              Kavkaz
-              <span className="text-accent italic">Library</span>
+              Kavkaz<span className="text-accent italic">Library</span>
             </span>
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1" aria-label="Основная навигация">
+          <nav className="hidden md:flex items-center gap-1 flex-1" aria-label="Основная навигация">
             {NAV_LINKS.map(({ href, label }) => (
               <Link
                 key={href}
@@ -94,6 +66,11 @@ export const Header = memo(() => {
               </Link>
             ))}
           </nav>
+
+          {/* Right side: avatar / login */}
+          <div className="hidden md:flex items-center gap-3">
+            <UserAvatar />
+          </div>
 
           {/* Mobile burger */}
           <button
@@ -143,6 +120,12 @@ export const Header = memo(() => {
                   </Link>
                 </li>
               ))}
+              {/* Avatar / login in mobile */}
+              <li className="pt-2 mt-1 border-t border-surface2">
+                <div className="px-3 py-2">
+                  <UserAvatar />
+                </div>
+              </li>
             </ul>
           </Container>
         </nav>
