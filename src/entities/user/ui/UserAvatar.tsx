@@ -17,7 +17,6 @@ export const UserAvatar = memo(() => {
     ? name.split(' ').map((w) => w[0]).join('').toUpperCase().slice(0, 2)
     : '?'
 
-  // Close on outside click
   useEffect(() => {
     function handle(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -28,7 +27,6 @@ export const UserAvatar = memo(() => {
     return () => document.removeEventListener('mousedown', handle)
   }, [])
 
-  // Not logged in
   if (!loading && !user) {
     return (
       <Link
@@ -46,14 +44,10 @@ export const UserAvatar = memo(() => {
     )
   }
 
-  // Loading skeleton
   if (loading) {
-    return (
-      <div className="w-9 h-9 rounded-full bg-surface2 animate-pulse" aria-hidden="true" />
-    )
+    return <div className="w-9 h-9 rounded-full bg-surface2 animate-pulse" aria-hidden="true" />
   }
 
-  // Logged in — avatar + dropdown
   return (
     <div className="relative" ref={menuRef}>
       <button
@@ -74,25 +68,15 @@ export const UserAvatar = memo(() => {
       >
         {image ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={image}
-            alt={name ?? 'Аватар'}
-            className="w-full h-full rounded-full object-cover"
-          />
+          <img src={image} alt={name ?? 'Аватар'} className="w-full h-full rounded-full object-cover" />
         ) : (
           <span className="text-bg text-[11px] font-semibold">{initials}</span>
         )}
       </button>
 
-      {/* Dropdown */}
       {open && (
         <div
-          className={cn(
-            'absolute right-0 top-11 z-50',
-            'w-52 rounded-2xl bg-bg border border-surface2',
-            'shadow-accent py-1.5',
-            'animate-in fade-in-0 zoom-in-95 duration-100',
-          )}
+          className="absolute right-0 top-11 z-50 w-52 rounded-2xl bg-bg border border-surface2 shadow-accent py-1.5"
           role="menu"
           aria-label="Меню пользователя"
         >
@@ -102,7 +86,6 @@ export const UserAvatar = memo(() => {
             <p className="text-xs text-ash truncate">{user?.email}</p>
           </div>
 
-          {/* Links */}
           <div className="py-1">
             <Link
               href="/profile"
@@ -115,6 +98,20 @@ export const UserAvatar = memo(() => {
               </svg>
               Профиль
             </Link>
+
+            {/* Favorites link */}
+            <Link
+              href="/favorites"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-text hover:text-ink hover:bg-surface transition-colors"
+              role="menuitem"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+              </svg>
+              Избранное
+            </Link>
+
             <Link
               href="/catalog"
               onClick={() => setOpen(false)}
@@ -128,7 +125,6 @@ export const UserAvatar = memo(() => {
             </Link>
           </div>
 
-          {/* Logout */}
           <div className="pt-1 border-t border-surface2">
             <form action={logoutAction}>
               <button

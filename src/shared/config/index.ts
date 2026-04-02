@@ -1,1 +1,1 @@
-export { MOCK_BOOKS, CATEGORIES, CATEGORY_LABELS, FEATURED_BOOK_IDS } from './constants'
+export { CATEGORY_LABELS, CATEGORIES } from './constants'

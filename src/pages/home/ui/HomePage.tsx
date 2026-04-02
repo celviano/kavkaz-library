@@ -1,31 +1,28 @@
+'use client'
+
 import { memo } from 'react'
 import Link from 'next/link'
 import { Hero } from '@/widgets/hero'
 import { AboutPreview } from '@/widgets/about-preview'
+import { QuoteBanner } from '@/widgets/quote-banner'
 import { BookGrid } from '@/widgets/book-grid'
 import { Container } from '@/shared/ui/Container'
 import { Badge } from '@/shared/ui/Badge'
-import {
-  MOCK_BOOKS,
-  FEATURED_BOOK_IDS,
-  CATEGORIES,
-  CATEGORY_LABELS,
-} from '@/shared/config/constants'
-import { QuoteBanner } from '@/widgets/quote-banner'
+import { CATEGORIES, CATEGORY_LABELS } from '@/shared/config/constants'
+import { useFeaturedBooks, useCategoryCounts } from '@/entities/book'
 
 export const HomePage = memo(() => {
-  const featuredBooks = MOCK_BOOKS.filter((b) => FEATURED_BOOK_IDS.includes(b.id))
+  const { data: featuredBooks = [], isLoading: featuredLoading } = useFeaturedBooks()
+  const { data: categoryCounts = {} } = useCategoryCounts()
 
   return (
     <main id="main-content">
       <Hero />
       <AboutPreview />
       <QuoteBanner />
+
       {/* Featured books */}
-      <section
-        aria-labelledby="featured-heading"
-        className="py-20 border-t border-surface2"
-      >
+      <section aria-labelledby="featured-heading" className="py-20 border-t border-surface2">
         <Container>
           <div className="flex items-end justify-between mb-10">
             <div>
@@ -35,10 +32,7 @@ export const HomePage = memo(() => {
               <h2
                 id="featured-heading"
                 className="font-display font-semibold text-ink leading-tight"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
-                }}
+                style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3vw, 2.2rem)' }}
               >
                 Избранные книги
               </h2>
@@ -47,11 +41,26 @@ export const HomePage = memo(() => {
               href="/catalog"
               className="text-sm text-ash hover:text-ink transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded hidden sm:inline-flex items-center gap-1"
             >
-              Весь каталог
-              <span aria-hidden="true">→</span>
+              Весь каталог <span aria-hidden="true">→</span>
             </Link>
           </div>
-          <BookGrid books={featuredBooks} />
+
+          {featuredLoading ? (
+            <div className="grid gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="rounded-2xl bg-surface border border-surface2 overflow-hidden animate-pulse">
+                  <div className="aspect-[3/4] bg-surface2" />
+                  <div className="p-4 flex flex-col gap-2">
+                    <div className="h-4 bg-surface2 rounded-full w-1/2" />
+                    <div className="h-3 bg-surface2 rounded-full w-3/4" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <BookGrid books={featuredBooks} />
+          )}
+
           <div className="mt-8 flex justify-center sm:hidden">
             <Link
               href="/catalog"
@@ -64,10 +73,7 @@ export const HomePage = memo(() => {
       </section>
 
       {/* Categories */}
-      <section
-        aria-labelledby="categories-heading"
-        className="py-20 border-t border-surface2 bg-surface/40"
-      >
+      <section aria-labelledby="categories-heading" className="py-20 border-t border-surface2 bg-surface/40">
         <Container>
           <div className="mb-10">
             <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-2">
@@ -76,37 +82,26 @@ export const HomePage = memo(() => {
             <h2
               id="categories-heading"
               className="font-display font-semibold text-ink"
-              style={{
-                fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
-              }}
+              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3vw, 2.2rem)' }}
             >
               Категории
             </h2>
           </div>
 
-          <ul
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4"
-            role="list"
-            aria-label="Список категорий"
-          >
+          <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4" role="list" aria-label="Список категорий">
             {CATEGORIES.map((cat) => {
-              const count = MOCK_BOOKS.filter((b) => b.category === cat).length
+              const count = categoryCounts[cat] ?? 0
               return (
                 <li key={cat}>
                   <Link
                     href={`/catalog?category=${cat}`}
-                    className="flex flex-col gap-3 p-5 rounded-2xl bg-bg border border-surface2 hover:border-accent/30 hover:shadow-accent-sm transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent group shadow-card"
+                    className="flex flex-col gap-3 p-5 rounded-2xl bg-bg border border-surface2 hover:border-accent/30 hover:shadow-accent-sm transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shadow-card"
                     aria-label={`${CATEGORY_LABELS[cat]}: ${count} книг`}
                   >
                     <Badge category={cat} label={CATEGORY_LABELS[cat]} />
                     <span
                       className="font-display font-semibold text-accent"
-                      style={{
-                        fontFamily: 'var(--font-display)',
-                        fontSize: '1.75rem',
-                        lineHeight: 1,
-                      }}
+                      style={{ fontFamily: 'var(--font-display)', fontSize: '1.75rem', lineHeight: 1 }}
                     >
                       {count}
                     </span>
@@ -133,10 +128,7 @@ export const HomePage = memo(() => {
               <h2
                 id="cta-heading"
                 className="font-display font-semibold text-bg"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)',
-                }}
+                style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)' }}
               >
                 Изучайте историю <em className="text-accent3 not-italic">Кавказа</em>
               </h2>

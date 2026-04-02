@@ -48,7 +48,7 @@ export const Header = memo(() => {
           </Link>
 
           {/* Desktop nav */}
-          <nav className="hidden md:flex items-center gap-1 flex-1" aria-label="Основная навигация">
+          <nav className="hidden md:flex justify-center items-center gap-1 flex-1" aria-label="Основная навигация">
             {NAV_LINKS.map(({ href, label }) => (
               <Link
                 key={href}

@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { cn } from '@/shared/lib/cn'
 import { Badge } from '@/shared/ui/Badge'
 import { CATEGORY_LABELS } from '@/shared/config/constants'
+import { FavoriteButton } from '@/features/favorites'
 import type { Book } from '../model/types'
 
 interface BookCardProps {
@@ -20,7 +21,7 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
     <Link
       href={`/book/${id}`}
       className={cn(
-        'group flex flex-col',
+        'group relative flex flex-col',
         'bg-surface rounded-2xl border border-surface2',
         'overflow-hidden',
         'transition-all duration-300',
@@ -33,17 +34,16 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
     >
       {/* Cover */}
       <div className="relative aspect-[3/4] overflow-hidden bg-surface2">
-        <Image
-          src={coverUrl}
-          alt={`Обложка книги «${title}»`}
-          fill
-          sizes="(max-width: 640px) 50vw, (max-width: 940px) 33vw, 25vw"
-          className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
-          onError={(e) => {
-            const target = e.currentTarget as HTMLImageElement
-            target.style.display = 'none'
-          }}
-        />
+        {coverUrl && (
+          <Image
+            src={coverUrl}
+            alt={`Обложка книги «${title}»`}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 940px) 33vw, 25vw"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+          />
+        )}
+
         {/* Placeholder */}
         <div
           className="absolute inset-0 flex flex-col items-center justify-center bg-surface2"
@@ -55,25 +55,26 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
           >
             {year}
           </span>
-          <svg
-            width="36"
-            height="28"
-            viewBox="0 0 36 28"
-            fill="none"
-            className="opacity-[0.18]"
-          >
+          <svg width="36" height="28" viewBox="0 0 36 28" fill="none" className="opacity-[0.18]">
             <path d="M4 26L13 6L22 26H4Z" fill="var(--color-accent)" />
             <path d="M16 26L24 10L32 26H16Z" fill="var(--color-accent)" opacity="0.5" />
-            <path d="M13 6L16 12H10L13 6Z" fill="var(--color-bg)" opacity="0.6" />
+            <path d="M13 6L16 12H10L13 6Z" fill="var(--color-bg)" opacity="0.6"/>
           </svg>
         </div>
 
-        <span className="absolute bottom-2.5 right-3 text-[10px] font-mono text-ash/80">
+        {/* Year */}
+        <span className="absolute bottom-2.5 right-3 text-[10px] font-mono text-ash/80 z-10">
           {year}
         </span>
 
+        {/* Favorite button — top right */}
+        <div className="absolute top-2.5 right-2.5 z-10">
+          <FavoriteButton bookId={id} />
+        </div>
+
+        {/* Unavailable overlay */}
         {!available && (
-          <div className="absolute inset-0 bg-bg/65 flex items-center justify-center backdrop-blur-[1px]">
+          <div className="absolute inset-0 bg-bg/65 flex items-center justify-center backdrop-blur-[1px] z-20">
             <span className="text-[10px] text-ash font-medium tracking-[2px] uppercase border border-ash/30 rounded-full px-3 py-1">
               Недоступна
             </span>
@@ -97,7 +98,7 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
         <div className="mt-auto pt-3 flex items-center justify-between border-t border-surface2/60">
           <span className="text-[11px] text-dim">{year} г.</span>
           <div className="flex items-center gap-3">
-            <span className="text-[11px] text-ash">{pages} стр.</span>
+            {pages > 0 && <span className="text-[11px] text-ash">{pages} стр.</span>}
             <span className="text-[11px] text-dim">{language}</span>
           </div>
         </div>
