@@ -71,3 +71,45 @@ export async function logoutAction() {
   await supabase.auth.signOut()
   redirect('/')
 }
+
+// ─── Profile update ────────────────────────────────────────────────────────────
+
+export interface UpdateProfileFormData {
+  displayName: string
+  firstName:   string
+  lastName:    string
+  bio:         string
+  city:        string
+  country:     string
+  website:     string
+  bornYear:    string
+  avatarUrl:   string
+}
+
+export async function updateProfileAction(data: UpdateProfileFormData) {
+  const supabase = await createClient()
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  if (authError || !user) redirect('/auth/login')
+
+  const bornYear = data.bornYear ? parseInt(data.bornYear, 10) : null
+
+  const { error } = await supabase
+    .from('profiles')
+    .upsert({
+      id:           user.id,
+      display_name: data.displayName || null,
+      first_name:   data.firstName   || null,
+      last_name:    data.lastName    || null,
+      bio:          data.bio         || null,
+      city:         data.city        || null,
+      country:      data.country     || null,
+      website:      data.website     || null,
+      born_year:    bornYear,
+      avatar_url:   data.avatarUrl   || null,
+      updated_at:   new Date().toISOString(),
+    })
+
+  if (error) throw new Error(error.message)
+
+  redirect('/profile')
+}
