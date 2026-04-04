@@ -1,6 +1,6 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { cn } from '@/shared/lib/cn'
@@ -16,6 +16,8 @@ interface BookCardProps {
 
 export const BookCard = memo<BookCardProps>(({ book, className }) => {
   const { id, title, author, year, category, coverUrl, pages, language, available } = book
+  const [imgError, setImgError] = useState(false)
+  const showImage = Boolean(coverUrl) && !imgError
 
   return (
     <Link
@@ -32,49 +34,48 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
       )}
       aria-label={`${title} — ${author}, ${year} год`}
     >
-      {/* Cover */}
       <div className="relative aspect-[3/4] overflow-hidden bg-surface2">
-        {coverUrl && (
+
+        {showImage && (
           <Image
-            src={coverUrl}
+            src={coverUrl!}
             alt={`Обложка книги «${title}»`}
             fill
             sizes="(max-width: 640px) 50vw, (max-width: 940px) 33vw, 25vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+            className="object-cover transition-transform duration-500 group-hover:scale-[1.04] z-10 relative"
+            onError={() => setImgError(true)}
           />
         )}
 
-        {/* Placeholder */}
-        <div
-          className="absolute inset-0 flex flex-col items-center justify-center bg-surface2"
-          aria-hidden="true"
-        >
-          <span
-            className="font-display font-bold text-accent/[0.07] select-none leading-none absolute"
-            style={{ fontFamily: 'var(--font-display)', fontSize: '5rem' }}
+        {!showImage && (
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center bg-surface2"
+            aria-hidden="true"
           >
-            {year}
-          </span>
-          <svg width="36" height="28" viewBox="0 0 36 28" fill="none" className="opacity-[0.18]">
-            <path d="M4 26L13 6L22 26H4Z" fill="var(--color-accent)" />
-            <path d="M16 26L24 10L32 26H16Z" fill="var(--color-accent)" opacity="0.5" />
-            <path d="M13 6L16 12H10L13 6Z" fill="var(--color-bg)" opacity="0.6"/>
-          </svg>
-        </div>
+            <span
+              className="font-display font-bold text-accent/[0.07] select-none leading-none absolute"
+              style={{ fontFamily: 'var(--font-display)', fontSize: '5rem' }}
+            >
+              {year}
+            </span>
+            <svg width="36" height="28" viewBox="0 0 36 28" fill="none" className="opacity-[0.18]">
+              <path d="M4 26L13 6L22 26H4Z" fill="var(--color-accent)" />
+              <path d="M16 26L24 10L32 26H16Z" fill="var(--color-accent)" opacity="0.5" />
+              <path d="M13 6L16 12H10L13 6Z" fill="var(--color-bg)" opacity="0.6"/>
+            </svg>
+          </div>
+        )}
 
-        {/* Year */}
-        <span className="absolute bottom-2.5 right-3 text-[10px] font-mono text-ash/80 z-10">
+        <span className="absolute bottom-2.5 right-3 text-[10px] font-mono text-ash/80 z-20">
           {year}
         </span>
 
-        {/* Favorite button — top right */}
-        <div className="absolute top-2.5 right-2.5 z-10">
+        <div className="absolute top-2.5 right-2.5 z-20">
           <FavoriteButton bookId={id} />
         </div>
 
-        {/* Unavailable overlay */}
         {!available && (
-          <div className="absolute inset-0 bg-bg/65 flex items-center justify-center backdrop-blur-[1px] z-20">
+          <div className="absolute inset-0 bg-bg/65 flex items-center justify-center backdrop-blur-[1px] z-30">
             <span className="text-[10px] text-ash font-medium tracking-[2px] uppercase border border-ash/30 rounded-full px-3 py-1">
               Недоступна
             </span>
@@ -82,7 +83,6 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
         )}
       </div>
 
-      {/* Body */}
       <div className="flex flex-col gap-2.5 p-4 flex-1">
         <Badge category={category} label={CATEGORY_LABELS[category]} />
 

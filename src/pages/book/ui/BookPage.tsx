@@ -131,8 +131,17 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
           </nav>
 
           {/* Main grid */}
+
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 xl:gap-20 mb-16">
-            <BookSlider title={book.title} year={book.year} category={categoryLabel} />
+            <div className="min-w-0 w-full">
+              <BookSlider
+                title={book.title}
+                year={book.year}
+                category={categoryLabel}
+                coverUrl={book.coverUrl}
+                images={book.images}
+              />
+            </div>
 
             <div className="flex flex-col gap-7">
               <div className="flex flex-col gap-3">
