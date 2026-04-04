@@ -4,81 +4,114 @@ import { memo } from 'react'
 import Link from 'next/link'
 import { Container } from '@/shared/ui/Container'
 import { Badge } from '@/shared/ui/Badge'
+import { Breadcrumb } from '@/shared/ui/Breadcrumb'
+import { EmptyState } from '@/shared/ui/EmptyState'
 import { BookGrid } from '@/widgets/book-grid'
 import { BookSlider } from '@/widgets/book-slider'
+import { BookMetaGrid } from '@/widgets/book-meta'
+import { BookPurchaseBlock } from '@/widgets/book-purchase'
 import { CATEGORY_LABELS } from '@/shared/config/constants'
 import { useBook, useSimilarBooks } from '@/entities/book'
 import { FavoriteButton } from '@/features/favorites'
-import { CONDITION_LABELS } from '@/entities/book/model/types'
 
 interface BookPageProps {
   bookId: string
 }
 
+// ─── Skeleton ─────────────────────────────────────────────────────────────────
+
+function BookPageSkeleton() {
+  return (
+    <main id="main-content">
+      <section className="py-10">
+        <Container>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 xl:gap-20">
+            <div className="aspect-[3/4] rounded-2xl bg-surface animate-pulse" />
+            <div className="flex flex-col gap-5">
+              <div className="h-5 w-24 bg-surface rounded-full animate-pulse" />
+              <div className="h-10 w-3/4 bg-surface rounded-xl animate-pulse" />
+              <div className="h-5 w-1/2 bg-surface rounded-full animate-pulse" />
+              <div className="h-px bg-surface2" />
+              <div className="grid grid-cols-3 gap-px bg-surface2 rounded-2xl overflow-hidden">
+                {Array.from({ length: 6 }).map((_, i) => (
+                  <div key={i} className="bg-bg px-4 py-3.5 h-16 animate-pulse" />
+                ))}
+              </div>
+              <div className="space-y-2">
+                <div className="h-3 bg-surface rounded-full w-full animate-pulse" />
+                <div className="h-3 bg-surface rounded-full w-4/5 animate-pulse" />
+                <div className="h-3 bg-surface rounded-full w-3/5 animate-pulse" />
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+    </main>
+  )
+}
+
+// ─── Similar section ──────────────────────────────────────────────────────────
+
+interface SimilarSectionProps {
+  category: string
+  books: ReturnType<typeof useSimilarBooks>['data']
+}
+
+function SimilarSection({ category, books }: SimilarSectionProps) {
+  if (!books || books.length === 0) return null
+
+  return (
+    <section aria-labelledby="similar-heading" className="border-t border-surface2 pt-14">
+      <div className="flex items-end justify-between mb-8">
+        <div>
+          <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-2">
+            Из того же раздела
+          </p>
+          <h2
+            id="similar-heading"
+            className="font-display font-semibold text-ink"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)' }}
+          >
+            Похожие книги
+          </h2>
+        </div>
+        <Link
+          href={`/catalog?category=${category}`}
+          className="text-sm text-ash hover:text-ink transition-colors hidden sm:inline-flex items-center gap-1 group"
+        >
+          Все в разделе
+          <span className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
+        </Link>
+      </div>
+      <BookGrid books={books} />
+    </section>
+  )
+}
+
+// ─── Page ─────────────────────────────────────────────────────────────────────
+
 export const BookPage = memo<BookPageProps>(({ bookId }) => {
   const { data: book, isLoading, error } = useBook(bookId)
   const { data: similar = [] } = useSimilarBooks(bookId, book?.category ?? 'history')
 
-  if (isLoading) {
-    return (
-      <main id="main-content">
-        <section className="py-10">
-          <Container>
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 xl:gap-20">
-              <div className="aspect-[3/4] rounded-2xl bg-surface animate-pulse" />
-              <div className="flex flex-col gap-5">
-                <div className="h-5 w-24 bg-surface rounded-full animate-pulse" />
-                <div className="h-10 w-3/4 bg-surface rounded-xl animate-pulse" />
-                <div className="h-5 w-1/2 bg-surface rounded-full animate-pulse" />
-                <div className="h-px bg-surface2" />
-                <div className="grid grid-cols-3 gap-px bg-surface2 rounded-2xl overflow-hidden">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="bg-bg px-4 py-3.5 h-16 animate-pulse" />
-                  ))}
-                </div>
-                <div className="space-y-2">
-                  <div className="h-3 bg-surface rounded-full w-full animate-pulse" />
-                  <div className="h-3 bg-surface rounded-full w-4/5 animate-pulse" />
-                  <div className="h-3 bg-surface rounded-full w-3/5 animate-pulse" />
-                </div>
-              </div>
-            </div>
-          </Container>
-        </section>
-      </main>
-    )
-  }
+  if (isLoading) return <BookPageSkeleton />
 
   if (error || !book) {
     return (
       <main id="main-content" className="flex-1 flex items-center justify-center py-24">
         <Container>
-          <div className="max-w-md mx-auto text-center flex flex-col items-center gap-6">
-            <div className="w-14 h-14 rounded-2xl bg-surface border border-surface2 flex items-center justify-center">
+          <EmptyState
+            icon={
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <circle cx="12" cy="12" r="10" stroke="#7D7060" strokeWidth="1.5" />
-                <path
-                  d="M12 8v4M12 16h.01"
-                  stroke="#7D7060"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
+                <path d="M12 8v4M12 16h.01" stroke="#7D7060" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
-            </div>
-            <h1
-              className="font-display font-semibold text-ink"
-              style={{ fontFamily: 'var(--font-display)', fontSize: '1.7rem' }}
-            >
-              Книга не найдена
-            </h1>
-            <p className="text-ash text-sm">Возможно, она была удалена или перемещена.</p>
-            <Link
-              href="/catalog"
-              className="inline-flex items-center justify-center h-10 px-6 rounded-xl text-sm font-medium bg-accent text-bg hover:bg-accent2 transition-all"
-            >
-              В каталог
-            </Link>
-          </div>
+            }
+            title="Книга не найдена"
+            description="Возможно, она была удалена или перемещена."
+            actionLabel="В каталог"
+            actionHref="/catalog"
+          />
         </Container>
       </main>
     )
@@ -90,47 +123,14 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
     <main id="main-content">
       <section className="py-10">
         <Container>
-          {/* Breadcrumb */}
-          <nav aria-label="Навигация по разделам" className="mb-10">
-            <ol className="flex flex-wrap items-center gap-2 text-sm text-ash">
-              <li>
-                <Link
-                  href="/"
-                  className="hover:text-accent transition-colors focus-visible:outline-accent rounded"
-                >
-                  Главная
-                </Link>
-              </li>
-              <li aria-hidden="true" className="text-surface3">
-                ›
-              </li>
-              <li>
-                <Link
-                  href="/catalog"
-                  className="hover:text-accent transition-colors focus-visible:outline-accent rounded"
-                >
-                  Каталог
-                </Link>
-              </li>
-              <li aria-hidden="true" className="text-surface3">
-                ›
-              </li>
-              <li>
-                <Link
-                  href={`/catalog?category=${book.category}`}
-                  className="hover:text-accent transition-colors focus-visible:outline-accent rounded"
-                >
-                  {categoryLabel}
-                </Link>
-              </li>
-              <li aria-hidden="true" className="text-surface3">
-                ›
-              </li>
-              <li className="text-text line-clamp-1">{book.title}</li>
-            </ol>
-          </nav>
-
-          {/* Main grid */}
+          <Breadcrumb
+            items={[
+              { label: 'Главная', href: '/' },
+              { label: 'Каталог', href: '/catalog' },
+              { label: categoryLabel, href: `/catalog?category=${book.category}` },
+              { label: book.title },
+            ]}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 xl:gap-20 mb-16">
             <div className="min-w-0 w-full">
@@ -151,10 +151,7 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
                 </div>
                 <h1
                   className="font-display font-semibold text-ink leading-tight"
-                  style={{
-                    fontFamily: 'var(--font-display)',
-                    fontSize: 'clamp(1.7rem, 3.5vw, 2.5rem)',
-                  }}
+                  style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.7rem, 3.5vw, 2.5rem)' }}
                 >
                   {book.title}
                 </h1>
@@ -168,54 +165,18 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
 
               <hr className="border-surface2" />
 
-              {/* Meta grid */}
-              <div>
-                <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">
-                  Сведения об издании
-                </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-px bg-surface2 rounded-2xl overflow-hidden">
-                  {[
-                    { label: 'Год издания', value: String(book.year) },
-                    { label: 'Страниц', value: book.pages ? String(book.pages) : '—' },
-                    { label: 'Язык', value: book.language },
-                    { label: 'Издательство', value: book.publisherName ?? '—' },
-                    { label: 'Место издания', value: book.publisherCity ?? '—' },
-                    {
-                      label: 'Состояние',
-                      value: book.available ? 'Доступна' : 'Недоступна',
-                      accent: book.available,
-                    },
-                  ].map(({ label, value, accent }) => (
-                    <div key={label} className="bg-bg px-4 py-3.5 flex flex-col gap-1">
-                      <span className="text-[10px] text-dim uppercase tracking-wider">
-                        {label}
-                      </span>
-                      <span
-                        className={`text-sm font-medium ${accent ? 'text-accent' : 'text-ink'}`}
-                      >
-                        {value}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <BookMetaGrid book={book} />
 
-              {/* Description */}
               {book.description && (
                 <div>
-                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">
-                    О книге
-                  </p>
+                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">О книге</p>
                   <p className="text-ash text-base leading-relaxed">{book.description}</p>
                 </div>
               )}
 
-              {/* Tags */}
               {book.tags.length > 0 && (
                 <div>
-                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">
-                    Темы
-                  </p>
+                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">Темы</p>
                   <div className="flex flex-wrap gap-2">
                     {book.tags.map((tag) => (
                       <span
@@ -231,147 +192,11 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
 
               <hr className="border-surface2" />
 
-              {/* Availability */}
-              {/* Purchase block */}
-              <div className="flex flex-col gap-4 bg-surface rounded-2xl border border-surface2 px-5 py-5">
-                {/* Price row */}
-                {book.price ? (
-                  <div className="flex items-center justify-between">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-[10px] text-dim uppercase tracking-wider">
-                        Цена
-                      </span>
-                      <span
-                        className="font-display font-semibold text-ink"
-                        style={{
-                          fontFamily: 'var(--font-display)',
-                          fontSize: '1.8rem',
-                          lineHeight: 1,
-                        }}
-                      >
-                        {new Intl.NumberFormat('ru-RU', {
-                          style: 'currency',
-                          currency: book.currency,
-                          maximumFractionDigits: 0,
-                        }).format(book.price)}
-                      </span>
-                    </div>
-
-                    {/* Copies left badge */}
-                    {book.copiesLeft > 0 && (
-                      <div className="flex flex-col items-end gap-0.5">
-                        <span className="text-[10px] text-dim uppercase tracking-wider">
-                          В наличии
-                        </span>
-                        <span className="text-sm font-medium text-ink">
-                          {book.copiesLeft}{' '}
-                          {book.copiesLeft === 1
-                            ? 'экз.'
-                            : book.copiesLeft < 5
-                              ? 'экз.'
-                              : 'экз.'}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                ) : null}
-
-                {/* Divider if price exists */}
-                {book.price && <hr className="border-surface2" />}
-
-                {/* Condition + status row */}
-                <div className="flex items-center justify-between gap-4 flex-wrap">
-                  <div className="flex items-center gap-4">
-                    {/* Availability dot */}
-                    <div className="flex items-center gap-2">
-                      <span
-                        className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                          book.available && book.copiesLeft > 0
-                            ? 'bg-[#27a560] shadow-[0_0_0_3px_rgba(39,165,96,0.15)]'
-                            : 'bg-surface3'
-                        }`}
-                        aria-hidden="true"
-                      />
-                      <span className="text-sm text-ash">
-                        {book.available && book.copiesLeft > 0
-                          ? 'В наличии'
-                          : 'Нет в наличии'}
-                      </span>
-                    </div>
-
-                    {/* Condition badge */}
-                    {book.condition && (
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-surface2 text-ash border border-surface3">
-                        {CONDITION_LABELS[book.condition]}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Edition */}
-                  {book.edition && (
-                    <span className="text-[11px] text-dim">{book.edition}</span>
-                  )}
-                </div>
-
-                {/* CTA button */}
-                {book.available && book.copiesLeft > 0 ? (
-                  <button
-                    type="button"
-                    className="w-full h-12 rounded-xl text-base font-medium bg-accent text-bg border border-accent hover:bg-accent2 hover:border-accent2 transition-all duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shadow-accent-sm hover:shadow-accent"
-                  >
-                    Приобрести
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    disabled
-                    className="w-full h-12 rounded-xl text-base font-medium bg-surface2 text-ash border border-surface2 cursor-not-allowed"
-                  >
-                    Нет в наличии
-                  </button>
-                )}
-              </div>
+              <BookPurchaseBlock book={book} />
             </div>
           </div>
 
-          {/* Similar */}
-          {similar.length > 0 && (
-            <section
-              aria-labelledby="similar-heading"
-              className="border-t border-surface2 pt-14"
-            >
-              <div className="flex items-end justify-between mb-8">
-                <div>
-                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-2">
-                    Из того же раздела
-                  </p>
-                  <h2
-                    id="similar-heading"
-                    className="font-display font-semibold text-ink"
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)',
-                    }}
-                  >
-                    Похожие книги
-                  </h2>
-                </div>
-                <Link
-                  href={`/catalog?category=${book.category}`}
-                  className="text-sm text-ash hover:text-ink transition-colors hidden sm:inline-flex items-center gap-1 group"
-                >
-                  Все в разделе
-                  <span
-                    className="group-hover:translate-x-0.5 transition-transform"
-                    aria-hidden="true"
-                  >
-                    →
-                  </span>
-                </Link>
-              </div>
-              <BookGrid books={similar} />
-            </section>
-          )}
+          <SimilarSection category={book.category} books={similar} />
         </Container>
       </section>
     </main>

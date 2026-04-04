@@ -17,7 +17,8 @@
     "@supabase/supabase-js": "^2.49.4",
     "@supabase/ssr": "^0.6.1",
     "@tanstack/react-query": "^5.74.4",
-    "@tanstack/react-query-devtools": "^5.74.4"
+    "@tanstack/react-query-devtools": "^5.74.4",
+    "react-dropzone": "^14.3.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.0.0",

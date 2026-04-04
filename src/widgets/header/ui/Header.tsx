@@ -6,11 +6,12 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/shared/lib/cn'
 import { Container } from '@/shared/ui/Container'
 import { UserAvatar } from '@/entities/user'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 
 const NAV_LINKS = [
   { href: '/catalog', label: 'Каталог' },
+  { href: '/events',  label: 'События' },
   { href: '/about',   label: 'О проекте' },
-  { href: '/contact', label: 'Контакты' },
 ] as const
 
 const MountainIcon = () => (
@@ -21,9 +22,29 @@ const MountainIcon = () => (
   </svg>
 )
 
+const AddBookButton = () => (
+  <Link
+    href="/add-book"
+    className={cn(
+      'inline-flex items-center gap-1.5 h-9 px-4 rounded-lg',
+      'text-sm font-medium',
+      'bg-accent text-bg border border-accent',
+      'hover:bg-accent2 hover:border-accent2',
+      'transition-all duration-150',
+      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+    )}
+  >
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+    </svg>
+    Добавить книгу
+  </Link>
+)
+
 export const Header = memo(() => {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
+  const { user } = useCurrentUser()
 
   return (
     <header className="sticky top-0 z-50 border-b border-surface2/70 bg-bg/90 backdrop-blur-sm">
@@ -36,9 +57,7 @@ export const Header = memo(() => {
             className="flex items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent rounded-sm shrink-0"
             aria-label="KavkazLibrary — на главную"
           >
-            <span className="text-accent">
-              <MountainIcon />
-            </span>
+            <span className="text-accent"><MountainIcon /></span>
             <span
               className="font-display text-xl font-semibold tracking-wide text-ink leading-none"
               style={{ fontFamily: 'var(--font-display)' }}
@@ -56,7 +75,7 @@ export const Header = memo(() => {
                 className={cn(
                   'px-4 py-2 rounded-lg text-sm transition-all duration-150',
                   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-                  pathname === href
+                  pathname === href || pathname.startsWith(href + '/')
                     ? 'text-accent bg-accent/10 font-medium'
                     : 'text-ash hover:text-ink hover:bg-surface',
                 )}
@@ -67,8 +86,9 @@ export const Header = memo(() => {
             ))}
           </nav>
 
-          {/* Right side: avatar / login */}
+          {/* Right: add book + avatar */}
           <div className="hidden md:flex items-center gap-3">
+            {user && <AddBookButton />}
             <UserAvatar />
           </div>
 
@@ -95,11 +115,7 @@ export const Header = memo(() => {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <nav
-          id="mobile-menu"
-          className="md:hidden border-t border-surface2 bg-surface"
-          aria-label="Мобильная навигация"
-        >
+        <nav id="mobile-menu" className="md:hidden border-t border-surface2 bg-surface" aria-label="Мобильная навигация">
           <Container>
             <ul className="flex flex-col py-3 gap-1">
               {NAV_LINKS.map(({ href, label }) => (
@@ -120,11 +136,22 @@ export const Header = memo(() => {
                   </Link>
                 </li>
               ))}
-              {/* Avatar / login in mobile */}
+              {user && (
+                <li>
+                  <Link
+                    href="/add-book"
+                    className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg text-accent font-medium hover:bg-accent/8 transition-colors"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
+                      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                    </svg>
+                    Добавить книгу
+                  </Link>
+                </li>
+              )}
               <li className="pt-2 mt-1 border-t border-surface2">
-                <div className="px-3 py-2">
-                  <UserAvatar />
-                </div>
+                <div className="px-3 py-2"><UserAvatar /></div>
               </li>
             </ul>
           </Container>
