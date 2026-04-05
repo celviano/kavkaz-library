@@ -9,8 +9,8 @@ import { logoutAction } from '@/features/auth'
 
 export const UserAvatar = memo(() => {
   const { user, loading } = useCurrentUser()
-  const { data: profile } = useProfile(user?.id ?? null)
-  const [open, setOpen] = useState(false)
+  const { data: profile }  = useProfile(user?.id ?? null)
+  const [open, setOpen]    = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
   const displayName = getFullName(profile) || user?.email?.split('@')[0] || null
@@ -18,9 +18,7 @@ export const UserAvatar = memo(() => {
 
   useEffect(() => {
     function handler(e: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setOpen(false)
-      }
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setOpen(false)
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
@@ -45,6 +43,13 @@ export const UserAvatar = memo(() => {
 
   if (loading) return <div className="w-9 h-9 rounded-full bg-surface2 animate-pulse" aria-hidden="true" />
 
+  const NAV_ITEMS = [
+    { href: '/profile',   label: 'Профиль',   d: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4 20c0-4 3.6-7 8-7s8 3 8 7' },
+    { href: '/dashboard', label: 'Кабинет',   d: 'M3 3h7v7H3zM14 3h7v7h-7zM14 14h7v7h-7zM3 14h7v7H3z' },
+    { href: '/favorites', label: 'Избранное', d: 'M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z' },
+    { href: '/catalog',   label: 'Каталог',   d: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z' },
+  ]
+
   return (
     <div className="relative" ref={menuRef}>
       <button
@@ -53,8 +58,7 @@ export const UserAvatar = memo(() => {
         aria-expanded={open}
         aria-label={`Меню пользователя ${displayName ?? ''}`}
         className={cn(
-          'w-9 h-9 rounded-full cursor-pointer',
-          'border-2 transition-all duration-150',
+          'w-9 h-9 rounded-full cursor-pointer border-2 transition-all duration-150',
           'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
           open ? 'border-accent ring-2 ring-accent/20' : 'border-surface2 hover:border-accent/50',
         )}
@@ -63,22 +67,19 @@ export const UserAvatar = memo(() => {
       </button>
 
       {open && (
-        <div
-          className="absolute right-0 top-11 z-50 w-52 rounded-2xl bg-bg border border-surface2 shadow-accent py-1.5"
-          role="menu"
-          aria-label="Меню пользователя"
-        >
+        <div className="absolute right-0 top-11 z-50 w-52 rounded-2xl bg-bg border border-surface2 shadow-accent py-1.5" role="menu">
           <div className="px-4 py-3 border-b border-surface2">
             <p className="text-sm font-medium text-ink truncate">{displayName}</p>
             <p className="text-xs text-ash truncate">{user?.email}</p>
+            {profile?.role && profile.role !== 'user' && (
+              <p className="text-[10px] text-accent mt-0.5 uppercase tracking-wider">
+                {profile.role === 'admin' ? 'Администратор' : 'Продавец'}
+              </p>
+            )}
           </div>
 
           <div className="py-1">
-            {[
-              { href: '/profile',   label: 'Профиль',   icon: 'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM4 20c0-4 3.6-7 8-7s8 3 8 7' },
-              { href: '/favorites', label: 'Избранное', icon: 'M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z' },
-              { href: '/catalog',   label: 'Каталог',   icon: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z' },
-            ].map(({ href, label, icon }) => (
+            {NAV_ITEMS.map(({ href, label, d }) => (
               <Link
                 key={href}
                 href={href}
@@ -87,7 +88,7 @@ export const UserAvatar = memo(() => {
                 role="menuitem"
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
-                  <path d={icon}/>
+                  <path d={d}/>
                 </svg>
                 {label}
               </Link>
@@ -96,11 +97,7 @@ export const UserAvatar = memo(() => {
 
           <div className="pt-1 border-t border-surface2">
             <form action={logoutAction}>
-              <button
-                type="submit"
-                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-ash hover:text-ink hover:bg-surface transition-colors cursor-pointer"
-                role="menuitem"
-              >
+              <button type="submit" className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-ash hover:text-ink hover:bg-surface transition-colors cursor-pointer" role="menuitem">
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
                   <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
                   <polyline points="16 17 21 12 16 7"/>

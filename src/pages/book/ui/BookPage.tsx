@@ -10,6 +10,7 @@ import { BookGrid } from '@/widgets/book-grid'
 import { BookSlider } from '@/widgets/book-slider'
 import { BookMetaGrid } from '@/widgets/book-meta'
 import { BookPurchaseBlock } from '@/widgets/book-purchase'
+import { SellerBlock } from '@/widgets/seller-block'
 import { CATEGORY_LABELS } from '@/shared/config/constants'
 import { useBook, useSimilarBooks } from '@/entities/book'
 import { FavoriteButton } from '@/features/favorites'
@@ -17,8 +18,6 @@ import { FavoriteButton } from '@/features/favorites'
 interface BookPageProps {
   bookId: string
 }
-
-// ─── Skeleton ─────────────────────────────────────────────────────────────────
 
 function BookPageSkeleton() {
   return (
@@ -37,11 +36,6 @@ function BookPageSkeleton() {
                   <div key={i} className="bg-bg px-4 py-3.5 h-16 animate-pulse" />
                 ))}
               </div>
-              <div className="space-y-2">
-                <div className="h-3 bg-surface rounded-full w-full animate-pulse" />
-                <div className="h-3 bg-surface rounded-full w-4/5 animate-pulse" />
-                <div className="h-3 bg-surface rounded-full w-3/5 animate-pulse" />
-              </div>
             </div>
           </div>
         </Container>
@@ -50,23 +44,18 @@ function BookPageSkeleton() {
   )
 }
 
-// ─── Similar section ──────────────────────────────────────────────────────────
-
 interface SimilarSectionProps {
   category: string
-  books: ReturnType<typeof useSimilarBooks>['data']
+  books:    ReturnType<typeof useSimilarBooks>['data']
 }
 
 function SimilarSection({ category, books }: SimilarSectionProps) {
   if (!books || books.length === 0) return null
-
   return (
     <section aria-labelledby="similar-heading" className="border-t border-surface2 pt-14">
       <div className="flex items-end justify-between mb-8">
         <div>
-          <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-2">
-            Из того же раздела
-          </p>
+          <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-2">Из того же раздела</p>
           <h2
             id="similar-heading"
             className="font-display font-semibold text-ink"
@@ -88,8 +77,6 @@ function SimilarSection({ category, books }: SimilarSectionProps) {
   )
 }
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
 export const BookPage = memo<BookPageProps>(({ bookId }) => {
   const { data: book, isLoading, error } = useBook(bookId)
   const { data: similar = [] } = useSimilarBooks(bookId, book?.category ?? 'history')
@@ -103,8 +90,8 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
           <EmptyState
             icon={
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="#7D7060" strokeWidth="1.5" />
-                <path d="M12 8v4M12 16h.01" stroke="#7D7060" strokeWidth="1.5" strokeLinecap="round" />
+                <circle cx="12" cy="12" r="10" stroke="#7D7060" strokeWidth="1.5"/>
+                <path d="M12 8v4M12 16h.01" stroke="#7D7060" strokeWidth="1.5" strokeLinecap="round"/>
               </svg>
             }
             title="Книга не найдена"
@@ -191,6 +178,14 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
               )}
 
               <hr className="border-surface2" />
+
+              {/* Seller block */}
+              {book.ownerId && (
+                <div>
+                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">Продавец</p>
+                  <SellerBlock sellerId={book.ownerId} />
+                </div>
+              )}
 
               <BookPurchaseBlock book={book} />
             </div>

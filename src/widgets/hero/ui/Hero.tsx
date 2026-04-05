@@ -123,7 +123,7 @@ export const Hero = memo(() => {
             Библиотека <em className="text-accent not-italic">Кавказа</em>
             <br />
             <span className="text-ash font-normal" style={{ fontSize: '0.7em' }}>
-              и Закавказья
+              От древности до наших дней
             </span>
           </h1>
 

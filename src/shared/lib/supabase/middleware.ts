@@ -1,14 +1,14 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-// Routes that require authentication
 const PROTECTED_ROUTES = [
   '/profile',
   '/favorites',
   '/add-book',
+  '/dashboard',
+  '/organization',
 ]
 
-// Routes only for guests (redirect to / if already logged in)
 const GUEST_ONLY_ROUTES = [
   '/auth/login',
   '/auth/sign-up',
@@ -16,11 +16,11 @@ const GUEST_ONLY_ROUTES = [
 ]
 
 function isProtected(pathname: string): boolean {
-  return PROTECTED_ROUTES.some((route) => pathname === route || pathname.startsWith(route + '/'))
+  return PROTECTED_ROUTES.some((r) => pathname === r || pathname.startsWith(r + '/'))
 }
 
 function isGuestOnly(pathname: string): boolean {
-  return GUEST_ONLY_ROUTES.some((route) => pathname.startsWith(route))
+  return GUEST_ONLY_ROUTES.some((r) => pathname.startsWith(r))
 }
 
 export async function updateSession(request: NextRequest) {
@@ -31,9 +31,7 @@ export async function updateSession(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
+        getAll() { return request.cookies.getAll() },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({ request })
@@ -48,21 +46,19 @@ export async function updateSession(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser()
   const { pathname } = request.nextUrl
 
-  // Not logged in → trying to access protected route
   if (!user && isProtected(pathname)) {
-    const loginUrl = request.nextUrl.clone()
-    loginUrl.pathname = '/auth/login'
-    loginUrl.searchParams.set('next', pathname)
-    return NextResponse.redirect(loginUrl)
+    const url = request.nextUrl.clone()
+    url.pathname = '/auth/login'
+    url.searchParams.set('next', pathname)
+    return NextResponse.redirect(url)
   }
 
-  // Already logged in → trying to access guest-only route
   if (user && isGuestOnly(pathname)) {
     const next = request.nextUrl.searchParams.get('next') ?? '/'
-    const homeUrl = request.nextUrl.clone()
-    homeUrl.pathname = next.startsWith('/') ? next : '/'
-    homeUrl.search = ''
-    return NextResponse.redirect(homeUrl)
+    const url  = request.nextUrl.clone()
+    url.pathname = next.startsWith('/') ? next : '/'
+    url.search   = ''
+    return NextResponse.redirect(url)
   }
 
   return supabaseResponse
