@@ -1,25 +1,57 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import { AuthCard } from './AuthCard'
 import { AuthInput } from './AuthInput'
 import { signUpAction } from '../actions/auth.actions'
+import { useFormValidation } from '@/shared/hooks/useFormValidation'
+import { rules } from '@/shared/lib/validation'
 
 interface SignUpFormProps {
   error?: string
 }
 
+interface SignUpValues {
+  name:     string
+  email:    string
+  password: string
+}
+
+const SIGNUP_RULES = {
+  name:     [rules.required('Введите имя'), rules.minLength(2)],
+  email:    [rules.required('Введите email'), rules.email()],
+  password: [rules.required('Введите пароль'), rules.minLength(6, 'Минимум 6 символов')],
+}
+
 export function SignUpForm({ error }: SignUpFormProps) {
+  const [values, setValues] = useState<SignUpValues>({ name: '', email: '', password: '' })
+  const { getFieldError, touchField, validateAll } = useFormValidation<SignUpValues>({
+    rules: SIGNUP_RULES,
+  })
+
+  function handleChange(field: keyof SignUpValues, value: string) {
+    setValues((prev) => ({ ...prev, [field]: value }))
+    touchField(field, value)
+  }
+
+  async function handleSubmit(formData: FormData) {
+    if (!validateAll(values)) return
+    await signUpAction(formData)
+  }
+
   return (
-    <AuthCard
-      title="Создать аккаунт"
-      subtitle="Присоединяйтесь к библиотеке"
-    >
-      <form action={signUpAction} className="flex flex-col gap-4">
+    <AuthCard title="Создать аккаунт" subtitle="Присоединяйтесь к библиотеке">
+      <form action={handleSubmit} className="flex flex-col gap-4">
         <AuthInput
           label="Имя"
           name="name"
           type="text"
           placeholder="Ваше имя"
           autoComplete="name"
+          value={values.name}
+          onChange={(e) => handleChange('name', e.target.value)}
+          error={getFieldError('name')}
           required
         />
         <AuthInput
@@ -28,6 +60,9 @@ export function SignUpForm({ error }: SignUpFormProps) {
           type="email"
           placeholder="you@example.com"
           autoComplete="email"
+          value={values.email}
+          onChange={(e) => handleChange('email', e.target.value)}
+          error={getFieldError('email')}
           required
         />
         <AuthInput
@@ -36,7 +71,9 @@ export function SignUpForm({ error }: SignUpFormProps) {
           type="password"
           placeholder="Минимум 6 символов"
           autoComplete="new-password"
-          minLength={6}
+          value={values.password}
+          onChange={(e) => handleChange('password', e.target.value)}
+          error={getFieldError('password')}
           required
         />
 

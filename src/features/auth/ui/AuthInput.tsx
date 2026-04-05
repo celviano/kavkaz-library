@@ -25,9 +25,15 @@ export const AuthInput: FC<AuthInputProps> = ({ label, error, className, name, .
             : 'border-surface2 hover:border-surface3 focus:border-accent/50 focus:ring-2 focus:ring-accent/10',
           className,
         )}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
         {...rest}
       />
-      {error && <p className="text-xs text-red-500">{error}</p>}
+      {error && (
+        <p id={`${id}-error`} className="text-xs text-red-500" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   )
 }

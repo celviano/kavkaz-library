@@ -1,25 +1,55 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
 import { AuthCard } from './AuthCard'
 import { AuthInput } from './AuthInput'
 import { loginAction } from '../actions/auth.actions'
+import { useFormValidation } from '@/shared/hooks/useFormValidation'
+import { rules } from '@/shared/lib/validation'
 
 interface LoginFormProps {
   error?: string
 }
 
+interface LoginValues {
+  email:    string
+  password: string
+}
+
+const LOGIN_RULES = {
+  email:    [rules.required('Введите email'), rules.email()],
+  password: [rules.required('Введите пароль')],
+}
+
 export function LoginForm({ error }: LoginFormProps) {
+  const [values, setValues] = useState<LoginValues>({ email: '', password: '' })
+  const { getFieldError, touchField, validateAll } = useFormValidation<LoginValues>({
+    rules: LOGIN_RULES,
+  })
+
+  function handleChange(field: keyof LoginValues, value: string) {
+    setValues((prev) => ({ ...prev, [field]: value }))
+    touchField(field, value)
+  }
+
+  async function handleSubmit(formData: FormData) {
+    if (!validateAll(values)) return
+    await loginAction(formData)
+  }
+
   return (
-    <AuthCard
-      title="Добро пожаловать"
-      subtitle="Войдите в свой аккаунт"
-    >
-      <form action={loginAction} className="flex flex-col gap-4">
+    <AuthCard title="Добро пожаловать" subtitle="Войдите в свой аккаунт">
+      <form action={handleSubmit} className="flex flex-col gap-4">
         <AuthInput
           label="Email"
           name="email"
           type="email"
           placeholder="you@example.com"
           autoComplete="email"
+          value={values.email}
+          onChange={(e) => handleChange('email', e.target.value)}
+          error={getFieldError('email')}
           required
         />
         <AuthInput
@@ -28,6 +58,9 @@ export function LoginForm({ error }: LoginFormProps) {
           type="password"
           placeholder="••••••••"
           autoComplete="current-password"
+          value={values.password}
+          onChange={(e) => handleChange('password', e.target.value)}
+          error={getFieldError('password')}
           required
         />
 
@@ -38,10 +71,7 @@ export function LoginForm({ error }: LoginFormProps) {
         )}
 
         <div className="flex justify-end -mt-1">
-          <Link
-            href="/auth/forgot-password"
-            className="text-xs text-ash hover:text-accent transition-colors"
-          >
+          <Link href="/auth/forgot-password" className="text-xs text-ash hover:text-accent transition-colors">
             Забыли пароль?
           </Link>
         </div>

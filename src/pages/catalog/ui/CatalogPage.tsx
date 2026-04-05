@@ -1,65 +1,94 @@
 'use client'
 
-import { memo, useState, useMemo } from 'react'
+import { memo, useState, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { Container } from '@/shared/ui/Container'
+import { PageHeading } from '@/shared/ui/PageHeading'
+import { Pagination } from '@/shared/ui/Pagination'
 import { BookGrid } from '@/widgets/book-grid'
 import { BookSearch } from '@/features/book-search'
 import { BookFilter } from '@/features/book-filter'
-import { Container } from '@/shared/ui/Container'
+import { BookCardSkeleton } from '@/shared/ui/Skeleton'
 import { useBooks } from '@/entities/book'
 import type { BookCategory } from '@/entities/book'
 
-export const CatalogPage = memo(() => {
-  const [search, setSearch] = useState('')
-  const [category, setCategory] = useState<BookCategory | 'all'>('all')
+const PAGE_SIZE = 12
 
-  const { data, isLoading, error } = useBooks({ category, search })
-  const books = data?.books ?? []
+export const CatalogPage = memo(() => {
+  const searchParams = useSearchParams()
+
+  // Read state from URL
+  const pageParam     = searchParams.get('page')
+  const categoryParam = searchParams.get('category') as BookCategory | null
+  const searchParam   = searchParams.get('q') ?? ''
+
+  const [search,   setSearch]   = useState(searchParam)
+  const [category, setCategory] = useState<BookCategory | 'all'>(categoryParam ?? 'all')
+  const [page,     setPage]     = useState(parseInt(pageParam ?? '1', 10))
+
+  // Sync URL → state when searchParams change (browser back/forward)
+  useEffect(() => {
+    setSearch(searchParams.get('q') ?? '')
+    setCategory((searchParams.get('category') as BookCategory | null) ?? 'all')
+    setPage(parseInt(searchParams.get('page') ?? '1', 10))
+  }, [searchParams])
+
+  // Reset to page 1 when filter/search changes
+  function handleSearchChange(value: string) {
+    setSearch(value)
+    setPage(1)
+  }
+
+  function handleCategoryChange(value: BookCategory | 'all') {
+    setCategory(value)
+    setPage(1)
+  }
+
+  const { data, isLoading, error } = useBooks({
+    category,
+    search,
+    page,
+    pageSize: PAGE_SIZE,
+  })
+
+  const books      = data?.books      ?? []
+  const total      = data?.total      ?? 0
+  const totalPages = data?.totalPages ?? 1
 
   return (
     <main id="main-content">
       <section aria-labelledby="catalog-heading" className="py-12">
         <Container>
           <div className="flex flex-col gap-8">
-            <div className="flex flex-col gap-1">
-              <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent">
-                Каталог
-              </p>
-              <h1
-                id="catalog-heading"
-                className="font-display font-semibold text-ink leading-tight"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(2rem, 4vw, 3rem)',
-                }}
-              >
-                Все книги
-              </h1>
-              {!isLoading && (
-                <p className="text-ash text-base mt-1">
-                  {data?.total ?? 0} изданий по истории Кавказа и Закавказья
-                </p>
-              )}
-            </div>
+
+            <PageHeading
+              eyebrow="Каталог"
+              title="Все книги"
+              subtitle={!isLoading ? `${total} изданий по истории Кавказа и Закавказья` : undefined}
+              id="catalog-heading"
+            />
 
             <div className="flex flex-col gap-4">
-              <BookSearch value={search} onChange={setSearch} />
-              <BookFilter selected={category} onChange={setCategory} />
+              <BookSearch value={search} onChange={handleSearchChange} />
+              <BookFilter selected={category} onChange={handleCategoryChange} />
             </div>
+
+            <p
+              className="text-sm text-ash -mt-2"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {isLoading ? 'Загрузка...' : (
+                books.length === total
+                  ? `Показано все ${books.length} книг`
+                  : `Показано ${books.length} из ${total}`
+              )}
+            </p>
 
             {isLoading && (
               <div className="grid gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-                {Array.from({ length: 8 }).map((_, i) => (
-                  <div
-                    key={i}
-                    className="rounded-2xl bg-surface border border-surface2 overflow-hidden animate-pulse"
-                  >
-                    <div className="aspect-[3/4] bg-surface2" />
-                    <div className="p-4 flex flex-col gap-2">
-                      <div className="h-4 bg-surface2 rounded-full w-1/2" />
-                      <div className="h-3 bg-surface2 rounded-full w-3/4" />
-                    </div>
-                  </div>
-                ))}
+                {Array.from({ length: PAGE_SIZE }).map((_, i) => <BookCardSkeleton key={i} />)}
               </div>
             )}
 
@@ -69,16 +98,16 @@ export const CatalogPage = memo(() => {
               </div>
             )}
 
-            {!isLoading && !error && (
-              <>
-                <p className="text-sm text-ash -mt-2" role="status" aria-live="polite">
-                  {books.length === (data?.total ?? 0)
-                    ? `Показано все ${books.length} книг`
-                    : `Найдено: ${books.length} из ${data?.total ?? 0}`}
-                </p>
-                <BookGrid books={books} />
-              </>
+            {!isLoading && !error && <BookGrid books={books} />}
+
+            {!isLoading && totalPages > 1 && (
+              <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                className="mt-4"
+              />
             )}
+
           </div>
         </Container>
       </section>
