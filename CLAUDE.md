@@ -16,6 +16,7 @@
 
 ---
 
+
 ## Architecture — Feature-Sliced Design
 
 ### FSD Import Rules (strict)
