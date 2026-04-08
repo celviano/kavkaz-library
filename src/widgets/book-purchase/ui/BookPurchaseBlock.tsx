@@ -13,11 +13,10 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
   const inStock = book.available && book.copiesLeft > 0
   const [modalOpen, setModalOpen] = useState(false)
 
-  // Don't show purchase block if book is not active
   if (book.status !== 'active') {
     return (
       <div className="flex items-center gap-3 bg-surface rounded-2xl border border-surface2 px-5 py-4">
-        <span className="w-2 h-2 rounded-full bg-surface3 flex-shrink-0" aria-hidden="true" />
+        <span className="w-2 h-2 rounded-full bg-surface3 flex-shrink-0" aria-hidden="true"/>
         <p className="text-sm text-ash">
           {book.status === 'sold'     && 'Эта книга уже продана'}
           {book.status === 'pending'  && 'Книга на модерации'}
@@ -40,14 +39,10 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
                   className="font-display font-semibold text-ink"
                   style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', lineHeight: 1 }}
                 >
-                  {book.priceType === 'negotiable'
-                    ? 'Договорная'
-                    : book.priceType === 'exchange'
-                    ? 'Обмен'
+                  {book.priceType === 'negotiable' ? 'Договорная'
+                    : book.priceType === 'exchange' ? 'Обмен'
                     : new Intl.NumberFormat('ru-RU', {
-                        style: 'currency',
-                        currency: book.currency,
-                        maximumFractionDigits: 0,
+                        style: 'currency', currency: book.currency, maximumFractionDigits: 0,
                       }).format(book.price)}
                 </span>
               </div>
@@ -58,21 +53,18 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
                 </div>
               )}
             </div>
-            <hr className="border-surface2" />
+            <hr className="border-surface2"/>
           </>
         )}
 
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span
-                className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                  inStock
-                    ? 'bg-[#27a560] shadow-[0_0_0_3px_rgba(39,165,96,0.15)]'
-                    : 'bg-surface3'
-                }`}
-                aria-hidden="true"
-              />
+              <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                inStock
+                  ? 'bg-[#27a560] shadow-[0_0_0_3px_rgba(39,165,96,0.15)]'
+                  : 'bg-surface3'
+              }`} aria-hidden="true"/>
               <span className="text-sm text-ash">{inStock ? 'В наличии' : 'Нет в наличии'}</span>
             </div>
             {book.condition && (
@@ -93,11 +85,8 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
             Приобрести
           </button>
         ) : (
-          <button
-            type="button"
-            disabled
-            className="w-full h-12 rounded-xl text-base font-medium bg-surface2 text-ash border border-surface2 cursor-not-allowed"
-          >
+          <button type="button" disabled
+            className="w-full h-12 rounded-xl text-base font-medium bg-surface2 text-ash border border-surface2 cursor-not-allowed">
             Нет в наличии
           </button>
         )}
@@ -105,8 +94,7 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
 
       {modalOpen && book.ownerId && (
         <RequestModal
-          bookId={book.id}
-          bookTitle={book.title}
+          book={book}
           sellerId={book.ownerId}
           onClose={() => setModalOpen(false)}
         />

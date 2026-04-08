@@ -1,6 +1,7 @@
 import { createClient } from '@/shared/lib/supabase/client'
 
-export type OrderStatus = 'pending' | 'confirmed' | 'cancelled' | 'completed'
+export type OrderStatus   = 'pending' | 'confirmed' | 'cancelled' | 'completed'
+export type DeliveryType  = 'sdek' | 'pochta'
 
 export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   pending:   'Ожидает ответа',
@@ -16,18 +17,34 @@ export const ORDER_STATUS_COLORS: Record<OrderStatus, string> = {
   completed: 'bg-surface2 text-ash border-surface3',
 }
 
+export const DELIVERY_LABELS: Record<DeliveryType, string> = {
+  sdek:   'СДЭК',
+  pochta: 'Почта России',
+}
+
 export interface OrderRow {
-  id:           string
-  book_id:      string
-  buyer_id:     string
-  seller_id:    string
-  status:       OrderStatus
-  message:      string | null
-  buyer_contact:string | null
-  created_at:   string
+  id:            string
+  book_id:       string
+  buyer_id:      string
+  seller_id:     string
+  status:        OrderStatus
+  // Buyer info
+  full_name:     string | null
+  phone:         string | null
+  email:         string | null
+  // Delivery
+  delivery_type: DeliveryType | null
+  address:       string | null
+  city:          string | null
+  postal_code:   string | null
+  apartment:     string | null
+  // Other
+  quantity:      number
+  comment:       string | null
+  created_at:    string
   // joined
-  books?:       { title: string; cover_url: string | null } | null
-  buyer?:       { display_name: string | null; first_name: string | null; last_name: string | null } | null
+  books?:  { title: string; cover_url: string | null; price: number | null; currency: string } | null
+  buyer?:  { display_name: string | null; first_name: string | null; last_name: string | null } | null
 }
 
 export interface Order {
@@ -36,11 +53,21 @@ export interface Order {
   buyerId:      string
   sellerId:     string
   status:       OrderStatus
-  message:      string | null
-  buyerContact: string | null
+  fullName:     string | null
+  phone:        string | null
+  email:        string | null
+  deliveryType: DeliveryType | null
+  address:      string | null
+  city:         string | null
+  postalCode:   string | null
+  apartment:    string | null
+  quantity:     number
+  comment:      string | null
   createdAt:    Date
   bookTitle:    string | null
   bookCoverUrl: string | null
+  bookPrice:    number | null
+  bookCurrency: string
   buyerName:    string | null
 }
 
@@ -56,21 +83,41 @@ function mapOrderRow(row: OrderRow): Order {
     buyerId:      row.buyer_id,
     sellerId:     row.seller_id,
     status:       row.status,
-    message:      row.message,
-    buyerContact: row.buyer_contact,
+    fullName:     row.full_name,
+    phone:        row.phone,
+    email:        row.email,
+    deliveryType: row.delivery_type,
+    address:      row.address,
+    city:         row.city,
+    postalCode:   row.postal_code,
+    apartment:    row.apartment,
+    quantity:     row.quantity ?? 1,
+    comment:      row.comment,
     createdAt:    new Date(row.created_at),
     bookTitle:    row.books?.title ?? null,
     bookCoverUrl: row.books?.cover_url ?? null,
+    bookPrice:    row.books?.price ?? null,
+    bookCurrency: row.books?.currency ?? 'RUB',
     buyerName,
   }
 }
 
-export async function createOrder(data: {
+export interface CreateOrderData {
   bookId:       string
   sellerId:     string
-  message:      string
-  buyerContact: string
-}): Promise<Order> {
+  fullName:     string
+  phone:        string
+  email:        string
+  deliveryType: DeliveryType
+  address:      string
+  city:         string
+  postalCode:   string
+  apartment:    string
+  quantity:     number
+  comment:      string
+}
+
+export async function createOrder(data: CreateOrderData): Promise<Order> {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) throw new Error('Необходима авторизация')
@@ -82,8 +129,16 @@ export async function createOrder(data: {
       buyer_id:      user.id,
       seller_id:     data.sellerId,
       status:        'pending',
-      message:       data.message,
-      buyer_contact: data.buyerContact,
+      full_name:     data.fullName,
+      phone:         data.phone,
+      email:         data.email,
+      delivery_type: data.deliveryType,
+      address:       data.address,
+      city:          data.city,
+      postal_code:   data.postalCode,
+      apartment:     data.apartment || null,
+      quantity:      data.quantity,
+      comment:       data.comment || null,
     })
     .select('*')
     .single()
@@ -92,12 +147,11 @@ export async function createOrder(data: {
   return mapOrderRow(order as OrderRow)
 }
 
-// Seller's incoming orders
 export async function fetchMyOrders(sellerId: string): Promise<Order[]> {
   const supabase = createClient()
   const { data, error } = await supabase
     .from('orders')
-    .select('*, books(title, cover_url), buyer:profiles!orders_buyer_id_fkey(display_name, first_name, last_name)')
+    .select('*, books(title, cover_url, price, currency), buyer:profiles!orders_buyer_id_fkey(display_name, first_name, last_name)')
     .eq('seller_id', sellerId)
     .order('created_at', { ascending: false })
 
@@ -105,12 +159,11 @@ export async function fetchMyOrders(sellerId: string): Promise<Order[]> {
   return (data as OrderRow[]).map(mapOrderRow)
 }
 
-// Buyer's sent orders
 export async function fetchSentOrders(buyerId: string): Promise<Order[]> {
   const supabase = createClient()
   const { data, error } = await supabase
     .from('orders')
-    .select('*, books(title, cover_url)')
+    .select('*, books(title, cover_url, price, currency)')
     .eq('buyer_id', buyerId)
     .order('created_at', { ascending: false })
 

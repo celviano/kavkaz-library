@@ -4,11 +4,12 @@ import '../src/app/styles/globals.css'
 import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
 import { QueryProvider } from '@/app/providers/QueryProvider'
+import { AuthProvider } from '@/app/providers/AuthProvider'
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin', 'latin-ext', 'cyrillic'],
-  weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
+  weight:  ['400', '500', '600', '700'],
+  style:   ['normal', 'italic'],
   variable: '--font-display',
   display: 'swap',
 })
@@ -24,7 +25,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://kavkazlibrary.ru'
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
   title: {
-    default: 'KavkazLibrary — Исторические книги о Кавказе',
+    default:  'KavkazLibrary — Исторические книги о Кавказе',
     template: '%s | KavkazLibrary',
   },
   description: 'Каталог редких исторических книг, атласов и мемуаров о народах и землях Кавказа и Закавказья.',
@@ -41,23 +42,19 @@ export const metadata: Metadata = {
   },
   manifest: '/site.webmanifest',
   openGraph: {
-    type: 'website',
-    locale: 'ru_RU',
-    url: BASE_URL,
-    siteName: 'KavkazLibrary',
-    title: 'KavkazLibrary — Исторические книги о Кавказе',
+    type:      'website',
+    locale:    'ru_RU',
+    url:       BASE_URL,
+    siteName:  'KavkazLibrary',
+    title:     'KavkazLibrary — Исторические книги о Кавказе',
     description: 'Собрание редких исторических книг, атласов, мемуаров и этнографических трудов о народах Кавказского региона.',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'KavkazLibrary' }],
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'KavkazLibrary — Исторические книги о Кавказе',
-    description: 'Каталог редких исторических книг о Кавказе.',
-    images: ['/og-image.png'],
-  },
 }
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ru" className={`${cormorant.variable} ${inter.variable}`}>
       <body className="min-h-screen flex flex-col bg-bg text-text antialiased">
@@ -68,9 +65,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           Перейти к содержимому
         </a>
         <QueryProvider>
-          <Header />
-          {children}
-          <Footer />
+          <AuthProvider>
+            <Header />
+            {children}
+            <Footer />
+          </AuthProvider>
         </QueryProvider>
       </body>
     </html>
