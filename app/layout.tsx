@@ -5,6 +5,7 @@ import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
 import { QueryProvider } from '@/app/providers/QueryProvider'
 import { AuthProvider } from '@/app/providers/AuthProvider'
+import { JsonLd } from '@/shared/ui/JsonLd'
 
 const cormorant = Cormorant_Garamond({
   subsets: ['latin', 'latin-ext', 'cyrillic'],
@@ -50,6 +51,12 @@ export const metadata: Metadata = {
     description: 'Собрание редких исторических книг, атласов, мемуаров и этнографических трудов о народах Кавказского региона.',
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'KavkazLibrary' }],
   },
+  twitter: {
+    card:        'summary_large_image',
+    title:       'KavkazLibrary — Исторические книги о Кавказе',
+    description: 'Собрание редких исторических книг, атласов, мемуаров и этнографических трудов о народах Кавказского региона.',
+    images:      ['/og-image.png'],
+  },
 }
 
 export default function RootLayout({
@@ -64,6 +71,17 @@ export default function RootLayout({
         >
           Перейти к содержимому
         </a>
+        <JsonLd
+          data={{
+            '@context': 'https://schema.org',
+            '@type':    'Organization',
+            name:       'KavkazLibrary',
+            url:        BASE_URL,
+            logo:       `${BASE_URL}/og-image.png`,
+            description: 'Маркетплейс исторических книг о Кавказе и Закавказье. Редкие книги, атласы, мемуары и этнографические труды.',
+            sameAs:     [],
+          }}
+        />
         <QueryProvider>
           <AuthProvider>
             <Header />

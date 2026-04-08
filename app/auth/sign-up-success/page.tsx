@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Container } from '@/shared/ui/Container'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Подтвердите почту' }
+export const metadata: Metadata = { title: 'Подтвердите почту', robots: { index: false } }
 
 export default function SignUpSuccessPage() {
   return (

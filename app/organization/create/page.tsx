@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/shared/lib/supabase/server'
 import { CreateOrganizationForm } from '@/pages/organization'
 
-export const metadata: Metadata = { title: 'Создать организацию' }
+export const metadata: Metadata = { title: 'Создать организацию', robots: { index: false } }
 
 export default async function Page() {
   const supabase = await createClient()

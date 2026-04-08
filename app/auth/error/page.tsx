@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { Container } from '@/shared/ui/Container'
 import type { Metadata } from 'next'
 
-export const metadata: Metadata = { title: 'Ошибка авторизации' }
+export const metadata: Metadata = { title: 'Ошибка авторизации', robots: { index: false } }
 
 interface Props {
   searchParams: Promise<{ error?: string }>

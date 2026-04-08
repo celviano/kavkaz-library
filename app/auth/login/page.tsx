@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { LoginForm } from '@/features/auth'
 
-export const metadata: Metadata = { title: 'Вход' }
+export const metadata: Metadata = { title: 'Вход', robots: { index: false } }
 
 interface Props {
   searchParams: Promise<{ error?: string }>

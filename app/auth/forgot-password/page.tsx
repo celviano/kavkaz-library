@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { ForgotPasswordForm } from '@/features/auth'
 
-export const metadata: Metadata = { title: 'Сброс пароля' }
+export const metadata: Metadata = { title: 'Сброс пароля', robots: { index: false } }
 
 interface Props {
   searchParams: Promise<{ error?: string; success?: string }>

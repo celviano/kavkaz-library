@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/shared/lib/supabase/server'
 import { AddBookForm } from '@/features/add-book'
 
-export const metadata: Metadata = { title: 'Добавить книгу' }
+export const metadata: Metadata = { title: 'Добавить книгу', robots: { index: false } }
 
 export default async function Page() {
   const supabase = await createClient()
