@@ -3,6 +3,8 @@
 import { memo, useState } from 'react'
 import { CONDITION_LABELS } from '@/entities/book/model/types'
 import { RequestModal } from '@/features/book-request'
+import { AuthGateModal } from '@/shared/ui/AuthGateModal'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 import type { Book } from '@/entities/book'
 
 interface BookPurchaseBlockProps {
@@ -11,7 +13,14 @@ interface BookPurchaseBlockProps {
 
 export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
   const inStock = book.available && book.copiesLeft > 0
+  const { user } = useCurrentUser()
   const [modalOpen, setModalOpen] = useState(false)
+  const [authGateOpen, setAuthGateOpen] = useState(false)
+
+  function handlePurchaseClick() {
+    if (!user) { setAuthGateOpen(true); return }
+    setModalOpen(true)
+  }
 
   if (book.status !== 'active') {
     return (
@@ -79,7 +88,7 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
         {inStock && book.ownerId ? (
           <button
             type="button"
-            onClick={() => setModalOpen(true)}
+            onClick={handlePurchaseClick}
             className="w-full h-12 rounded-xl text-base font-medium bg-accent text-bg border border-accent hover:bg-accent2 hover:border-accent2 transition-all duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shadow-accent-sm hover:shadow-accent"
           >
             Приобрести
@@ -98,6 +107,9 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
           sellerId={book.ownerId}
           onClose={() => setModalOpen(false)}
         />
+      )}
+      {authGateOpen && (
+        <AuthGateModal onClose={() => setAuthGateOpen(false)} />
       )}
     </>
   )

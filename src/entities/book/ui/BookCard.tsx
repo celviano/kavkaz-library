@@ -14,6 +14,31 @@ interface BookCardProps {
   className?: string
 }
 
+function AvailabilityBadge({ book }: { book: Book }) {
+  if (book.status === 'sold' || (!book.available && book.status !== 'active')) {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface2 text-dim border border-surface3">
+        <span className="w-1.5 h-1.5 rounded-full bg-surface3 shrink-0" aria-hidden="true"/>
+        Распродана
+      </span>
+    )
+  }
+  if (book.available && book.copiesLeft > 0) {
+    return (
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-accent/10 text-accent border border-accent/20">
+        <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" aria-hidden="true"/>
+        В наличии
+      </span>
+    )
+  }
+  return (
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-gold/10 text-gold border border-gold/20">
+      <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" aria-hidden="true"/>
+      Предзаказ
+    </span>
+  )
+}
+
 export const BookCard = memo<BookCardProps>(({ book, className }) => {
   const { id, title, author, year, category, coverUrl, pages, language, available } = book
   const [imgError, setImgError] = useState(false)
@@ -23,7 +48,7 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
     <Link
       href={`/book/${id}`}
       className={cn(
-        'group relative flex flex-col',
+        'group relative flex flex-col h-full',
         'bg-surface rounded-2xl border border-surface2',
         'overflow-hidden',
         'transition-all duration-300',
@@ -34,7 +59,7 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
       )}
       aria-label={`${title} — ${author}, ${year} год`}
     >
-      <div className="relative aspect-[3/4] overflow-hidden bg-surface2">
+      <div className="relative aspect-3/4 overflow-hidden bg-surface2">
 
         {showImage && (
           <Image
@@ -84,7 +109,10 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
       </div>
 
       <div className="flex flex-col gap-2.5 p-4 flex-1">
-        <Badge category={category} label={CATEGORY_LABELS[category]} />
+        <div className="flex items-center justify-between gap-2 flex-wrap">
+          <Badge category={category} label={CATEGORY_LABELS[category]} />
+          <AvailabilityBadge book={book} />
+        </div>
 
         <h3
           className="text-ink text-sm font-medium leading-snug line-clamp-2 group-hover:text-accent transition-colors duration-200"

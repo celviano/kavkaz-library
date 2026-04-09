@@ -105,7 +105,7 @@ export const SellerPage = memo<SellerPageProps>(({ sellerId }) => {
 
                 {/* Name + role */}
                 <div className="flex flex-col gap-1 mb-4">
-                  <div className="flex items-center gap-2 flex-wrap">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
                     <h1
                       className="font-display font-semibold text-ink"
                       style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.3rem, 3vw, 1.8rem)' }}

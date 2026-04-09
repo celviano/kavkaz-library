@@ -31,8 +31,8 @@ export const BookGrid = memo<BookGridProps>(({ books, className }) => {
       aria-label={`Список книг: ${books.length} шт.`}
     >
       {books.map((book) => (
-        <li key={book.id}>
-          <BookCard book={book} />
+        <li key={book.id} className="h-full">
+          <BookCard book={book} className="h-full" />
         </li>
       ))}
     </ul>
