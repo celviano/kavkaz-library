@@ -1,5 +1,3 @@
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export type ValidationRule<T> = (value: T) => string | null
 
 export type FieldRules<T extends Record<string, unknown>> = {
@@ -9,8 +7,6 @@ export type FieldRules<T extends Record<string, unknown>> = {
 export type FieldErrors<T extends Record<string, unknown>> = {
   [K in keyof T]?: string
 }
-
-// ─── Built-in rules ───────────────────────────────────────────────────────────
 
 export const rules = {
   required: (message = 'Обязательное поле'): ValidationRule<string> =>
@@ -39,38 +35,30 @@ export const rules = {
       return (isNaN(n) || n < 1400 || n > new Date().getFullYear()) ? message : null
     },
 
-  number: (min?: number, max?: number): ValidationRule<string> =>
+  number: (min?: number, max?: number, message?: string): ValidationRule<string> =>
     (v) => {
       if (!v) return null
       const n = parseFloat(v)
-      if (isNaN(n)) return 'Должно быть числом'
-      if (min !== undefined && n < min) return `Минимум ${min}`
-      if (max !== undefined && n > max) return `Максимум ${max}`
+      if (isNaN(n)) return message ?? 'Должно быть числом'
+      if (min !== undefined && n < min) return message ?? `Минимум ${min}`
+      if (max !== undefined && n > max) return message ?? `Максимум ${max}`
       return null
     },
 }
-
-// ─── Validator function ───────────────────────────────────────────────────────
 
 export function validate<T extends Record<string, unknown>>(
   values: T,
   fieldRules: FieldRules<T>,
 ): FieldErrors<T> {
   const errors: FieldErrors<T> = {}
-
   for (const field in fieldRules) {
     const fieldRuleList = fieldRules[field]
     if (!fieldRuleList) continue
-
     for (const rule of fieldRuleList) {
       const error = rule(values[field] as T[typeof field])
-      if (error) {
-        errors[field] = error
-        break
-      }
+      if (error) { errors[field] = error; break }
     }
   }
-
   return errors
 }
 

@@ -58,7 +58,7 @@ export const SellerBlock = memo<SellerBlockProps>(({ sellerId }) => {
 
       <Link
         href={`/seller/${sellerId}`}
-        className="flex-shrink-0 h-8 px-4 rounded-lg text-xs font-medium border border-surface2 text-ash hover:text-ink hover:bg-surface2 transition-all"
+        className="h-8 flex items-center px-4 rounded-lg text-xs font-medium border border-surface2 text-ash hover:text-ink hover:bg-surface2 transition-all"
       >
         Все книги
       </Link>

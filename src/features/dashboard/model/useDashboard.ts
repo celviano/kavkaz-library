@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { fetchMyBooks, updateBookStatus } from '@/shared/lib/supabase/queries/books'
-import { fetchMyOrders, updateOrderStatus } from '@/shared/lib/supabase/queries/orders'
+import { fetchMyOrders, fetchSentOrders, updateOrderStatus } from '@/shared/lib/supabase/queries/orders'
 import type { BookStatus } from '@/entities/book/model/types'
 import type { OrderStatus } from '@/shared/lib/supabase/queries/orders'
 
@@ -41,5 +41,13 @@ export function useUpdateOrderStatus(sellerId: string) {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['dashboard', 'orders', sellerId] })
     },
+  })
+}
+
+export function useSentOrders(buyerId: string | null) {
+  return useQuery({
+    queryKey: ['sent-orders', buyerId],
+    queryFn:  () => fetchSentOrders(buyerId!),
+    enabled:  Boolean(buyerId),
   })
 }

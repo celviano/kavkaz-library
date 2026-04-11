@@ -1,39 +1,14 @@
 import { type InputHTMLAttributes, type FC } from 'react'
-import { cn } from '@/shared/lib/cn'
+import { FormField } from '@/shared/ui/FormField'
+import { Input } from '@/shared/ui/Input'
 
 interface AuthInputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string
   error?: string
 }
 
-export const AuthInput: FC<AuthInputProps> = ({ label, error, className, name, ...rest }) => {
-  const id = `field-${name}`
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label htmlFor={id} className="text-sm font-medium text-ink">
-        {label}
-      </label>
-      <input
-        id={id}
-        name={name}
-        className={cn(
-          'h-11 w-full rounded-xl border bg-bg px-4 text-sm text-ink',
-          'placeholder:text-dim outline-none',
-          'transition-all duration-150',
-          error
-            ? 'border-red-400 focus:border-red-400 focus:ring-2 focus:ring-red-400/20'
-            : 'border-surface2 hover:border-surface3 focus:border-accent/50 focus:ring-2 focus:ring-accent/10',
-          className,
-        )}
-        aria-invalid={error ? 'true' : undefined}
-        aria-describedby={error ? `${id}-error` : undefined}
-        {...rest}
-      />
-      {error && (
-        <p id={`${id}-error`} className="text-xs text-red-500" role="alert">
-          {error}
-        </p>
-      )}
-    </div>
-  )
-}
+export const AuthInput: FC<AuthInputProps> = ({ label, error, name, ...rest }) => (
+  <FormField label={label} error={error}>
+    <Input id={`field-${name}`} name={name} error={error} {...rest} />
+  </FormField>
+)

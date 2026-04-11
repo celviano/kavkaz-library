@@ -5,17 +5,28 @@ import { createClient } from '@/shared/lib/supabase/server'
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
-  const token_hash = searchParams.get('token_hash')
-  const type = searchParams.get('type') as EmailOtpType | null
-  const _next = searchParams.get('next')
-  const next = _next?.startsWith('/') ? _next : '/'
 
-  if (token_hash && type) {
-    const supabase = await createClient()
-    const { error } = await supabase.auth.verifyOtp({ type, token_hash })
+  const code       = searchParams.get('code')
+  const token_hash = searchParams.get('token_hash')
+  const type       = searchParams.get('type') as EmailOtpType | null
+  const _next      = searchParams.get('next')
+  const next       = _next?.startsWith('/') ? _next : '/'
+
+  const supabase = await createClient()
+
+  // OAuth flow (Google) — exchanges code for session
+  if (code) {
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
     if (!error) redirect(next)
-    redirect(`/auth/error?error=${error?.message}`)
+    redirect(`/auth/error?error=${encodeURIComponent(error.message)}`)
   }
 
-  redirect('/auth/error?error=No token hash or type')
+  // Email OTP flow (confirmation, magic link, password reset)
+  if (token_hash && type) {
+    const { error } = await supabase.auth.verifyOtp({ type, token_hash })
+    if (!error) redirect(next)
+    redirect(`/auth/error?error=${encodeURIComponent(error.message)}`)
+  }
+
+  redirect('/auth/error?error=No+token+hash+or+type')
 }

@@ -6,7 +6,7 @@ import { createClient } from '@/shared/lib/supabase/client'
 
 export interface UploadedFile extends File {
   preview: string
-  errors: { message: string }[]
+  errors: readonly { message: string }[]
 }
 
 export interface UseSupabaseUploadOptions {
@@ -48,21 +48,18 @@ export function useSupabaseUpload({
   const [isSuccess, setIsSuccess] = useState(false)
   const inputRef = useRef<HTMLInputElement | null>(null)
 
-  const onDrop = useCallback(
-    (accepted: File[], rejected: FileRejection[]) => {
-      const acceptedMapped: UploadedFile[] = accepted.map((f) =>
-        Object.assign(f, { preview: URL.createObjectURL(f), errors: [] }),
-      )
-      const rejectedMapped: UploadedFile[] = rejected.map(({ file, errors: errs }) =>
-        Object.assign(file, {
-          preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : '',
-          errors: errs,
-        }),
-      )
-      setFiles((prev) => [...prev, ...acceptedMapped, ...rejectedMapped])
-    },
-    [],
-  )
+  const onDrop = useCallback((accepted: File[], rejected: FileRejection[]) => {
+    const acceptedMapped: UploadedFile[] = accepted.map((f) =>
+      Object.assign(f, { preview: URL.createObjectURL(f), errors: [] }),
+    )
+    const rejectedMapped: UploadedFile[] = rejected.map(({ file, errors: errs }) =>
+      Object.assign(file, {
+        preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : '',
+        errors: errs,
+      }),
+    )
+    setFiles((prev) => [...prev, ...acceptedMapped, ...rejectedMapped])
+  }, [])
 
   const { getRootProps, getInputProps, isDragActive, isDragReject } = useDropzone({
     onDrop,
@@ -89,7 +86,7 @@ export function useSupabaseUpload({
 
         const { error } = await supabase.storage
           .from(bucketName)
-          .upload(filePath, file, { upsert: false })
+          .upload(filePath, file, { upsert: true, cacheControl: '3600' })
 
         if (error) {
           newErrors.push({ name: file.name, message: error.message })

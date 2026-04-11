@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Cormorant_Garamond, Inter } from 'next/font/google'
+import { Crimson_Pro, Inter } from 'next/font/google'
 import '../src/app/styles/globals.css'
 import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
@@ -7,9 +7,9 @@ import { QueryProvider } from '@/app/providers/QueryProvider'
 import { AuthProvider } from '@/app/providers/AuthProvider'
 import { JsonLd } from '@/shared/ui/JsonLd'
 
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin', 'latin-ext', 'cyrillic'],
-  weight:  ['400', '500', '600', '700'],
+const crimson = Crimson_Pro({
+  subsets: ['latin', 'latin-ext'],
+  weight:  ['300', '400', '600'],
   style:   ['normal', 'italic'],
   variable: '--font-display',
   display: 'swap',
@@ -63,7 +63,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ru" className={`${cormorant.variable} ${inter.variable}`}>
+    <html lang="ru" className={`${crimson.variable} ${inter.variable}`}>
       <body className="min-h-screen flex flex-col bg-bg text-text antialiased">
         <a
           href="#main-content"

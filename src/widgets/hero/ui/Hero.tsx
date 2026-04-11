@@ -114,15 +114,17 @@ export const Hero = memo(() => {
           {/* Heading */}
           <h1
             id="hero-heading"
-            className="font-display font-semibold text-ink leading-[1.05] tracking-tight mb-6"
+            className="flex flex-col font-display text-ink leading-[1.05] tracking-tight mb-6"
             style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.5rem, 6vw, 5rem)',
             }}
           >
-            Библиотека <em className="text-accent not-italic">Кавказа</em>
-            <br />
-            <span className="text-ash font-normal" style={{ fontSize: '0.7em' }}>
+            <span>
+              Библиотека <em className="text-accent not-italic">Кавказа</em>
+            </span>
+
+            <span className="text-ash text-4xl font-normal">
               От древности до наших дней
             </span>
           </h1>

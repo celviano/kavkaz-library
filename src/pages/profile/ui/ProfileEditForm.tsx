@@ -1,48 +1,20 @@
 'use client'
 
-import { memo, useState } from 'react'
+import { memo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { cn } from '@/shared/lib/cn'
 import { Container } from '@/shared/ui/Container'
 import { PageHeading } from '@/shared/ui/PageHeading'
-import { ProfileAvatar } from '@/entities/profile'
+import { FormField } from '@/shared/ui/FormField'
+import { Input } from '@/shared/ui/Input'
+import { Textarea } from '@/shared/ui/Textarea'
+import { FormActions } from '@/shared/ui/FormActions'
+import { ErrorBanner } from '@/shared/ui/ErrorBanner'
 import { Dropzone, DropzoneEmptyState, DropzoneContent } from '@/shared/ui/Dropzone'
+import { ProfileAvatar, useUpdateProfile } from '@/entities/profile'
 import { useSupabaseUpload } from '@/shared/hooks/useSupabaseUpload'
-import { updateProfileAction } from '@/features/auth/actions/auth.actions'
+import { FormSection } from '@/features/add-book/ui/FormSection'
 import type { Profile } from '@/entities/profile'
 import type { User } from '@supabase/supabase-js'
-
-const inputCls = cn(
-  'h-11 w-full rounded-xl border border-surface2 bg-bg px-4 text-sm text-ink',
-  'placeholder:text-dim outline-none',
-  'hover:border-surface3 focus:border-accent/50 focus:ring-2 focus:ring-accent/10',
-  'transition-all duration-150',
-)
-
-const textareaCls = cn(
-  'w-full rounded-xl border border-surface2 bg-bg px-4 py-3 text-sm text-ink',
-  'placeholder:text-dim outline-none resize-none',
-  'hover:border-surface3 focus:border-accent/50 focus:ring-2 focus:ring-accent/10',
-  'transition-all duration-150',
-)
-
-function Field({
-  label,
-  hint,
-  children,
-}: {
-  label:    string
-  hint?:    string
-  children: React.ReactNode
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <label className="text-sm font-medium text-ink">{label}</label>
-      {children}
-      {hint && <p className="text-xs text-dim">{hint}</p>}
-    </div>
-  )
-}
 
 interface ProfileEditFormProps {
   user:    User
@@ -50,10 +22,18 @@ interface ProfileEditFormProps {
 }
 
 export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) => {
-  const router  = useRouter()
-  const [saving, setSaving]   = useState(false)
-  const [error,  setError]    = useState<string | null>(null)
-  const [avatarUrl, setAvatarUrl] = useState(profile?.avatarUrl ?? '')
+  const router = useRouter()
+  const { mutate: update, isPending, error } = useUpdateProfile(user.id)
+
+  // Refs — guaranteed to hold values even after async avatar upload
+  const firstNameRef   = useRef<HTMLInputElement>(null)
+  const lastNameRef    = useRef<HTMLInputElement>(null)
+  const displayNameRef = useRef<HTMLInputElement>(null)
+  const bornYearRef    = useRef<HTMLInputElement>(null)
+  const bioRef         = useRef<HTMLTextAreaElement>(null)
+  const cityRef        = useRef<HTMLInputElement>(null)
+  const countryRef     = useRef<HTMLInputElement>(null)
+  const websiteRef     = useRef<HTMLInputElement>(null)
 
   const avatarUpload = useSupabaseUpload({
     bucketName:       'avatars',
@@ -63,42 +43,33 @@ export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) =>
     maxFileSize:      3 * 1024 * 1024,
   })
 
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault()
-    setError(null)
-    setSaving(true)
-
-    try {
-      let finalAvatarUrl = avatarUrl
-
-      if (avatarUpload.files.filter((f) => f.errors.length === 0).length > 0) {
-        const urls = await avatarUpload.onUpload()
-        if (urls[0]) finalAvatarUrl = urls[0]
-      }
-
-      const fd = new FormData(e.currentTarget)
-
-      await updateProfileAction({
-        displayName: fd.get('display_name') as string,
-        firstName:   fd.get('first_name')   as string,
-        lastName:    fd.get('last_name')     as string,
-        bio:         fd.get('bio')           as string,
-        city:        fd.get('city')          as string,
-        country:     fd.get('country')       as string,
-        website:     fd.get('website')       as string,
-        bornYear:    fd.get('born_year')     as string,
-        avatarUrl:   finalAvatarUrl,
-      })
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Не удалось сохранить')
-      setSaving(false)
-    }
-  }
-
   const displayName = [profile?.firstName, profile?.lastName].filter(Boolean).join(' ')
     || profile?.displayName
     || user.email?.split('@')[0]
     || 'Пользователь'
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+
+    // Upload avatar first — refs stay valid across this await
+    let avatarUrl = profile?.avatarUrl ?? ''
+    if (avatarUpload.files.filter((f) => f.errors.length === 0).length > 0) {
+      const urls = await avatarUpload.onUpload()
+      if (urls[0]) avatarUrl = urls[0]
+    }
+
+    update({
+      firstName:   firstNameRef.current?.value   ?? '',
+      lastName:    lastNameRef.current?.value    ?? '',
+      displayName: displayNameRef.current?.value ?? '',
+      bornYear:    bornYearRef.current?.value    ?? '',
+      bio:         bioRef.current?.value         ?? '',
+      city:        cityRef.current?.value        ?? '',
+      country:     countryRef.current?.value     ?? '',
+      website:     websiteRef.current?.value     ?? '',
+      avatarUrl,
+    })
+  }
 
   return (
     <main id="main-content">
@@ -109,169 +80,77 @@ export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) =>
               <PageHeading eyebrow="Аккаунт" title="Редактировать профиль" />
             </div>
 
-            <form onSubmit={handleSubmit} noValidate>
-              <div className="flex flex-col gap-8">
+            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
 
-                {/* Avatar */}
-                <div className="bg-surface border border-surface2 rounded-2xl p-6 flex flex-col gap-5">
-                  <h2 className="text-[11px] font-medium tracking-[2px] uppercase text-accent">
-                    Фото профиля
-                  </h2>
-                  <div className="flex items-center gap-5">
-                    <ProfileAvatar avatarUrl={avatarUrl || null} name={displayName} size="xl" />
-                    <div className="flex-1">
-                      <Dropzone {...avatarUpload}>
-                        <DropzoneEmptyState />
-                        <DropzoneContent />
-                      </Dropzone>
-                    </div>
+              <FormSection title="Фото профиля">
+                <div className="flex items-center gap-5">
+                  <ProfileAvatar avatarUrl={profile?.avatarUrl ?? null} name={displayName} size="xl" />
+                  <div className="flex-1">
+                    <Dropzone {...avatarUpload}>
+                      <DropzoneEmptyState />
+                      <DropzoneContent />
+                    </Dropzone>
                   </div>
                 </div>
+              </FormSection>
 
-                {/* Personal info */}
-                <div className="bg-surface border border-surface2 rounded-2xl p-6 flex flex-col gap-5">
-                  <h2 className="text-[11px] font-medium tracking-[2px] uppercase text-accent">
-                    Личные данные
-                  </h2>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <Field label="Имя">
-                      <input
-                        name="first_name"
-                        type="text"
-                        maxLength={100}
-                        defaultValue={profile?.firstName ?? ''}
-                        placeholder="Александр"
-                        className={inputCls}
-                      />
-                    </Field>
-                    <Field label="Фамилия">
-                      <input
-                        name="last_name"
-                        type="text"
-                        maxLength={100}
-                        defaultValue={profile?.lastName ?? ''}
-                        placeholder="Иванов"
-                        className={inputCls}
-                      />
-                    </Field>
-                  </div>
-
-                  <Field label="Отображаемое имя" hint="Если не указано — используется имя и фамилия">
-                    <input
-                      name="display_name"
-                      type="text"
-                      maxLength={100}
-                      defaultValue={profile?.displayName ?? ''}
-                      placeholder="Псевдоним или короткое имя"
-                      className={inputCls}
-                    />
-                  </Field>
-
-                  <Field label="Год рождения">
-                    <input
-                      name="born_year"
-                      type="number"
-                      min={1900}
-                      max={new Date().getFullYear() - 5}
-                      defaultValue={profile?.bornYear ?? ''}
-                      placeholder="1985"
-                      className={inputCls}
-                    />
-                  </Field>
-
-                  <Field label="О себе" hint="Расскажите немного о себе и своих интересах">
-                    <textarea
-                      name="bio"
-                      rows={3}
-                      maxLength={500}
-                      defaultValue={profile?.bio ?? ''}
-                      placeholder="Интересуюсь историей Кавказа, собираю старинные карты..."
-                      className={textareaCls}
-                    />
-                  </Field>
+              <FormSection title="Личные данные">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField label="Имя">
+                    <Input ref={firstNameRef} name="first_name" placeholder="Александр"
+                      maxLength={100} defaultValue={profile?.firstName ?? ''} />
+                  </FormField>
+                  <FormField label="Фамилия">
+                    <Input ref={lastNameRef} name="last_name" placeholder="Иванов"
+                      maxLength={100} defaultValue={profile?.lastName ?? ''} />
+                  </FormField>
                 </div>
+                <FormField label="Отображаемое имя" hint="Если не указано — используется имя и фамилия">
+                  <Input ref={displayNameRef} name="display_name" placeholder="Псевдоним"
+                    maxLength={100} defaultValue={profile?.displayName ?? ''} />
+                </FormField>
+                <FormField label="Год рождения">
+                  <Input ref={bornYearRef} name="born_year" type="number"
+                    min={1900} max={new Date().getFullYear() - 5}
+                    placeholder="1985" defaultValue={profile?.bornYear ?? ''} />
+                </FormField>
+                <FormField label="О себе" hint="Расскажите немного о себе">
+                  <Textarea ref={bioRef} name="bio" rows={3} maxLength={500}
+                    placeholder="Интересуюсь историей Кавказа..."
+                    defaultValue={profile?.bio ?? ''} />
+                </FormField>
+              </FormSection>
 
-                {/* Location & contacts */}
-                <div className="bg-surface border border-surface2 rounded-2xl p-6 flex flex-col gap-5">
-                  <h2 className="text-[11px] font-medium tracking-[2px] uppercase text-accent">
-                    Местоположение и контакты
-                  </h2>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <Field label="Город">
-                      <input
-                        name="city"
-                        type="text"
-                        maxLength={100}
-                        defaultValue={profile?.city ?? ''}
-                        placeholder="Москва"
-                        className={inputCls}
-                      />
-                    </Field>
-                    <Field label="Страна">
-                      <input
-                        name="country"
-                        type="text"
-                        maxLength={100}
-                        defaultValue={profile?.country ?? ''}
-                        placeholder="Россия"
-                        className={inputCls}
-                      />
-                    </Field>
-                  </div>
-
-                  <Field label="Сайт или соцсеть">
-                    <input
-                      name="website"
-                      type="url"
-                      maxLength={255}
-                      defaultValue={profile?.website ?? ''}
-                      placeholder="https://example.com"
-                      className={inputCls}
-                    />
-                  </Field>
-
-                  {/* Email — read only */}
-                  <Field label="Email" hint="Изменить email можно в настройках аккаунта">
-                    <input
-                      type="email"
-                      value={user.email ?? ''}
-                      readOnly
-                      className={cn(inputCls, 'opacity-60 cursor-not-allowed')}
-                    />
-                  </Field>
+              <FormSection title="Местоположение и контакты">
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField label="Город">
+                    <Input ref={cityRef} name="city" placeholder="Москва"
+                      maxLength={100} defaultValue={profile?.city ?? ''} />
+                  </FormField>
+                  <FormField label="Страна">
+                    <Input ref={countryRef} name="country" placeholder="Россия"
+                      maxLength={100} defaultValue={profile?.country ?? ''} />
+                  </FormField>
                 </div>
+                <FormField label="Сайт или соцсеть">
+                  <Input ref={websiteRef} name="website" type="url"
+                    placeholder="https://example.com" maxLength={255}
+                    defaultValue={profile?.website ?? ''} />
+                </FormField>
+                <FormField label="Email" hint="Изменить email можно в настройках аккаунта">
+                  <Input type="email" value={user.email ?? ''} readOnly
+                    className="opacity-60 cursor-not-allowed" />
+                </FormField>
+              </FormSection>
 
-                {error && (
-                  <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-                    {error}
-                  </div>
-                )}
+              <ErrorBanner message={error instanceof Error ? error.message : null} />
 
-                <div className="flex gap-3 justify-end">
-                  <button
-                    type="button"
-                    onClick={() => router.back()}
-                    className="h-11 px-6 rounded-xl text-sm font-medium border border-surface2 text-ash hover:text-ink hover:bg-surface transition-all cursor-pointer"
-                  >
-                    Отмена
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={saving}
-                    className="h-11 px-8 rounded-xl text-sm font-medium bg-accent text-bg border border-accent hover:bg-accent2 shadow-accent-sm hover:shadow-accent transition-all cursor-pointer disabled:opacity-60 disabled:cursor-wait"
-                  >
-                    {saving ? (
-                      <span className="flex items-center gap-2">
-                        <span className="w-4 h-4 rounded-full border-2 border-bg/30 border-t-bg animate-spin" />
-                        Сохраняем...
-                      </span>
-                    ) : 'Сохранить'}
-                  </button>
-                </div>
-
-              </div>
+              <FormActions
+                submitLabel="Сохранить"
+                submitting={isPending}
+                submittingLabel="Сохраняем..."
+                onCancel={() => router.back()}
+              />
             </form>
           </div>
         </Container>

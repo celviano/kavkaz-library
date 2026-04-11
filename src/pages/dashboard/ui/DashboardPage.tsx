@@ -19,11 +19,14 @@ export const DashboardPage = memo(() => {
   const { data: profile } = useProfile(user?.id ?? null)
   const [activeTab, setActiveTab] = useState<Tab>('books')
 
-  const { data: books  = [] } = useMyBooks(user?.id ?? null)
+  const { data: books = [] } = useMyBooks(user?.id ?? null)
   const { data: orders = [] } = useMyOrders(user?.id ?? null)
 
   const pendingOrders = orders.filter((o) => o.status === 'pending').length
-  const pendingBooks  = books.filter((b)  => b.status === 'pending').length
+  const pendingBooks = books.filter((b) => b.status === 'pending').length
+
+  console.log('userId для заказов:', user?.id)
+  console.log('orders:', orders)
 
   if (!userLoading && !user) {
     return (
@@ -45,19 +48,25 @@ export const DashboardPage = memo(() => {
       <section className="py-12">
         <Container>
           <div className="max-w-7xl mx-auto flex flex-col gap-8">
-
             {/* Header */}
             <div className="flex items-start justify-between gap-4 flex-wrap">
-              <PageHeading
-                eyebrow="Личный кабинет"
-                title="Мои книги и запросы"
-              />
+              <PageHeading eyebrow="Личный кабинет" title="Мои книги и запросы" />
               <Link
                 href="/add-book"
                 className="inline-flex items-center gap-1.5 h-10 px-5 rounded-xl text-sm font-medium bg-accent text-bg border border-accent hover:bg-accent2 hover:border-accent2 transition-all"
               >
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
-                  <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  aria-hidden="true"
+                >
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
                 </svg>
                 Добавить книгу
               </Link>
@@ -66,11 +75,18 @@ export const DashboardPage = memo(() => {
             {/* Stats */}
             <div className="grid grid-cols-3 gap-3 max-w-2xl">
               {[
-                { label: 'Всего книг',     value: books.length },
-                { label: 'На модерации',   value: pendingBooks,  accent: pendingBooks > 0 },
-                { label: 'Новых запросов', value: pendingOrders, accent: pendingOrders > 0 },
+                { label: 'Всего книг', value: books.length },
+                { label: 'На модерации', value: pendingBooks, accent: pendingBooks > 0 },
+                {
+                  label: 'Новых запросов',
+                  value: pendingOrders,
+                  accent: pendingOrders > 0,
+                },
               ].map(({ label, value, accent }) => (
-                <div key={label} className="bg-surface border border-surface2 rounded-2xl px-4 py-4 flex flex-col items-center text-center gap-1">
+                <div
+                  key={label}
+                  className="bg-surface border border-surface2 rounded-2xl px-4 py-4 flex flex-col items-center text-center gap-1"
+                >
                   <span
                     className={cn(
                       'font-display font-semibold leading-none',
@@ -80,17 +96,19 @@ export const DashboardPage = memo(() => {
                   >
                     {value}
                   </span>
-                  <span className="text-[11px] text-ash uppercase tracking-wider">{label}</span>
+                  <span className="text-[11px] text-ash uppercase tracking-wider">
+                    {label}
+                  </span>
                 </div>
               ))}
             </div>
 
             {/* Tabs */}
             <div className="flex gap-1 bg-surface border max-w-2xl border-surface2 rounded-xl p-1">
-              {([
-                { id: 'books'  as Tab, label: 'Мои книги',  count: books.length },
-                { id: 'orders' as Tab, label: 'Запросы',     count: orders.length },
-              ]).map(({ id, label, count }) => (
+              {[
+                { id: 'books' as Tab, label: 'Мои книги', count: books.length },
+                { id: 'orders' as Tab, label: 'Запросы', count: orders.length },
+              ].map(({ id, label, count }) => (
                 <button
                   key={id}
                   type="button"
@@ -104,10 +122,14 @@ export const DashboardPage = memo(() => {
                 >
                   {label}
                   {count > 0 && (
-                    <span className={cn(
-                      'text-[11px] font-medium px-1.5 py-0.5 rounded-full',
-                      activeTab === id ? 'bg-accent/10 text-accent' : 'bg-surface2 text-dim',
-                    )}>
+                    <span
+                      className={cn(
+                        'text-[11px] font-medium px-1.5 py-0.5 rounded-full',
+                        activeTab === id
+                          ? 'bg-accent/10 text-accent'
+                          : 'bg-surface2 text-dim',
+                      )}
+                    >
                       {count}
                     </span>
                   )}
@@ -116,9 +138,8 @@ export const DashboardPage = memo(() => {
             </div>
 
             {/* Tab content */}
-            {user && activeTab === 'books'  && <MyBooksTab  userId={user.id} />}
+            {user && activeTab === 'books' && <MyBooksTab userId={user.id} />}
             {user && activeTab === 'orders' && <MyOrdersTab userId={user.id} />}
-
           </div>
         </Container>
       </section>
