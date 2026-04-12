@@ -116,7 +116,7 @@ export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) =>
                 </FormField>
                 <FormField label="О себе" hint="Расскажите немного о себе">
                   <Textarea ref={bioRef} name="bio" rows={3} maxLength={500}
-                    placeholder="Интересуюсь историей Кавказа..."
+                    placeholder="Интересуюсь культурой и историей Кавказа..."
                     defaultValue={profile?.bio ?? ''} />
                 </FormField>
               </FormSection>

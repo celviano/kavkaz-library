@@ -11,7 +11,8 @@ import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 const NAV_LINKS = [
   { href: '/catalog', label: 'Каталог' },
   { href: '/events',  label: 'События' },
-  { href: '/about',   label: 'О проекте' },
+  { href: '/about',    label: 'О проекте' },
+  { href: '/contacts', label: 'Контакты' },
 ] as const
 
 const MountainIcon = () => (

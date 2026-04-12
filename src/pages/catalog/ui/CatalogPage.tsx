@@ -63,8 +63,8 @@ export const CatalogPage = memo(() => {
 
             <PageHeading
               eyebrow="Каталог"
-              title="Все книги"
-              subtitle={!isLoading ? `${total} изданий по истории Кавказа и Закавказья` : undefined}
+              title="Каталог книг"
+              subtitle={!isLoading ? `${total} изданий о Кавказе и народах Закавказья` : undefined}
               id="catalog-heading"
             />
 

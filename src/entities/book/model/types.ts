@@ -1,5 +1,9 @@
 export type BookCategory =
   | 'history'
+  | 'culture'
+  | 'languages'
+  | 'literature'
+  | 'biography'
   | 'geography'
   | 'ethnography'
   | 'memoirs'

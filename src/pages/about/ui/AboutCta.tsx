@@ -4,8 +4,8 @@ import { Container } from '@/shared/ui/Container'
 
 const STATS = [
   { value: '200+', label: 'книг в каталоге' },
-  { value: 'XIX в.', label: 'основной период' },
-  { value: '6', label: 'тематических разделов' },
+  { value: '7', label: 'тематических разделов' },
+  { value: '7', label: 'тематических разделов' },
 ]
 
 export function AboutCta() {
@@ -31,7 +31,7 @@ export function AboutCta() {
                 fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)',
               }}
             >
-              История Кавказа ждёт вас
+              Кавказ ждёт вас
             </h2>
             <p className="text-bg/55 text-base leading-relaxed">
               Начните с каталога — или добавьте свои книги, если у вас есть что-то редкое.
@@ -41,16 +41,16 @@ export function AboutCta() {
 
             {/* Stats */}
             <dl className="flex flex-wrap justify-center gap-10 py-6 border-y border-bg/10 w-full">
-              {STATS.map(({ value, label }) => (
-                <div key={label} className="flex flex-col items-center gap-1">
+              {STATS.map((item, index ) => (
+                <div key={index} className="flex flex-col items-center gap-1">
                   <dd
                     className="font-display font-semibold text-accent3 leading-none"
                     style={{ fontFamily: 'var(--font-display)', fontSize: '2rem' }}
                   >
-                    {value}
+                    {item.value}
                   </dd>
                   <dt className="text-xs text-bg/50 uppercase tracking-widest">
-                    {label}
+                    {item.label}
                   </dt>
                 </div>
               ))}

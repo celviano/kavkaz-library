@@ -107,7 +107,7 @@ export const Hero = memo(() => {
           {/* Eyebrow */}
           <div className="inline-flex items-center gap-2.5 rounded-full border border-accent/20 bg-accent/6 px-5 py-2 mb-8">
             <span className="text-accent text-xs font-medium tracking-[2px] uppercase">
-              Исторический архив
+              Библиотека Кавказа
             </span>
           </div>
 
@@ -131,8 +131,8 @@ export const Hero = memo(() => {
 
           {/* Description */}
           <p className="text-ash text-lg leading-relaxed max-w-2xl mb-10">
-            Собрание редких исторических книг, атласов, мемуаров и этнографических трудов
-            о народах и землях Кавказского региона — от древности до начала XX века.
+            Книги по истории, культуре, языкам, литературе и биографиям народов Кавказа и Закавказья.
+            Редкие издания, которые почти невозможно найти в обычной продаже.
           </p>
 
           {/* CTA buttons */}
@@ -155,17 +155,17 @@ export const Hero = memo(() => {
           <dl className="flex flex-wrap justify-center gap-12 pt-8 border-t border-surface2 w-full max-w-lg">
             {[
               { value: '200+', label: 'изданий' },
-              { value: 'XIX в.', label: 'основной период' },
+              { value: '7', label: 'разделов' },
               { value: '6', label: 'разделов' },
-            ].map(({ value, label }) => (
-              <div key={label} className="flex flex-col items-center gap-1">
+            ].map((item, index) => (
+              <div key={index} className="flex flex-col items-center gap-1">
                 <dd
                   className="font-display font-semibold text-accent leading-none"
                   style={{ fontFamily: 'var(--font-display)', fontSize: '2rem' }}
                 >
-                  {value}
+                  {item.value}
                 </dd>
-                <dt className="text-xs text-ash uppercase tracking-widest">{label}</dt>
+                <dt className="text-xs text-ash uppercase tracking-widest">{item.label}</dt>
               </div>
             ))}
           </dl>
