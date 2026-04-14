@@ -13,8 +13,7 @@ export const CtaBanner = memo(() => (
         <div className="relative flex flex-col items-center gap-5 max-w-2xl mx-auto">
           <h2
             id="cta-heading"
-            className="font-display font-semibold text-bg"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)' }}
+            className="font-display text-4xl font-normal text-bg"
           >
             Изучайте историю <em className="text-accent3 not-italic">Кавказа</em>
           </h2>

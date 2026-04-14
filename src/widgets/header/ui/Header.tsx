@@ -56,14 +56,14 @@ export const Header = memo(() => {
           <Link
             href="/"
             className="flex items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent rounded-sm shrink-0"
-            aria-label="KavkazLibrary — на главную"
+            aria-label="CaucasusLibrary — на главную"
           >
             <span className="text-accent"><MountainIcon /></span>
             <span
               className="font-display text-xl font-semibold tracking-wide text-ink leading-none"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              Kavkaz<span className="text-accent italic">Library</span>
+              Caucasus<span className="text-accent italic">Library</span>
             </span>
           </Link>
 

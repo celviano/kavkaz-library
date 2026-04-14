@@ -21,7 +21,7 @@ export const AuthCard: FC<AuthCardProps> = ({ title, subtitle, children }) => {
             className="font-display text-xl font-semibold text-ink"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Kavkaz<span className="text-accent italic">Library</span>
+            Caucasus<span className="text-accent italic">Library</span>
           </span>
         </div>
       </div>

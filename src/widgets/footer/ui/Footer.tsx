@@ -32,9 +32,9 @@ const IconMax = () => (
 )
 
 const SOCIALS = [
-  { href: 'https://t.me/kavkazlibrary', label: 'Telegram', Icon: IconTelegram },
-  { href: 'https://vk.com/kavkazlibrary', label: 'ВКонтакте', Icon: IconVK },
-  { href: 'https://max.ru/kavkazlibrary', label: 'MAX', Icon: IconMax },
+  { href: 'https://t.me/caucasuslibrary', label: 'Telegram', Icon: IconTelegram },
+  { href: 'https://vk.com/caucasuslibrary', label: 'ВКонтакте', Icon: IconVK },
+  { href: 'https://max.ru/caucasuslibrary', label: 'MAX', Icon: IconMax },
 ]
 
 const NAV = [
@@ -59,7 +59,7 @@ export const Footer = memo(() => {
                 className="font-display font-semibold text-ink text-lg leading-none"
                 style={{ fontFamily: 'var(--font-display)' }}
               >
-                Kavkaz<span className="text-accent italic">Library</span>
+                Caucasus<span className="text-accent italic">Library</span>
               </span>
               <p className="text-xs text-ash max-w-xs leading-relaxed">
                 Каталог исторических книг, атласов и мемуаров о народах и землях Кавказа и
@@ -108,7 +108,7 @@ export const Footer = memo(() => {
           {/* Bottom row */}
           <div className="border-t border-surface2 pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <p className="text-xs text-dim">
-              © {year} KavkazLibrary — все права защищены
+              © {year} CaucasusLibrary — все права защищены
             </p>
             <p className="text-xs text-dim">
               Библиотека книг о Кавказе — история, культура, языки, литература

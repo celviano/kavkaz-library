@@ -59,7 +59,7 @@ export function AboutMission() {
                 почти не найти в обычной продаже.
               </p>
               <p>
-                <strong className="text-ink font-medium">KavkazLibrary</strong> — единая
+                <strong className="text-ink font-medium">CaucasusLibrary</strong> — единая
                 площадка, где всё это собрано в одном месте. История, культура, языки,
                 литература, биографии — мы объединяем всех, кто хранит и кто ищет.
               </p>

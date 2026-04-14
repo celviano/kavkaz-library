@@ -15,11 +15,8 @@ export const AboutPreview = memo(() => {
               </p>
               <h2
                 id="about-heading"
-                className="font-display font-semibold text-ink leading-tight mb-5"
-                style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: 'clamp(1.7rem, 3vw, 2.4rem)',
-                }}
+                className="font-display font-normal text-4xl text-ink leading-tight mb-5"
+                
               >
                 Кавказ — <em className="text-accent not-italic">как лоскутное одеяло</em>
               </h2>

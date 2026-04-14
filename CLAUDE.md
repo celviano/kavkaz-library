@@ -1,8 +1,8 @@
-# KavkazLibrary — Project Context for Claude
+# CaucasusLibrary — Project Context for Claude
 
 ## Project Overview
 
-**KavkazLibrary** — маркетплейс исторических книг о Кавказе и Закавказье.
+**CaucasusLibrary** — маркетплейс исторических книг о Кавказе и Закавказье.
 Физические книги: продажа, добавление пользователями, избранное, события.
 Объединяет частных коллекционеров, книжные магазины и архивы на одной площадке.
 

@@ -1,6 +1,6 @@
 {
-  "name": "KavkazLibrary",
-  "short_name": "KavkazLib",
+  "name": "CaucasusLibrary",
+  "short_name": "CaucasusLib",
   "description": "Каталог исторических книг о Кавказе и Закавказье",
   "start_url": "/",
   "display": "standalone",

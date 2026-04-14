@@ -3,7 +3,7 @@ import { BookPage } from '@/pages/book'
 import { fetchBookById } from '@/shared/lib/supabase/queries/books'
 import { JsonLd } from '@/shared/ui/JsonLd'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://kavkazlibrary.ru'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://caucasuslibrary.ru'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -16,7 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const ogImage = book.coverUrl
     ? { url: book.coverUrl, width: 800, height: 600, alt: book.title }
-    : { url: '/og-image.png', width: 1200, height: 630, alt: 'KavkazLibrary' }
+    : { url: '/og-image.png', width: 1200, height: 630, alt: 'CaucasusLibrary' }
 
   return {
     title:       `${book.title} — ${book.author}`,

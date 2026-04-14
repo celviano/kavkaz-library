@@ -1,4 +1,4 @@
-# KavkazLibrary
+# CaucasusLibrary
 
 Каталог исторических книг по Кавказу и Закавказью.
 

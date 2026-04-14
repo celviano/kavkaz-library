@@ -72,11 +72,7 @@ export function AboutHero() {
 
           <h1
             id="about-heading"
-            className="font-display font-semibold text-ink leading-[1.08]"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2.2rem, 5vw, 4rem)',
-            }}
+            className="font-display font-normal text-4xl text-ink leading-[1.08]"
           >
             Кавказ — это не просто <em className="text-accent not-italic">география</em>
           </h1>
@@ -84,10 +80,10 @@ export function AboutHero() {
           <p className="text-ash text-lg leading-relaxed max-w-2xl">
             Это тысячелетия культур, языков и народов. История, которую писали очевидцы,
             путешественники, полководцы и учёные — и которую сегодня почти невозможно
-            найти. KavkazLibrary создан, чтобы это изменить.
+            найти. CaucasusLibrary создан, чтобы это изменить.
           </p>
         </div>
       </Container>
     </section>
   )
-}
+}   

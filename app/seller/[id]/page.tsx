@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const name = getFullName(profile) ?? 'Продавец'
   return {
     title:       name,
-    description: `Книги продавца ${name} на KavkazLibrary — исторические книги о Кавказе и Закавказье.`,
+    description: `Книги продавца ${name} на CaucasusLibrary — исторические книги о Кавказе и Закавказье.`,
   }
 }
 

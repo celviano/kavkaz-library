@@ -5,7 +5,7 @@ import { AboutPage } from '@/pages/about'
 export const metadata: Metadata = {
   title: 'О проекте',
   description:
-    'KavkazLibrary — единая площадка редких исторических книг о народах и землях Кавказа и Закавказья.',
+    'caucasusLibrary — единая площадка редких исторических книг о народах и землях Кавказа и Закавказья.',
 }
 
 export default function Page() {
