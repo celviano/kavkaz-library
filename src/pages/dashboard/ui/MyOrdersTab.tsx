@@ -1,3 +1,4 @@
+import { ShoppingBag, BookOpen } from 'lucide-react'
 'use client'
 
 import { memo } from 'react'

@@ -1,3 +1,4 @@
+import { Calendar, MapPin } from 'lucide-react'
 import { type FC } from 'react'
 import { cn } from '@/shared/lib/cn'
 import { EVENT_TYPE_LABELS } from '../model/types'

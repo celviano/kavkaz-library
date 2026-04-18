@@ -1,3 +1,4 @@
+import { Check, MapPin, Calendar, Link2 } from 'lucide-react'
 'use client'
 
 import { memo } from 'react'
@@ -96,7 +97,7 @@ export const SellerPage = memo<SellerPageProps>(({ sellerId }) => {
                   {profile.isVerified && (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-accent/10 text-accent border border-accent/20">
                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                        <polyline points="20 6 9 17 4 12"/>
+                        
                       </svg>
                       Верифицирован
                     </span>

@@ -1,3 +1,4 @@
+import { Info } from 'lucide-react'
 'use client'
 
 import { memo, useRef } from 'react'
@@ -114,10 +115,7 @@ export const CreateOrganizationForm = memo(() => {
               </FormSection>
 
               <div className="flex items-start gap-3 bg-accent/6 border border-accent/20 rounded-2xl px-5 py-4">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2a5c45"
-                  strokeWidth="1.8" strokeLinecap="round" className="flex-shrink-0 mt-0.5">
-                  <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
-                </svg>
+                <Info size={16} strokeWidth={1.8} className="flex-shrink-0 mt-0.5 text-accent"/>
                 <p className="text-sm text-accent leading-relaxed">
                   Организация будет проверена администратором перед верификацией.
                 </p>

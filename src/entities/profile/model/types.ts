@@ -1,9 +1,15 @@
 export type UserRole = 'user' | 'seller' | 'admin'
 
 export const ROLE_LABELS: Record<UserRole, string> = {
-  user:   'Пользователь',
+  user:   'Покупатель',
   seller: 'Продавец',
   admin:  'Администратор',
+}
+
+export const ROLE_BADGE_STYLE: Record<UserRole, string> = {
+  user:   'bg-surface2 text-ash border border-surface3',
+  seller: 'bg-accent/10 text-accent border border-accent/20',
+  admin:  'bg-gold/10 text-gold border border-gold/20',
 }
 
 export interface ProfileRow {
@@ -66,10 +72,7 @@ export function getFullName(profile: Profile | null): string | null {
   return profile.displayName
 }
 
-export function isAdmin(profile: Profile | null): boolean {
-  return profile?.role === 'admin'
-}
-
-export function isSeller(profile: Profile | null): boolean {
-  return profile?.role === 'seller' || profile?.role === 'admin'
-}
+// ─── Role helpers ──────────────────────────────────────────────────────────────
+export const isAdmin  = (p: Profile | null): boolean => p?.role === 'admin'
+export const isSeller = (p: Profile | null): boolean => p?.role === 'seller' || p?.role === 'admin'
+export const isBuyer  = (p: Profile | null): boolean => p?.role === 'user'

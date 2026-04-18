@@ -3,14 +3,16 @@
 import { memo, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Plus, LayoutDashboard } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
 import { Container } from '@/shared/ui/Container'
 import { UserAvatar } from '@/entities/user'
 import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
+import { useCurrentRole } from '@/shared/hooks/useCurrentRole'
 
 const NAV_LINKS = [
-  { href: '/catalog', label: 'Каталог' },
-  { href: '/events',  label: 'События' },
+  { href: '/catalog',  label: 'Каталог' },
+  { href: '/events',   label: 'События' },
   { href: '/about',    label: 'О проекте' },
   { href: '/contacts', label: 'Контакты' },
 ] as const
@@ -23,29 +25,50 @@ const MountainIcon = () => (
   </svg>
 )
 
-const AddBookButton = () => (
-  <Link
-    href="/add-book"
-    className={cn(
-      'inline-flex items-center gap-1.5 h-9 px-4 rounded-lg',
-      'text-sm font-medium',
-      'bg-accent text-bg border border-accent',
-      'hover:bg-accent2 hover:border-accent2',
-      'transition-all duration-150',
-      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-    )}
-  >
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
-      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-    </svg>
-    Добавить книгу
-  </Link>
-)
+// Кнопка зависит от роли:
+// seller/admin → Кабинет + Добавить книгу
+// user → Добавить книгу (с подсказкой что станет продавцом)
+function HeaderActions({ isSeller, isAdmin }: { isSeller: boolean; isAdmin: boolean }) {
+  const hasDashboard = isSeller || isAdmin
+
+  return (
+    <div className="flex items-center gap-2">
+      {hasDashboard && (
+        <Link
+          href="/dashboard"
+          className={cn(
+            'inline-flex items-center gap-1.5 h-9 px-3 rounded-lg',
+            'text-sm font-medium text-ash border border-surface2',
+            'hover:text-ink hover:bg-surface hover:border-surface3',
+            'transition-all duration-150',
+          )}
+        >
+          <LayoutDashboard size={14} strokeWidth={1.8}/>
+          Кабинет
+        </Link>
+      )}
+      <Link
+        href="/add-book"
+        className={cn(
+          'inline-flex items-center gap-1.5 h-9 px-4 rounded-lg',
+          'text-sm font-medium',
+          'bg-accent text-bg border border-accent',
+          'hover:bg-accent2 hover:border-accent2',
+          'transition-all duration-150',
+        )}
+      >
+        <Plus size={14} strokeWidth={2.5} aria-hidden="true"/>
+        Добавить книгу
+      </Link>
+    </div>
+  )
+}
 
 export const Header = memo(() => {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
   const { user } = useCurrentUser()
+  const { isSeller, isAdmin } = useCurrentRole()
 
   return (
     <header className="sticky top-0 z-50 border-b border-surface2/70 bg-bg/90 backdrop-blur-sm">
@@ -87,9 +110,9 @@ export const Header = memo(() => {
             ))}
           </nav>
 
-          {/* Right: add book + avatar */}
+          {/* Right */}
           <div className="hidden md:flex items-center gap-3">
-            {user && <AddBookButton />}
+            {user && <HeaderActions isSeller={isSeller} isAdmin={isAdmin} />}
             <UserAvatar />
           </div>
 
@@ -98,9 +121,7 @@ export const Header = memo(() => {
             className={cn(
               'md:hidden flex flex-col justify-center gap-[5px] w-10 h-10 rounded-lg',
               'text-ash hover:text-ink hover:bg-surface',
-              'transition-colors duration-150',
-              'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-              'cursor-pointer items-center',
+              'transition-colors duration-150 cursor-pointer items-center',
             )}
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-expanded={menuOpen}
@@ -125,7 +146,6 @@ export const Header = memo(() => {
                     href={href}
                     className={cn(
                       'flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors',
-                      'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
                       pathname === href
                         ? 'text-accent bg-accent/8 font-medium'
                         : 'text-ash hover:text-ink hover:bg-surface2',
@@ -137,6 +157,20 @@ export const Header = memo(() => {
                   </Link>
                 </li>
               ))}
+
+              {user && (isSeller || isAdmin) && (
+                <li>
+                  <Link
+                    href="/dashboard"
+                    className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg text-ash hover:text-ink hover:bg-surface2 transition-colors"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    <LayoutDashboard size={14} strokeWidth={1.8}/>
+                    Кабинет
+                  </Link>
+                </li>
+              )}
+
               {user && (
                 <li>
                   <Link
@@ -144,13 +178,12 @@ export const Header = memo(() => {
                     className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg text-accent font-medium hover:bg-accent/8 transition-colors"
                     onClick={() => setMenuOpen(false)}
                   >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" aria-hidden="true">
-                      <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-                    </svg>
+                    <Plus size={14} strokeWidth={2.5}/>
                     Добавить книгу
                   </Link>
                 </li>
               )}
+
               <li className="pt-2 mt-1 border-t border-surface2">
                 <div className="px-3 py-2"><UserAvatar /></div>
               </li>

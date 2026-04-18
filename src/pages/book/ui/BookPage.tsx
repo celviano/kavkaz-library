@@ -1,5 +1,6 @@
 'use client'
 
+import { BookOpen } from 'lucide-react'
 import { memo } from 'react'
 import Link from 'next/link'
 import { Container } from '@/shared/ui/Container'

@@ -1,5 +1,6 @@
 'use client'
 
+import { Check } from 'lucide-react'
 import { memo } from 'react'
 import Link from 'next/link'
 import { useProfile, useSellerStats, getFullName } from '@/entities/profile'

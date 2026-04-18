@@ -1,3 +1,4 @@
+import { BookMarked, Users, Store, Globe } from 'lucide-react'
 import { Container } from '@/shared/ui/Container'
 
 const GROUPS = [

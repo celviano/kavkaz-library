@@ -4,7 +4,7 @@ import { memo, useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { cn } from '@/shared/lib/cn'
 import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
-import { useProfile, ProfileAvatar, getFullName } from '@/entities/profile'
+import { useProfile, ProfileAvatar, getFullName, ROLE_LABELS, ROLE_BADGE_STYLE } from '@/entities/profile'
 import { logoutAction } from '@/features/auth'
 
 export const UserAvatar = memo(() => {
@@ -103,10 +103,10 @@ export const UserAvatar = memo(() => {
           <div className="px-4 py-3 border-b border-surface2">
             <p className="text-sm font-medium text-ink truncate">{displayName}</p>
             <p className="text-xs text-ash truncate">{user?.email}</p>
-            {profile?.role && profile.role !== 'user' && (
-              <p className="text-[10px] text-accent mt-0.5 uppercase tracking-wider">
-                {profile.role === 'admin' ? 'Администратор' : 'Продавец'}
-              </p>
+            {profile?.role && (
+              <span className={`inline-flex items-center mt-1.5 px-2 py-0.5 rounded-full text-[10px] font-medium ${ROLE_BADGE_STYLE[profile.role]}`}>
+                {ROLE_LABELS[profile.role]}
+              </span>
             )}
           </div>
 

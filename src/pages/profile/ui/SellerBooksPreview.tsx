@@ -1,5 +1,6 @@
 'use client'
 
+import { BookOpen } from 'lucide-react'
 import { type FC } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
@@ -58,10 +59,7 @@ export const SellerBooksPreview: FC<SellerBooksPreviewProps> = ({ books }) => {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9e9080" strokeWidth="1.5" strokeLinecap="round">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                      </svg>
+                      <BookOpen size={24} strokeWidth={1.5} className="text-dim"/>
                     </div>
                   )}
                 </div>

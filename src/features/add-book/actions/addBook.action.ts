@@ -31,7 +31,6 @@ export async function addBookAction(data: AddBookFormData) {
   const { data: { user }, error: authError } = await supabase.auth.getUser()
   if (authError || !user) redirect('/auth/login')
 
-  // Get user role — admin books go active immediately, others go pending
   const { data: profile } = await supabase
     .from('profiles')
     .select('role')
@@ -78,7 +77,14 @@ export async function addBookAction(data: AddBookFormData) {
 
   if (error) throw new Error(error.message)
 
-  // Admin goes straight to book page, others go to dashboard
+  // Автоматически повышаем роль до seller при первой добавленной книге
+  if (role === 'user') {
+    await supabase
+      .from('profiles')
+      .update({ role: 'seller', updated_at: new Date().toISOString() })
+      .eq('id', user.id)
+  }
+
   if (role === 'admin') {
     redirect(`/book/${book.id}`)
   } else {

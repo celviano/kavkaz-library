@@ -1,3 +1,4 @@
+import { BookOpen } from 'lucide-react'
 'use client'
 
 import { memo, useState } from 'react'
