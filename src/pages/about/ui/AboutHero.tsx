@@ -1,5 +1,4 @@
 // src/pages/about/ui/AboutHero.tsx
-import Link from 'next/link'
 import { Container } from '@/shared/ui/Container'
 
 export function AboutHero() {
@@ -56,10 +55,10 @@ export function AboutHero() {
           d="M0 120 L0 70 L100 15 L180 55 L280 5 L380 50 L460 0 L560 45 L640 10 L740 55 L820 5 L920 50 L1000 15 L1100 55 L1200 20 L1200 120Z"
           fill="#1B2212"
         />
-        <path d="M280 5 L295 30 L265 30Z" fill="#f2ede6" opacity="0.6" />
-        <path d="M460 0 L478 26 L442 26Z" fill="#f2ede6" opacity="0.6" />
+        <path d="M280 5  L295 30 L265 30Z" fill="#f2ede6" opacity="0.6" />
+        <path d="M460 0  L478 26 L442 26Z" fill="#f2ede6" opacity="0.6" />
         <path d="M640 10 L654 32 L626 32Z" fill="#f2ede6" opacity="0.55" />
-        <path d="M820 5 L836 28 L804 28Z" fill="#f2ede6" opacity="0.6" />
+        <path d="M820 5  L836 28 L804 28Z" fill="#f2ede6" opacity="0.6" />
       </svg>
 
       <Container className="relative">
@@ -74,16 +73,16 @@ export function AboutHero() {
             id="about-heading"
             className="font-display font-normal text-4xl text-ink leading-[1.08]"
           >
-            Кавказ — это не просто <em className="text-accent not-italic">география</em>
+            Кавказ - это не просто <em className="text-accent not-italic">география</em>
           </h1>
 
           <p className="text-ash text-lg leading-relaxed max-w-2xl">
-            Это тысячелетия культур, языков и народов. История, которую писали очевидцы,
-            путешественники, полководцы и учёные — и которую сегодня почти невозможно
+            Тысячелетия культур, языков и народов. История, которую писали очевидцы,
+            путешественники, полководцы и учёные - и которую сегодня почти невозможно
             найти. CaucasusLibrary создан, чтобы это изменить.
           </p>
         </div>
       </Container>
     </section>
   )
-}   
+}

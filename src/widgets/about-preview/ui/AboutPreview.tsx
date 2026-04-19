@@ -4,10 +4,141 @@ import { Container } from '@/shared/ui/Container'
 
 export const AboutPreview = memo(() => {
   return (
-    <section aria-labelledby="about-heading" className="py-20 border-t border-surface2">
+    <section
+      aria-labelledby="about-heading"
+      className="py-20 border-t border-surface2 relative overflow-hidden"
+    >
+      {/* Georgian script background */}
+      <svg
+        className="pointer-events-none absolute inset-0 w-full h-full"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        <text
+          x="3%"
+          y="18%"
+          fontFamily="Georgia, serif"
+          fontSize={96}
+          fill="#2a5c45"
+          opacity={0.045}
+          transform="rotate(-8)"
+          style={{ userSelect: 'none' }}
+        >
+          ა
+        </text>
+        <text
+          x="11%"
+          y="68%"
+          fontFamily="Georgia, serif"
+          fontSize={72}
+          fill="#2a5c45"
+          opacity={0.038}
+          transform="rotate(6)"
+          style={{ userSelect: 'none' }}
+        >
+          ბ
+        </text>
+        <text
+          x="20%"
+          y="32%"
+          fontFamily="Georgia, serif"
+          fontSize={110}
+          fill="#8B6914"
+          opacity={0.032}
+          transform="rotate(-4)"
+          style={{ userSelect: 'none' }}
+        >
+          გ
+        </text>
+        <text
+          x="48%"
+          y="12%"
+          fontFamily="Georgia, serif"
+          fontSize={88}
+          fill="#2a5c45"
+          opacity={0.035}
+          transform="rotate(-6)"
+          style={{ userSelect: 'none' }}
+        >
+          ვ
+        </text>
+        <text
+          x="68%"
+          y="24%"
+          fontFamily="Georgia, serif"
+          fontSize={78}
+          fill="#8B6914"
+          opacity={0.042}
+          transform="rotate(-10)"
+          style={{ userSelect: 'none' }}
+        >
+          თ
+        </text>
+        <text
+          x="76%"
+          y="72%"
+          fontFamily="Georgia, serif"
+          fontSize={92}
+          fill="#2a5c45"
+          opacity={0.036}
+          transform="rotate(7)"
+          style={{ userSelect: 'none' }}
+        >
+          კ
+        </text>
+        <text
+          x="85%"
+          y="42%"
+          fontFamily="Georgia, serif"
+          fontSize={68}
+          fill="#8B6914"
+          opacity={0.04}
+          transform="rotate(-5)"
+          style={{ userSelect: 'none' }}
+        >
+          ლ
+        </text>
+        <text
+          x="93%"
+          y="82%"
+          fontFamily="Georgia, serif"
+          fontSize={86}
+          fill="#2a5c45"
+          opacity={0.033}
+          transform="rotate(8)"
+          style={{ userSelect: 'none' }}
+        >
+          მ
+        </text>
+        <text
+          x="7%"
+          y="88%"
+          fontFamily="Georgia, serif"
+          fontSize={74}
+          fill="#8B6914"
+          opacity={0.038}
+          transform="rotate(-12)"
+          style={{ userSelect: 'none' }}
+        >
+          ნ
+        </text>
+        <text
+          x="90%"
+          y="10%"
+          fontFamily="Georgia, serif"
+          fontSize={82}
+          fill="#2a5c45"
+          opacity={0.035}
+          transform="rotate(-7)"
+          style={{ userSelect: 'none' }}
+        >
+          პ
+        </text>
+      </svg>
+
       <Container>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left — text */}
+          {/* Left - text */}
           <div className="flex flex-col gap-6">
             <div>
               <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">
@@ -16,26 +147,25 @@ export const AboutPreview = memo(() => {
               <h2
                 id="about-heading"
                 className="font-display font-normal text-4xl text-ink leading-tight mb-5"
-                
               >
-                Кавказ — <em className="text-accent not-italic">как лоскутное одеяло</em>
+                Кавказ - <em className="text-accent not-italic">как лоскутное одеяло</em>
               </h2>
               <div className="flex flex-col gap-4 text-ash text-base leading-relaxed">
                 <p>
-                  Кавказ — один из самых удивительных регионов мира. Десятки народов,
+                  Кавказ - один из самых удивительных регионов мира. Десятки народов,
                   языков и культур, живущих бок о бок на небольшом клочке земли между
-                  Чёрным и Каспийским морями. Каждая долина — своя история, каждый хребет
-                  — своя судьба.
+                  Чёрным и Каспийским морями. Каждая долина хранит свою историю, каждый
+                  хребет - свою судьбу.
                 </p>
                 <p>
-                  Этот проект создан для того, чтобы разжечь интерес к этому краю — через
-                  книги, которые писали люди, видевшие Кавказ своими глазами:
-                  путешественники, учёные, военные, поэты. Их свидетельства открывают
-                  регион живым, противоречивым и бесконечно богатым.
+                  Проект создан, чтобы разжечь интерес к этому краю через книги, которые
+                  писали люди, видевшие Кавказ своими глазами: путешественники, учёные,
+                  военные, поэты. Их свидетельства открывают регион живым, противоречивым
+                  и бесконечно богатым.
                 </p>
                 <p>
-                  Мы убеждены: культура и история Кавказа — это не далёкое прошлое. Это ключ к
-                  пониманию настоящего. И лучший способ начать — открыть книгу.
+                  Культура и история Кавказа - это не далёкое прошлое. Это ключ к
+                  пониманию настоящего. Лучший способ начать - открыть книгу.
                 </p>
               </div>
             </div>
@@ -54,7 +184,7 @@ export const AboutPreview = memo(() => {
             </Link>
           </div>
 
-          {/* Right — decorative panel */}
+          {/* Right - decorative panel */}
           <div className="relative flex items-center justify-center">
             <div className="relative w-full max-w-sm mx-auto">
               <div

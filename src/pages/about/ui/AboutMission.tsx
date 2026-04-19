@@ -1,23 +1,6 @@
 // src/pages/about/ui/AboutMission.tsx
 import Image from 'next/image'
-
-
 import { Container } from '@/shared/ui/Container'
-
-const IMAGES = [
-  {
-    src: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&q=80',
-    alt: 'Старинные книги на полке антикварной лавки',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=800&q=80',
-    alt: 'Библиотека с деревянными стеллажами и старинными фолиантами',
-  },
-  {
-    src: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=800&q=80',
-    alt: 'Книжный рынок с редкими изданиями',
-  },
-]
 
 import AboutOne from '../../../../public/images/about-mission/photo_2025-11-25_12-16-05.jpg'
 import AboutTwo from '../../../../public/images/about-mission/photo_2026-04-02_15-47-47.jpg'
@@ -48,20 +31,21 @@ export function AboutMission() {
 
             <div className="flex flex-col gap-4 text-ash text-base leading-relaxed">
               <p>
-                Кавказ — один из самых богатых и многогранных регионов мира. Здесь переплелись
-                десятки народов, языков, религий и культур. Каждый народ — своя поэзия,
-                своя письменность, свои предания. Каждое ущелье хранит свою правду.
+                Кавказ - один из самых богатых и многогранных регионов мира. Здесь
+                переплелись десятки народов, языков, религий и культур. Каждый народ
+                хранит свою поэзию, свою письменность, свои предания. Каждое ущелье - своя
+                правда.
               </p>
               <p>
                 Понять Кавказ без первоисточников невозможно. Но книги, написанные
-                очевидцами — мемуары офицеров, этнографические экспедиции, редкие атласы
-                XIX века — разбросаны по частным коллекциям, книжным лавкам и архивам. Их
-                почти не найти в обычной продаже.
+                очевидцами - мемуары офицеров, этнографические экспедиции, редкие атласы
+                XIX века - разбросаны по частным коллекциям, книжным лавкам и архивам. В
+                обычной продаже их почти не найти.
               </p>
               <p>
-                <strong className="text-ink font-medium">CaucasusLibrary</strong> — единая
+                <strong className="text-ink font-medium">CaucasusLibrary</strong> - единая
                 площадка, где всё это собрано в одном месте. История, культура, языки,
-                литература, биографии — мы объединяем всех, кто хранит и кто ищет.
+                литература, биографии - объединяем всех, кто хранит и кто ищет.
               </p>
             </div>
           </div>
@@ -72,7 +56,7 @@ export function AboutMission() {
               <div className="rounded-2xl overflow-hidden aspect-[4/5] bg-surface2">
                 <Image
                   src={AboutOne}
-                  alt={IMAGES[0].alt}
+                  alt="Старинные книги на полке антикварной лавки"
                   className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-500"
                   loading="lazy"
                 />
@@ -80,7 +64,7 @@ export function AboutMission() {
               <div className="rounded-2xl overflow-hidden aspect-[4/3] bg-surface2">
                 <Image
                   src={AboutTwo}
-                  alt={IMAGES[2].alt}
+                  alt="Книжный рынок с редкими изданиями"
                   className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-500"
                   loading="lazy"
                 />
@@ -92,7 +76,7 @@ export function AboutMission() {
             >
               <Image
                 src={AboutThree}
-                alt={IMAGES[1].alt}
+                alt="Библиотека с деревянными стеллажами и старинными фолиантами"
                 className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-500"
                 loading="lazy"
               />

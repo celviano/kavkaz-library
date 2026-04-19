@@ -7,26 +7,33 @@ import { Container } from '@/shared/ui/Container'
 import { PageHeading } from '@/shared/ui/PageHeading'
 import { EmptyState } from '@/shared/ui/EmptyState'
 import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
-import { useProfile } from '@/entities/profile'
+import { useProfile, isAdmin } from '@/entities/profile'
 import { useMyBooks, useMyOrders } from '@/features/dashboard/model/useDashboard'
+import { useMyQuotes, useAllQuotes } from '@/features/quotes/model/useQuotes'
 import { MyBooksTab } from './MyBooksTab'
 import { MyOrdersTab } from './MyOrdersTab'
+import { MyQuotesTab } from './MyQuotesTab'
+import { AdminQuotesTab } from './AdminQuotesTab'
 
-type Tab = 'books' | 'orders'
+type Tab = 'books' | 'orders' | 'quotes' | 'admin-quotes'
 
 export const DashboardPage = memo(() => {
   const { user, loading: userLoading } = useCurrentUser()
   const { data: profile } = useProfile(user?.id ?? null)
   const [activeTab, setActiveTab] = useState<Tab>('books')
 
-  const { data: books = [] } = useMyBooks(user?.id ?? null)
+  const { data: books = [] }  = useMyBooks(user?.id ?? null)
   const { data: orders = [] } = useMyOrders(user?.id ?? null)
+  const { data: myQuotes = [] } = useMyQuotes(user?.id ?? null)
+  const { data: allQuotes = [] } = useAllQuotes()
 
-  const pendingOrders = orders.filter((o) => o.status === 'pending').length
-  const pendingBooks = books.filter((b) => b.status === 'pending').length
+  const admin = isAdmin(profile ?? null)
 
-  console.log('userId для заказов:', user?.id)
-  console.log('orders:', orders)
+  const pendingOrders  = orders.filter((o) => o.status === 'pending').length
+  const pendingBooks   = books.filter((b) => b.status === 'pending').length
+  const pendingQuotes  = admin
+    ? allQuotes.filter((q) => q.status === 'pending').length
+    : myQuotes.filter((q) => q.status === 'pending').length
 
   if (!userLoading && !user) {
     return (
@@ -43,6 +50,13 @@ export const DashboardPage = memo(() => {
     )
   }
 
+  // Tabs config
+  const tabs: { id: Tab; label: string; count?: number }[] = [
+    { id: 'books',  label: 'Мои книги',  count: books.length },
+    { id: 'orders', label: 'Запросы',    count: orders.length },
+    { id: admin ? 'admin-quotes' : 'quotes', label: admin ? 'Цитаты (модерация)' : 'Мои цитаты', count: pendingQuotes || undefined },
+  ]
+
   return (
     <main id="main-content">
       <section className="py-12">
@@ -56,13 +70,8 @@ export const DashboardPage = memo(() => {
                 className="inline-flex items-center gap-1.5 h-10 px-5 rounded-xl text-sm font-medium bg-accent text-bg border border-accent hover:bg-accent2 hover:border-accent2 transition-all"
               >
                 <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
+                  width="13" height="13" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
                   aria-hidden="true"
                 >
                   <line x1="12" y1="5" x2="12" y2="19" />
@@ -75,13 +84,11 @@ export const DashboardPage = memo(() => {
             {/* Stats */}
             <div className="grid grid-cols-3 gap-3 max-w-2xl">
               {[
-                { label: 'Всего книг', value: books.length },
-                { label: 'На модерации', value: pendingBooks, accent: pendingBooks > 0 },
-                {
-                  label: 'Новых запросов',
-                  value: pendingOrders,
-                  accent: pendingOrders > 0,
-                },
+                { label: 'Всего книг',    value: books.length },
+                { label: 'На модерации',  value: pendingBooks,  accent: pendingBooks > 0 },
+                { label: admin ? 'Цитат на проверке' : 'Новых запросов',
+                  value: admin ? pendingQuotes : pendingOrders,
+                  accent: (admin ? pendingQuotes : pendingOrders) > 0 },
               ].map(({ label, value, accent }) => (
                 <div
                   key={label}
@@ -105,10 +112,7 @@ export const DashboardPage = memo(() => {
 
             {/* Tabs */}
             <div className="flex gap-1 bg-surface border max-w-2xl border-surface2 rounded-xl p-1">
-              {[
-                { id: 'books' as Tab, label: 'Мои книги', count: books.length },
-                { id: 'orders' as Tab, label: 'Запросы', count: orders.length },
-              ].map(({ id, label, count }) => (
+              {tabs.map(({ id, label, count }) => (
                 <button
                   key={id}
                   type="button"
@@ -121,7 +125,7 @@ export const DashboardPage = memo(() => {
                   )}
                 >
                   {label}
-                  {count > 0 && (
+                  {count != null && count > 0 && (
                     <span
                       className={cn(
                         'text-[11px] font-medium px-1.5 py-0.5 rounded-full',
@@ -138,8 +142,10 @@ export const DashboardPage = memo(() => {
             </div>
 
             {/* Tab content */}
-            {user && activeTab === 'books' && <MyBooksTab userId={user.id} />}
-            {user && activeTab === 'orders' && <MyOrdersTab userId={user.id} />}
+            {user && activeTab === 'books'        && <MyBooksTab    userId={user.id} />}
+            {user && activeTab === 'orders'       && <MyOrdersTab   userId={user.id} />}
+            {user && activeTab === 'quotes'       && <MyQuotesTab   userId={user.id} />}
+            {user && activeTab === 'admin-quotes' && <AdminQuotesTab />}
           </div>
         </Container>
       </section>
