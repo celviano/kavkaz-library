@@ -1,13 +1,45 @@
 import { memo } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { Container } from '@/shared/ui/Container'
+import heroPainting from '../../../../public/images/hero-painting.jpg'
 
 export const Hero = memo(() => {
   return (
     <section className="relative overflow-hidden" aria-labelledby="hero-heading">
-      {/* Carpet pattern */}
+      {/* Painting background */}
+      <div className="absolute inset-0" aria-hidden="true">
+        <Image
+          src={heroPainting}
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+          quality={90}
+        />
+      </div>
+
+      {/* Layer 1: heavy top fade so text is always readable */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(242,237,230,0.92) 0%, rgba(242,237,230,0.78) 45%, rgba(242,237,230,0.45) 75%, rgba(242,237,230,0.15) 100%)',
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Layer 2: warm tint */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'rgba(242,237,230,0.18)' }}
+        aria-hidden="true"
+      />
+
+      {/* Layer 3: carpet pattern */}
       <svg
-        className="absolute inset-0 w-full h-full opacity-[0.045]"
+        className="absolute inset-0 w-full h-full opacity-[0.025]"
         preserveAspectRatio="xMidYMid slice"
         aria-hidden="true"
       >
@@ -64,44 +96,17 @@ export const Hero = memo(() => {
         <rect width="100%" height="100%" fill="url(#carpet)" />
       </svg>
 
-      {/* Mountain silhouette (bottom) */}
-      <svg
-        className="absolute bottom-0 left-0 w-full opacity-[0.065]"
-        viewBox="0 0 1200 160"
-        preserveAspectRatio="xMidYMax slice"
-        aria-hidden="true"
-      >
-        <path
-          d="M0 160 L0 90 L100 20 L180 80 L280 10 L380 70 L460 0 L560 60 L640 15 L740 75 L820 5 L920 65 L1000 20 L1100 70 L1200 30 L1200 160 Z"
-          fill="#1B2212"
-        />
-        <path
-          d="M0 160 L0 110 L80 60 L150 100 L240 45 L330 95 L420 50 L510 90 L600 55 L690 100 L780 45 L870 90 L960 55 L1050 95 L1140 60 L1200 100 L1200 160 Z"
-          fill="#2a5c45"
-          opacity="0.6"
-        />
-        <path d="M100 20 L115 42 L85  42 Z" fill="#f2ede6" opacity="0.55" />
-        <path d="M280 10 L295 32 L265 32 Z" fill="#f2ede6" opacity="0.5" />
-        <path d="M460 0  L478 28 L442 28 Z" fill="#f2ede6" opacity="0.6" />
-        <path d="M640 15 L654 36 L626 36 Z" fill="#f2ede6" opacity="0.5" />
-        <path d="M820 5  L836 30 L804 30 Z" fill="#f2ede6" opacity="0.55" />
-        <path d="M1000 20 L1015 42 L985 42 Z" fill="#f2ede6" opacity="0.5" />
-      </svg>
-
-      {/* Gradient fade */}
+      {/* Bottom fade */}
       <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background:
-            'linear-gradient(to bottom, rgba(242,237,230,0.88) 0%, rgba(242,237,230,0.6) 60%, rgba(242,237,230,0.15) 100%)',
-        }}
+        className="absolute bottom-0 left-0 w-full h-32 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg))' }}
         aria-hidden="true"
       />
 
       <Container className="relative">
         <div className="flex flex-col items-center text-center py-24 md:py-32 xl:py-40">
           {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-accent/20 bg-accent/6 px-5 py-2 mb-8">
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-accent/20 bg-accent/6 px-5 py-2 mb-8 backdrop-blur-[2px]">
             <span className="text-accent text-xs font-medium tracking-[2px] uppercase">
               Библиотека Кавказа
             </span>
@@ -119,13 +124,13 @@ export const Hero = memo(() => {
             <span>
               Библиотека <em className="text-accent not-italic">Кавказа</em>
             </span>
-            <span className="text-ash text-4xl font-normal">
+            <span className="text-ink/70 text-4xl font-normal">
               От древности до наших дней
             </span>
           </h1>
 
           {/* Description */}
-          <p className="text-ash text-lg leading-relaxed max-w-2xl mb-10">
+          <p className="text-ink/60 text-lg leading-relaxed max-w-2xl mb-10">
             Книги по истории, культуре, языкам, литературе и биографиям народов Кавказа и
             Закавказья. Редкие издания, которые почти невозможно найти в обычной продаже.
           </p>
@@ -140,14 +145,14 @@ export const Hero = memo(() => {
             </Link>
             <Link
               href="/about"
-              className="inline-flex items-center justify-center h-12 px-8 rounded-xl text-base font-medium bg-transparent text-accent border border-accent/40 hover:bg-accent/8 hover:border-accent/70 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="inline-flex items-center justify-center h-12 px-8 rounded-xl text-base font-medium bg-bg/60 backdrop-blur-sm text-accent border border-accent/40 hover:bg-accent/8 hover:border-accent/70 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               О проекте
             </Link>
           </div>
 
           {/* Stats */}
-          <dl className="flex flex-wrap justify-center gap-12 pt-8 border-t border-surface2 w-full max-w-lg">
+          <dl className="flex flex-wrap justify-center gap-12 pt-8 border-t border-surface2/70 w-full max-w-lg">
             {[
               { value: '200+', label: 'изданий' },
               { value: '7', label: 'разделов' },
@@ -160,7 +165,7 @@ export const Hero = memo(() => {
                 >
                   {item.value}
                 </dd>
-                <dt className="text-xs text-ash uppercase tracking-widest">
+                <dt className="text-xs text-ink/50 uppercase tracking-widest">
                   {item.label}
                 </dt>
               </div>
