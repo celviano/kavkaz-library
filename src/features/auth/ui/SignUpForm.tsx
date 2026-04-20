@@ -11,7 +11,7 @@ import { signUpAction } from '../actions/auth.actions'
 import { useFormValidation } from '@/shared/hooks/useFormValidation'
 import { rules } from '@/shared/lib/validation'
 
-interface SignUpValues extends Record<string, unknown> {
+interface SignUpValues {
   name: string
   email: string
   password: string

@@ -1,10 +1,11 @@
 export type ValidationRule<T> = (value: T) => string | null
 
-export type FieldRules<T extends Record<string, unknown>> = {
-  [K in keyof T]?: ValidationRule<T[K]>[]
+export type FieldRules<T> = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [K in keyof T]?: Array<(value: any) => string | null>
 }
 
-export type FieldErrors<T extends Record<string, unknown>> = {
+export type FieldErrors<T> = {
   [K in keyof T]?: string
 }
 
@@ -46,24 +47,24 @@ export const rules = {
     },
 }
 
-export function validate<T extends Record<string, unknown>>(
+export function validate<T extends object>(
   values: T,
   fieldRules: FieldRules<T>,
 ): FieldErrors<T> {
   const errors: FieldErrors<T> = {}
-  for (const field in fieldRules) {
-    const fieldRuleList = fieldRules[field]
+  const v = values as Record<string, unknown>
+  const r = fieldRules as Record<string, Array<(value: unknown) => string | null> | undefined>
+  for (const field in r) {
+    const fieldRuleList = r[field]
     if (!fieldRuleList) continue
     for (const rule of fieldRuleList) {
-      const error = rule(values[field] as T[typeof field])
-      if (error) { errors[field] = error; break }
+      const error = rule(v[field])
+      if (error) { (errors as Record<string, string>)[field] = error; break }
     }
   }
   return errors
 }
 
-export function hasErrors<T extends Record<string, unknown>>(
-  errors: FieldErrors<T>,
-): boolean {
+export function hasErrors<T>(errors: FieldErrors<T>): boolean {
   return Object.values(errors).some(Boolean)
 }

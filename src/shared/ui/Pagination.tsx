@@ -18,7 +18,7 @@ export const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, class
   if (totalPages <= 1) return null
 
   function goToPage(page: number) {
-    const params = new URLSearchParams(searchParams.toString())
+    const params = new URLSearchParams(searchParams?.toString() ?? '')
     if (page === 1) {
       params.delete('page')
     } else {

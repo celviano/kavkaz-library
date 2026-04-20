@@ -13,7 +13,7 @@ export const UserAvatar = memo(() => {
   const [open, setOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const displayName = getFullName(profile) || user?.email?.split('@')[0] || null
+  const displayName = getFullName(profile ?? null) || user?.email?.split('@')[0] || null
   const avatarUrl = profile?.avatarUrl ?? user?.user_metadata?.avatar_url ?? null
 
   useEffect(() => {

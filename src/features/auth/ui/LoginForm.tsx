@@ -11,7 +11,7 @@ import { loginAction } from '../actions/auth.actions'
 import { useFormValidation } from '@/shared/hooks/useFormValidation'
 import { rules } from '@/shared/lib/validation'
 
-interface LoginValues extends Record<string, unknown> {
+interface LoginValues {
   email: string
   password: string
 }

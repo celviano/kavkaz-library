@@ -56,7 +56,7 @@ export function useSupabaseUpload({
       const rejectedMapped: UploadedFile[] = rejected.map(({ file, errors: errs }) =>
         Object.assign(file, {
           preview: file.type.startsWith('image/') ? URL.createObjectURL(file) : '',
-          errors: errs,
+          errors: [...errs],
         }),
       )
       setFiles((prev) => [...prev, ...acceptedMapped, ...rejectedMapped])

@@ -15,6 +15,10 @@ const CATEGORY_COLORS: Record<BookCategory, string> = {
   memoirs:     'bg-ash/10 text-ash border-ash/20',
   atlases:     'bg-ink/6 text-text border-ink/12',
   other:       'bg-dim/10 text-dim border-dim/20',
+  culture:     'bg-accent2/10 text-accent2 border-accent2/20',
+  languages:   'bg-dim/10 text-dim border-dim/20',
+  literature:  'bg-accent/10 text-accent border-accent/20',
+  biography:   'bg-ash/10 text-ash border-ash/20',
 }
 
 export const Badge: FC<BadgeProps> = ({ category, label, className }) => {

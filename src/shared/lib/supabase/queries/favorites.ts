@@ -23,8 +23,8 @@ export async function fetchFavoriteBooks(userId: string): Promise<Book[]> {
 
   if (error) throw new Error(error.message)
 
-  return (data ?? [])
-    .map((r: { books: BookRow | null }) => r.books)
+  return ((data ?? []) as unknown as { books: BookRow | null }[])
+    .map((r) => r.books)
     .filter((b): b is BookRow => b !== null)
     .map(mapBookRow)
 }

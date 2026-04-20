@@ -4,12 +4,12 @@ import { useState, useCallback } from 'react'
 import { validate, hasErrors } from '@/shared/lib/validation'
 import type { FieldRules, FieldErrors } from '@/shared/lib/validation'
 
-interface UseFormValidationOptions<T extends Record<string, unknown>> {
+interface UseFormValidationOptions<T extends object> {
   rules: FieldRules<T>
   initialValues?: Partial<T>
 }
 
-export function useFormValidation<T extends Record<string, unknown>>({
+export function useFormValidation<T extends object>({
   rules: fieldRules,
   initialValues = {},
 }: UseFormValidationOptions<T>) {

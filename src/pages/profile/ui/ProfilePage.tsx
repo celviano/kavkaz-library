@@ -76,7 +76,7 @@ export const ProfilePage = memo(() => {
     )
   }
 
-  const fullName    = getFullName(profile) || user.email?.split('@')[0] || 'Пользователь'
+  const fullName    = getFullName(profile ?? null) || user.email?.split('@')[0] || 'Пользователь'
   const memberSince = new Date(user.created_at).toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' })
 
   // Роль берём из профиля — единый источник правды

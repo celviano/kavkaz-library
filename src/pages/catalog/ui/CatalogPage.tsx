@@ -18,9 +18,9 @@ export const CatalogPage = memo(() => {
   const searchParams = useSearchParams()
 
   // Read state from URL
-  const pageParam     = searchParams.get('page')
-  const categoryParam = searchParams.get('category') as BookCategory | null
-  const searchParam   = searchParams.get('q') ?? ''
+  const pageParam     = searchParams?.get('page')
+  const categoryParam = searchParams?.get('category') as BookCategory | null
+  const searchParam   = searchParams?.get('q') ?? ''
 
   const [search,   setSearch]   = useState(searchParam)
   const [category, setCategory] = useState<BookCategory | 'all'>(categoryParam ?? 'all')
@@ -28,9 +28,9 @@ export const CatalogPage = memo(() => {
 
   // Sync URL → state when searchParams change (browser back/forward)
   useEffect(() => {
-    setSearch(searchParams.get('q') ?? '')
-    setCategory((searchParams.get('category') as BookCategory | null) ?? 'all')
-    setPage(parseInt(searchParams.get('page') ?? '1', 10))
+    setSearch(searchParams?.get('q') ?? '')
+    setCategory((searchParams?.get('category') as BookCategory | null) ?? 'all')
+    setPage(parseInt(searchParams?.get('page') ?? '1', 10))
   }, [searchParams])
 
   // Reset to page 1 when filter/search changes

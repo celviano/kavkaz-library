@@ -99,7 +99,7 @@ export const Header = memo(() => {
                 className={cn(
                   'px-4 py-2 rounded-lg text-sm transition-all duration-150',
                   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-                  pathname === href || pathname.startsWith(href + '/')
+                  pathname === href || pathname?.startsWith(href + '/')
                     ? 'text-accent bg-accent/10 font-medium'
                     : 'text-ash hover:text-ink hover:bg-surface',
                 )}
