@@ -30,7 +30,7 @@ export const Hero = memo(() => {
         aria-hidden="true"
       />
 
-      {/* Layer 2: warm tint */}
+      {/* Layer 2: warm tint */} 
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'rgba(242,237,230,0.18)' }}
