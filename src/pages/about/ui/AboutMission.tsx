@@ -1,4 +1,3 @@
-// src/pages/about/ui/AboutMission.tsx
 import Image from 'next/image'
 import { Container } from '@/shared/ui/Container'
 
