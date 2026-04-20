@@ -1,4 +1,3 @@
-import { type FC } from 'react'
 import { cn } from '@/shared/lib/cn'
 
 export interface SegmentOption<T extends string> {
@@ -7,10 +6,10 @@ export interface SegmentOption<T extends string> {
 }
 
 export interface SegmentedControlProps<T extends string> {
-  options:   SegmentOption<T>[]
-  value:     T
-  onChange:  (value: T) => void
-  error?:    string
+  options: SegmentOption<T>[]
+  value: T
+  onChange: (value: T) => void
+  error?: string
   className?: string
 }
 
@@ -35,8 +34,8 @@ export function SegmentedControl<T extends string>({
             value === opt.value
               ? 'bg-accent text-bg border-accent'
               : error
-              ? 'bg-bg border-red-300 text-ash hover:border-red-400'
-              : 'bg-bg border-surface2 text-ash hover:border-surface3 hover:text-ink',
+                ? 'bg-bg border-red-300 text-ash hover:border-red-400'
+                : 'bg-bg border-surface2 text-ash hover:border-surface3 hover:text-ink',
           )}
         >
           {opt.label}

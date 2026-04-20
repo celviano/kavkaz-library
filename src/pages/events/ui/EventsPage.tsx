@@ -1,4 +1,3 @@
-import { Calendar } from 'lucide-react'
 'use client'
 
 import { memo, useState, useMemo } from 'react'
@@ -19,11 +18,19 @@ function EventsGrid({ events }: { events: typeof MOCK_EVENTS }) {
     return (
       <EmptyState
         icon={
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7D7060" strokeWidth="1.5" strokeLinecap="round">
-            <rect x="3" y="4" width="18" height="18" rx="2"/>
-            <line x1="16" y1="2" x2="16" y2="6"/>
-            <line x1="8" y1="2" x2="8" y2="6"/>
-            <line x1="3" y1="10" x2="21" y2="10"/>
+          <svg
+            width="22"
+            height="22"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#7D7060"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          >
+            <rect x="3" y="4" width="18" height="18" rx="2" />
+            <line x1="16" y1="2" x2="16" y2="6" />
+            <line x1="8" y1="2" x2="8" y2="6" />
+            <line x1="3" y1="10" x2="21" y2="10" />
           </svg>
         }
         title="Событий не найдено"
@@ -49,9 +56,9 @@ function EventsGrid({ events }: { events: typeof MOCK_EVENTS }) {
 // ─── Announce banner ──────────────────────────────────────────────────────────
 
 function AnnounceBanner() {
-  const next = MOCK_EVENTS
-    .filter((e) => e.startsAt > new Date())
-    .sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime())[0]
+  const next = MOCK_EVENTS.filter((e) => e.startsAt > new Date()).sort(
+    (a, b) => a.startsAt.getTime() - b.startsAt.getTime(),
+  )[0]
 
   if (!next) return null
 
@@ -68,23 +75,36 @@ function AnnounceBanner() {
           </p>
           <p
             className="font-display font-semibold text-bg leading-snug"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.1rem, 2vw, 1.4rem)' }}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.1rem, 2vw, 1.4rem)',
+            }}
           >
             {next.title}
           </p>
           <p className="text-bg/50 text-sm mt-1">
-            {next.startsAt.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })}
+            {next.startsAt.toLocaleDateString('ru-RU', {
+              day: 'numeric',
+              month: 'long',
+              year: 'numeric',
+            })}
             {next.location && ` · ${next.location}`}
           </p>
         </div>
-        <span className={`flex-shrink-0 text-sm font-medium px-4 py-2 rounded-xl border ${
-          next.isFree
-            ? 'bg-accent text-bg border-accent'
-            : 'bg-bg/10 text-bg border-bg/20'
-        }`}>
-          {next.isFree ? 'Бесплатно' : new Intl.NumberFormat('ru-RU', {
-            style: 'currency', currency: next.currency, maximumFractionDigits: 0,
-          }).format(next.price ?? 0)}
+        <span
+          className={`flex-shrink-0 text-sm font-medium px-4 py-2 rounded-xl border ${
+            next.isFree
+              ? 'bg-accent text-bg border-accent'
+              : 'bg-bg/10 text-bg border-bg/20'
+          }`}
+        >
+          {next.isFree
+            ? 'Бесплатно'
+            : new Intl.NumberFormat('ru-RU', {
+                style: 'currency',
+                currency: next.currency,
+                maximumFractionDigits: 0,
+              }).format(next.price ?? 0)}
         </span>
       </div>
     </div>
@@ -100,8 +120,8 @@ export const EventsPage = memo(() => {
   const filtered = useMemo(() => {
     return MOCK_EVENTS.filter((event) => {
       if (filter === 'upcoming') return event.startsAt > now
-      if (filter === 'online')   return event.isOnline
-      if (filter === 'all')      return true
+      if (filter === 'online') return event.isOnline
+      if (filter === 'all') return true
       return event.type === filter
     }).sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime())
   }, [filter, now])

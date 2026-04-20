@@ -1,4 +1,3 @@
-import { BookOpen } from 'lucide-react'
 'use client'
 
 import { memo, useState } from 'react'
@@ -11,14 +10,13 @@ import { useMyBooks, useUpdateBookStatus } from '@/features/dashboard/model/useD
 import type { BookStatus } from '@/entities/book/model/types'
 
 const STATUS_FILTERS: { value: BookStatus | 'all'; label: string }[] = [
-  { value: 'all',      label: 'Все' },
-  { value: 'active',   label: 'Активные' },
-  { value: 'pending',  label: 'На модерации' },
-  { value: 'draft',    label: 'Черновики' },
-  { value: 'sold',     label: 'Проданные' },
+  { value: 'all', label: 'Все' },
+  { value: 'active', label: 'Активные' },
+  { value: 'pending', label: 'На модерации' },
+  { value: 'draft', label: 'Черновики' },
+  { value: 'sold', label: 'Проданные' },
   { value: 'archived', label: 'Архив' },
 ]
-
 interface MyBooksTabProps {
   userId: string
 }
@@ -70,7 +68,11 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
       {filtered.length === 0 ? (
         <EmptyState
           title="Книг нет"
-          description={filter === 'all' ? 'Добавьте первую книгу' : `Нет книг со статусом "${STATUS_LABELS[filter as BookStatus]}"`}
+          description={
+            filter === 'all'
+              ? 'Добавьте первую книгу'
+              : `Нет книг со статусом "${STATUS_LABELS[filter as BookStatus]}"`
+          }
           actionLabel={filter === 'all' ? 'Добавить книгу' : undefined}
           actionHref={filter === 'all' ? '/add-book' : undefined}
         />
@@ -82,11 +84,25 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                 {/* Cover */}
                 <div className="w-12 h-16 rounded-lg bg-surface2 overflow-hidden flex-shrink-0 relative">
                   {book.coverUrl ? (
-                    <Image src={book.coverUrl} alt={book.title} fill sizes="48px" className="object-cover" />
+                    <Image
+                      src={book.coverUrl}
+                      alt={book.title}
+                      fill
+                      sizes="48px"
+                      className="object-cover"
+                    />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9e9080" strokeWidth="1.5">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#9e9080"
+                        strokeWidth="1.5"
+                      >
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
                       </svg>
                     </div>
                   )}
@@ -95,18 +111,24 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                 {/* Info */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span className={cn(
-                      'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border',
-                      STATUS_COLORS[book.status],
-                    )}>
+                    <span
+                      className={cn(
+                        'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border',
+                        STATUS_COLORS[book.status],
+                      )}
+                    >
                       {STATUS_LABELS[book.status]}
                     </span>
                     {book.status === 'pending' && (
-                      <span className="text-[10px] text-dim">Ожидает проверки администратором</span>
+                      <span className="text-[10px] text-dim">
+                        Ожидает проверки администратором
+                      </span>
                     )}
                   </div>
                   <p className="text-sm font-medium text-ink truncate">{book.title}</p>
-                  <p className="text-xs text-ash">{book.author}, {book.year}</p>
+                  <p className="text-xs text-ash">
+                    {book.author}, {book.year}
+                  </p>
                 </div>
 
                 {/* Actions */}
@@ -132,7 +154,9 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                   {(book.status === 'active' || book.status === 'draft') && (
                     <button
                       type="button"
-                      onClick={() => changeStatus({ bookId: book.id, status: 'archived' })}
+                      onClick={() =>
+                        changeStatus({ bookId: book.id, status: 'archived' })
+                      }
                       disabled={isPending}
                       className="h-8 px-3 rounded-lg text-xs border border-surface2 text-ash hover:text-ink hover:bg-surface2 transition-colors cursor-pointer disabled:opacity-50"
                     >

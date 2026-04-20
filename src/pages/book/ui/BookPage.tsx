@@ -1,6 +1,5 @@
 'use client'
 
-import { BookOpen } from 'lucide-react'
 import { memo } from 'react'
 import Link from 'next/link'
 import { Container } from '@/shared/ui/Container'
@@ -47,7 +46,7 @@ function BookPageSkeleton() {
 
 interface SimilarSectionProps {
   category: string
-  books:    ReturnType<typeof useSimilarBooks>['data']
+  books: ReturnType<typeof useSimilarBooks>['data']
 }
 
 function SimilarSection({ category, books }: SimilarSectionProps) {
@@ -56,11 +55,16 @@ function SimilarSection({ category, books }: SimilarSectionProps) {
     <section aria-labelledby="similar-heading" className="border-t border-surface2 pt-14">
       <div className="flex items-end justify-between mb-8">
         <div>
-          <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-2">Из того же раздела</p>
+          <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-2">
+            Из того же раздела
+          </p>
           <h2
             id="similar-heading"
             className="font-display font-semibold text-ink"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)' }}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.4rem, 2.5vw, 1.9rem)',
+            }}
           >
             Похожие книги
           </h2>
@@ -70,7 +74,12 @@ function SimilarSection({ category, books }: SimilarSectionProps) {
           className="text-sm text-ash hover:text-ink transition-colors hidden sm:inline-flex items-center gap-1 group"
         >
           Все в разделе
-          <span className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
+          <span
+            className="group-hover:translate-x-0.5 transition-transform"
+            aria-hidden="true"
+          >
+            →
+          </span>
         </Link>
       </div>
       <BookGrid books={books} />
@@ -91,8 +100,13 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
           <EmptyState
             icon={
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                <circle cx="12" cy="12" r="10" stroke="#7D7060" strokeWidth="1.5"/>
-                <path d="M12 8v4M12 16h.01" stroke="#7D7060" strokeWidth="1.5" strokeLinecap="round"/>
+                <circle cx="12" cy="12" r="10" stroke="#7D7060" strokeWidth="1.5" />
+                <path
+                  d="M12 8v4M12 16h.01"
+                  stroke="#7D7060"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
               </svg>
             }
             title="Книга не найдена"
@@ -139,7 +153,10 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
                 </div>
                 <h1
                   className="font-display font-semibold text-ink leading-tight"
-                  style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.7rem, 3.5vw, 2.5rem)' }}
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: 'clamp(1.7rem, 3.5vw, 2.5rem)',
+                  }}
                 >
                   {book.title}
                 </h1>
@@ -157,14 +174,18 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
 
               {book.description && (
                 <div>
-                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">О книге</p>
+                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">
+                    О книге
+                  </p>
                   <p className="text-ash text-base leading-relaxed">{book.description}</p>
                 </div>
               )}
 
               {book.tags.length > 0 && (
                 <div>
-                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">Темы</p>
+                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">
+                    Темы
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     {book.tags.map((tag) => (
                       <span
@@ -183,7 +204,9 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
               {/* Seller block */}
               {book.ownerId && (
                 <div>
-                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">Продавец</p>
+                  <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">
+                    Продавец
+                  </p>
                   <SellerBlock sellerId={book.ownerId} />
                 </div>
               )}

@@ -11,7 +11,6 @@ interface UseFormValidationOptions<T extends object> {
 
 export function useFormValidation<T extends object>({
   rules: fieldRules,
-  initialValues = {},
 }: UseFormValidationOptions<T>) {
   const [errors, setErrors] = useState<FieldErrors<T>>({})
   const [touched, setTouched] = useState<Partial<Record<keyof T, boolean>>>({})

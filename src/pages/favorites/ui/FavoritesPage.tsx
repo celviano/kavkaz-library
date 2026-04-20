@@ -1,4 +1,3 @@
-import { Bookmark } from 'lucide-react'
 'use client'
 
 import { memo } from 'react'
@@ -19,8 +18,16 @@ export const FavoritesPage = memo(() => {
         <Container>
           <div className="max-w-md mx-auto text-center flex flex-col items-center gap-6">
             <div className="w-14 h-14 rounded-2xl bg-surface border border-surface2 flex items-center justify-center">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7D7060" strokeWidth="1.5" strokeLinecap="round">
-                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#7D7060"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              >
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
             </div>
             <div>
@@ -57,7 +64,10 @@ export const FavoritesPage = memo(() => {
             </p>
             <h1
               className="font-display font-semibold text-ink leading-tight mb-2"
-              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 4vw, 3rem)' }}
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
+              }}
             >
               Избранные книги
             </h1>
@@ -74,7 +84,10 @@ export const FavoritesPage = memo(() => {
           {(isLoading || userLoading) && (
             <div className="grid gap-5 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="rounded-2xl bg-surface border border-surface2 overflow-hidden animate-pulse">
+                <div
+                  key={i}
+                  className="rounded-2xl bg-surface border border-surface2 overflow-hidden animate-pulse"
+                >
                   <div className="aspect-[3/4] bg-surface2" />
                   <div className="p-4 flex flex-col gap-2">
                     <div className="h-4 bg-surface2 rounded-full w-1/2" />
@@ -96,12 +109,22 @@ export const FavoritesPage = memo(() => {
           {/* Empty state */}
           {!isLoading && !error && books.length === 0 && (
             <div className="flex flex-col items-center gap-5 py-24 text-center">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#d6ccbf" strokeWidth="1.2" strokeLinecap="round">
-                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+              <svg
+                width="48"
+                height="48"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#d6ccbf"
+                strokeWidth="1.2"
+                strokeLinecap="round"
+              >
+                <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
               </svg>
               <div>
                 <p className="text-ink font-medium mb-1">Здесь пока пусто</p>
-                <p className="text-ash text-sm">Нажмите на флажок на карточке книги, чтобы сохранить её</p>
+                <p className="text-ash text-sm">
+                  Нажмите на флажок на карточке книги, чтобы сохранить её
+                </p>
               </div>
               <Link
                 href="/catalog"
@@ -113,9 +136,7 @@ export const FavoritesPage = memo(() => {
           )}
 
           {/* Books grid */}
-          {!isLoading && !error && books.length > 0 && (
-            <BookGrid books={books} />
-          )}
+          {!isLoading && !error && books.length > 0 && <BookGrid books={books} />}
         </Container>
       </section>
     </main>

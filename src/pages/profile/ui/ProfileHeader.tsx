@@ -2,28 +2,27 @@
 
 import { type FC, type ReactNode } from 'react'
 import Link from 'next/link'
-import { MapPin, Calendar, Link2, Mail, Pencil } from 'lucide-react'
+import { MapPin, Calendar, Link2, Pencil } from 'lucide-react'
 import { ProfileAvatar } from '@/entities/profile'
 import { ProfileBanner } from './ProfileBanner'
 import { ProfileInfoRow } from './ProfileInfoRow'
 import type { Profile } from '@/entities/profile'
 
 interface ProfileHeaderProps {
-  name:        string
-  profile:     Profile | null
-  email:       string
+  name: string
+  profile: Profile | null
+  email: string
   memberSince: string
-  isSeller:    boolean
-  statsNode:   ReactNode
-  extraInfo?:  ReactNode   // extra info rows for seller
-  badgeNode?:  ReactNode   // seller badge
-  trustNode?:  ReactNode   // trust pills
+  isSeller: boolean
+  statsNode: ReactNode
+  extraInfo?: ReactNode // extra info rows for seller
+  badgeNode?: ReactNode // seller badge
+  trustNode?: ReactNode // trust pills
 }
 
 export const ProfileHeader: FC<ProfileHeaderProps> = ({
   name,
   profile,
-  email,
   memberSince,
   isSeller,
   statsNode,
@@ -50,7 +49,7 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({
             href="/profile/edit"
             className="inline-flex items-center gap-2 h-9 px-4 rounded-lg text-sm font-medium border border-surface2 text-ash hover:text-ink hover:bg-surface2 transition-all focus-visible:outline-2 focus-visible:outline-accent"
           >
-            <Pencil size={13} strokeWidth={1.8} aria-hidden="true"/>
+            <Pencil size={13} strokeWidth={1.8} aria-hidden="true" />
             Редактировать
           </Link>
         </div>
@@ -60,7 +59,10 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({
           {badgeNode}
           <h1
             className="font-display font-semibold text-ink leading-tight"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 3vw, 2rem)' }}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.4rem, 3vw, 2rem)',
+            }}
           >
             {name}
           </h1>
@@ -68,15 +70,34 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({
             <p className="text-dim text-sm">@{profile.displayName}</p>
           )}
           {profile?.bio && (
-            <p className="text-ash text-sm leading-relaxed mt-0.5 max-w-lg">{profile.bio}</p>
+            <p className="text-ash text-sm leading-relaxed mt-0.5 max-w-lg">
+              {profile.bio}
+            </p>
           )}
         </div>
 
         {/* Info rows */}
         <div className="flex flex-col gap-2 mb-4">
-          {location && <ProfileInfoRow icon={<MapPin size={14} strokeWidth={1.8}/>} label="Местоположение" value={location} />}
-          <ProfileInfoRow icon={<Calendar size={14} strokeWidth={1.8}/>} label="С нами с" value={memberSince} />
-          {profile?.website && <ProfileInfoRow icon={<Link2 size={14} strokeWidth={1.8}/>} label="Сайт" value={profile.website} href={profile.website} />}
+          {location && (
+            <ProfileInfoRow
+              icon={<MapPin size={14} strokeWidth={1.8} />}
+              label="Местоположение"
+              value={location}
+            />
+          )}
+          <ProfileInfoRow
+            icon={<Calendar size={14} strokeWidth={1.8} />}
+            label="С нами с"
+            value={memberSince}
+          />
+          {profile?.website && (
+            <ProfileInfoRow
+              icon={<Link2 size={14} strokeWidth={1.8} />}
+              label="Сайт"
+              value={profile.website}
+              href={profile.website}
+            />
+          )}
           {extraInfo}
         </div>
 

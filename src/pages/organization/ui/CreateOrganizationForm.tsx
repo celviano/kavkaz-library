@@ -1,6 +1,6 @@
-import { Info } from 'lucide-react'
 'use client'
 
+import { Info } from 'lucide-react'
 import { memo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { Container } from '@/shared/ui/Container'
@@ -19,21 +19,21 @@ export const CreateOrganizationForm = memo(() => {
   const router = useRouter()
   const { mutate: create, isPending, error } = useCreateOrganization()
 
-  const nameRef        = useRef<HTMLInputElement>(null)
+  const nameRef = useRef<HTMLInputElement>(null)
   const descriptionRef = useRef<HTMLTextAreaElement>(null)
-  const emailRef       = useRef<HTMLInputElement>(null)
-  const phoneRef       = useRef<HTMLInputElement>(null)
-  const websiteRef     = useRef<HTMLInputElement>(null)
-  const cityRef        = useRef<HTMLInputElement>(null)
-  const innRef         = useRef<HTMLInputElement>(null)
-  const addressRef     = useRef<HTMLInputElement>(null)
+  const emailRef = useRef<HTMLInputElement>(null)
+  const phoneRef = useRef<HTMLInputElement>(null)
+  const websiteRef = useRef<HTMLInputElement>(null)
+  const cityRef = useRef<HTMLInputElement>(null)
+  const innRef = useRef<HTMLInputElement>(null)
+  const addressRef = useRef<HTMLInputElement>(null)
 
   const logoUpload = useSupabaseUpload({
-    bucketName:       'logos',
-    path:             'organizations',
+    bucketName: 'logos',
+    path: 'organizations',
     allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'],
-    maxFiles:         1,
-    maxFileSize:      3 * 1024 * 1024,
+    maxFiles: 1,
+    maxFileSize: 3 * 1024 * 1024,
   })
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -47,14 +47,14 @@ export const CreateOrganizationForm = memo(() => {
 
     create(
       {
-        name:        nameRef.current?.value        ?? '',
+        name: nameRef.current?.value ?? '',
         description: descriptionRef.current?.value ?? '',
-        email:       emailRef.current?.value       ?? '',
-        phone:       phoneRef.current?.value       ?? '',
-        website:     websiteRef.current?.value     ?? '',
-        city:        cityRef.current?.value        ?? '',
-        inn:         innRef.current?.value         ?? '',
-        address:     addressRef.current?.value     ?? '',
+        email: emailRef.current?.value ?? '',
+        phone: phoneRef.current?.value ?? '',
+        website: websiteRef.current?.value ?? '',
+        city: cityRef.current?.value ?? '',
+        inn: innRef.current?.value ?? '',
+        address: addressRef.current?.value ?? '',
         logoUrl,
       },
       { onSuccess: () => router.push('/dashboard') },
@@ -67,55 +67,108 @@ export const CreateOrganizationForm = memo(() => {
         <Container>
           <div className="max-w-2xl mx-auto">
             <div className="mb-10">
-              <PageHeading eyebrow="Продавец" title="Создать организацию"
-                subtitle="После создания ваш статус изменится на «Продавец»." />
+              <PageHeading
+                eyebrow="Продавец"
+                title="Создать организацию"
+                subtitle="После создания ваш статус изменится на «Продавец»."
+              />
             </div>
 
             <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-8">
-
               <FormSection title="Основное">
                 <FormField label="Название организации" required>
-                  <Input ref={nameRef} name="name" required maxLength={200} placeholder="ООО «Книжная лавка»" />
+                  <Input
+                    ref={nameRef}
+                    name="name"
+                    required
+                    maxLength={200}
+                    placeholder="ООО «Книжная лавка»"
+                  />
                 </FormField>
                 <FormField label="Описание" hint="Специализация, история, ассортимент">
-                  <Textarea ref={descriptionRef} name="description" rows={3} maxLength={1000}
-                    placeholder="Антикварный книжный магазин..." />
+                  <Textarea
+                    ref={descriptionRef}
+                    name="description"
+                    rows={3}
+                    maxLength={1000}
+                    placeholder="Антикварный книжный магазин..."
+                  />
                 </FormField>
                 <FormField label="Логотип" hint="JPG, PNG, WebP или SVG до 3 МБ">
-                  <Dropzone {...logoUpload}><DropzoneEmptyState /><DropzoneContent /></Dropzone>
+                  <Dropzone {...logoUpload}>
+                    <DropzoneEmptyState />
+                    <DropzoneContent />
+                  </Dropzone>
                 </FormField>
               </FormSection>
 
               <FormSection title="Контакты">
                 <div className="grid grid-cols-2 gap-4">
                   <FormField label="Email">
-                    <Input ref={emailRef} name="email" type="email" maxLength={200} placeholder="info@example.com" />
+                    <Input
+                      ref={emailRef}
+                      name="email"
+                      type="email"
+                      maxLength={200}
+                      placeholder="info@example.com"
+                    />
                   </FormField>
                   <FormField label="Телефон">
-                    <Input ref={phoneRef} name="phone" type="tel" maxLength={30} placeholder="+7 999 123-45-67" />
+                    <Input
+                      ref={phoneRef}
+                      name="phone"
+                      type="tel"
+                      maxLength={30}
+                      placeholder="+7 999 123-45-67"
+                    />
                   </FormField>
                 </div>
                 <FormField label="Сайт">
-                  <Input ref={websiteRef} name="website" type="url" maxLength={255} placeholder="https://example.com" />
+                  <Input
+                    ref={websiteRef}
+                    name="website"
+                    type="url"
+                    maxLength={255}
+                    placeholder="https://example.com"
+                  />
                 </FormField>
               </FormSection>
 
               <FormSection title="Адрес и реквизиты">
                 <div className="grid grid-cols-2 gap-4">
                   <FormField label="Город">
-                    <Input ref={cityRef} name="city" maxLength={100} placeholder="Москва" />
+                    <Input
+                      ref={cityRef}
+                      name="city"
+                      maxLength={100}
+                      placeholder="Москва"
+                    />
                   </FormField>
                   <FormField label="ИНН" hint="Необязательно">
-                    <Input ref={innRef} name="inn" maxLength={12} placeholder="7700000000" />
+                    <Input
+                      ref={innRef}
+                      name="inn"
+                      maxLength={12}
+                      placeholder="7700000000"
+                    />
                   </FormField>
                 </div>
                 <FormField label="Адрес">
-                  <Input ref={addressRef} name="address" maxLength={300} placeholder="ул. Арбат, 1" />
+                  <Input
+                    ref={addressRef}
+                    name="address"
+                    maxLength={300}
+                    placeholder="ул. Арбат, 1"
+                  />
                 </FormField>
               </FormSection>
 
               <div className="flex items-start gap-3 bg-accent/6 border border-accent/20 rounded-2xl px-5 py-4">
-                <Info size={16} strokeWidth={1.8} className="flex-shrink-0 mt-0.5 text-accent"/>
+                <Info
+                  size={16}
+                  strokeWidth={1.8}
+                  className="flex-shrink-0 mt-0.5 text-accent"
+                />
                 <p className="text-sm text-accent leading-relaxed">
                   Организация будет проверена администратором перед верификацией.
                 </p>
@@ -123,8 +176,12 @@ export const CreateOrganizationForm = memo(() => {
 
               <ErrorBanner message={error instanceof Error ? error.message : null} />
 
-              <FormActions submitLabel="Создать организацию" submitting={isPending}
-                submittingLabel="Создаём..." onCancel={() => router.back()} />
+              <FormActions
+                submitLabel="Создать организацию"
+                submitting={isPending}
+                submittingLabel="Создаём..."
+                onCancel={() => router.back()}
+              />
             </form>
           </div>
         </Container>

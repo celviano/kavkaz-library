@@ -1,6 +1,5 @@
 'use client'
 
-import { Check } from 'lucide-react'
 import { memo } from 'react'
 import Link from 'next/link'
 import { useProfile, useSellerStats, getFullName } from '@/entities/profile'
@@ -12,7 +11,7 @@ interface SellerBlockProps {
 
 export const SellerBlock = memo<SellerBlockProps>(({ sellerId }) => {
   const { data: profile, isLoading } = useProfile(sellerId)
-  const { data: stats }              = useSellerStats(sellerId)
+  const { data: stats } = useSellerStats(sellerId)
 
   if (isLoading) {
     return (
@@ -44,14 +43,29 @@ export const SellerBlock = memo<SellerBlockProps>(({ sellerId }) => {
           <div className="flex items-center gap-2 text-xs text-ash">
             {profile.isVerified && (
               <span className="flex items-center gap-1 text-accent">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
-                  <polyline points="20 6 9 17 4 12"/>
+                <svg
+                  width="10"
+                  height="10"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
                 </svg>
                 Верифицирован
               </span>
             )}
             {stats && (
-              <span>{stats.activeBooks} {stats.activeBooks === 1 ? 'книга' : stats.activeBooks < 5 ? 'книги' : 'книг'}</span>
+              <span>
+                {stats.activeBooks}{' '}
+                {stats.activeBooks === 1
+                  ? 'книга'
+                  : stats.activeBooks < 5
+                    ? 'книги'
+                    : 'книг'}
+              </span>
             )}
           </div>
         </div>
