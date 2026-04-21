@@ -37,6 +37,7 @@ app/                          ← Next.js App Router (routing only, thin pages)
   organization/create/page.tsx
   profile/page.tsx + edit/
   about/page.tsx
+  contacts/page.tsx
   auth/ login/ sign-up/ forgot-password/ update-password/ confirm/ error/
   not-found.tsx  error.tsx  loading.tsx
 
@@ -64,6 +65,8 @@ src/
     about/ui/
       AboutPage.tsx  AboutHero.tsx  AboutMission.tsx  AboutHow.tsx
       AboutForWhom.tsx  AboutCta.tsx
+    contacts/ui/
+      ContactsPage.tsx
 
   widgets/
     header/           footer/         hero/
@@ -77,6 +80,7 @@ src/
     favorites/        event-filter/   add-book/
     book-request/                     ← RequestModal (sends order)
     dashboard/model/useDashboard.ts   ← useMyBooks, useMyOrders, status mutations
+    quotes/model/                     ← quote data for quote-banner widget
 
   entities/
     book/
@@ -113,6 +117,16 @@ src/
       Breadcrumb.tsx      ← reusable breadcrumbs
       EmptyState.tsx      ← empty state with optional icon + CTA
       Skeleton.tsx        ← Skeleton + BookCardSkeleton
+      Input.tsx           ← input с токенами
+      Textarea.tsx        ← textarea с токенами
+      FormField.tsx       ← Label + Input/Select + error message
+      FormActions.tsx     ← Submit + Cancel кнопки формы
+      SegmentedControl.tsx ← таб-переключатель (dashboard)
+      QuantityInput.tsx   ← ввод числа с +/−
+      AuthGateModal.tsx   ← модалка "нужна авторизация"
+      ErrorBanner.tsx     ← баннер ошибки формы
+      SocialIcons.tsx     ← IconTelegram, IconVK, IconMax
+      JsonLd.tsx          ← structured data для SEO
     lib/
       cn.ts               ← clsx + twMerge
       validation.ts       ← rules: required, email, minLength, maxLength, url, year, number
@@ -135,6 +149,7 @@ src/
       useFormValidation.ts   ← touchField, validateAll, getFieldError (shows error after touch)
     config/
       constants.ts           ← CATEGORY_LABELS, CATEGORIES (NO mock data)
+    icons/                   ← SVG-иконки как React-компоненты
 ```
 
 ---
@@ -242,10 +257,13 @@ draft → pending → active → sold
 --color-ink:      #1B2212   --color-text:     #50433D
 --color-ash:      #7D7060   --color-dim:      #a8998a
 --color-accent:   #2a5c45   --color-accent2:  #3d7a5e   --color-accent3: #6abf99
---color-gold:     #8B6914   --color-dark:     #1B2212
+--color-gold:     #8B6914   --color-gold2:    #b8902a
+--color-steel:    #B7C9D5   --color-steel2:   #4a6e7a
+--color-dark:     #1B2212   --color-dark2:    #252f1a
 
 --shadow-accent:    0 4px 24px rgb(42 92 69 / 0.14)
 --shadow-accent-sm: 0 2px 10px rgb(42 92 69 / 0.10)
+--shadow-accent-lg: 0 8px 40px rgb(42 92 69 / 0.18)
 --shadow-card:      0 1px 3px rgb(27 34 18 / 0.06), 0 4px 16px rgb(27 34 18 / 0.05)
 ```
 
@@ -353,16 +371,45 @@ export { useBooks, useBook, useFeaturedBooks } from './model/useBooks'
 
 ## What NOT to do
 
+### Agent behaviour
+- Do NOT leave tasks unfinished — complete them fully
+- Do NOT write long explanations without necessity — be concise
+- Do NOT create files without explicit user request
+- Do NOT suggest solutions that were not requested
+
+### TypeScript
 - Do NOT use `any` — strict typing always
-- Do NOT violate FSD import rules
+- Do NOT ignore TypeScript errors — fix them
+- Do NOT use `@ts-ignore` except as a last resort
+- Do NOT use `as` to bypass types; `!` only when existence is guaranteed
+
+### React & components
 - Do NOT skip `memo()` on heavy components
 - Do NOT put business logic in page components
+- Do NOT create components without proper error boundaries
+- Do NOT create deep component nesting
+
+### Architecture
+- Do NOT violate FSD import rules
 - Do NOT cross-import between same-level FSD slices
+- Do NOT duplicate code — use reusable patterns
+- Do NOT ignore performance implications
+
+### UI / UX
+- Do NOT skip `aria-*`, `role`, labels
+- Do NOT ignore responsive design requirements
 - Do NOT skip loading/error states
 - Do NOT use inline `#hex` colors — use CSS tokens
 - Do NOT hardcode values — use constants
-- Do NOT skip `aria-*`, `role`, labels
-- Do NOT leave `console.log` in code
+
+### Data & quality
 - Do NOT make direct API calls inside components — use hooks/queries
 - Do NOT skip input validation
 - Do NOT create memory leaks — clean up effects and subscriptions
+- Do NOT leave `console.log` in code
+- Do NOT ignore linting errors
+
+### Security
+- Do NOT create components with XSS vulnerabilities
+- Do NOT use `dangerouslySetInnerHTML` without sanitization
+- Do NOT expose sensitive data in client-side code
