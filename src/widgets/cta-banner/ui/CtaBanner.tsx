@@ -5,7 +5,7 @@ import { Container } from '@/shared/ui/Container'
 export const CtaBanner = memo(() => (
   <section aria-labelledby="cta-heading" className="py-20 border-t border-surface2">
     <Container>
-      <div className="relative overflow-hidden rounded-3xl bg-dark px-8 md:px-16 py-16 text-center">
+      <div className="relative overflow-hidden rounded-3xl bg-dark px-5 md:px-16 py-10 md:py-16 text-center">
         {/* Kubachi ornament — light on dark */}
         <svg
           className="pointer-events-none absolute inset-0 w-full h-full"
@@ -156,17 +156,21 @@ export const CtaBanner = memo(() => (
           <div className="absolute right-0 bottom-0 w-72 h-72 translate-x-1/3 translate-y-1/3 rounded-full bg-accent/15 blur-[60px]" />
         </div>
 
-        <div className="relative flex flex-col items-center gap-5 max-w-2xl mx-auto">
-          <h2 id="cta-heading" className="font-display text-4xl font-normal text-bg">
+        <div className="relative flex flex-col items-center gap-4 md:gap-5 max-w-2xl mx-auto">
+          <h2
+            id="cta-heading"
+            className="font-normal text-bg"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem, 5vw, 2.25rem)', lineHeight: 1.15 }}
+          >
             Изучайте историю <em className="text-accent3 not-italic">Кавказа</em>
           </h2>
-          <p className="text-bg/55 text-base leading-relaxed max-w-lg">
+          <p className="text-bg/55 text-sm md:text-base leading-relaxed max-w-lg">
             История, культура, языки, литература и биографии — всё о народах Кавказа
             великой эпохи Кавказской войны и освоения региона.
           </p>
           <Link
             href="/catalog"
-            className="inline-flex items-center justify-center h-12 px-8 rounded-xl text-base font-medium bg-accent text-bg border border-accent hover:bg-accent2 shadow-accent-sm hover:shadow-accent transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent3"
+            className="inline-flex items-center justify-center h-10 md:h-12 px-6 md:px-8 rounded-xl text-sm md:text-base font-medium bg-accent text-bg border border-accent hover:bg-accent2 shadow-accent-sm hover:shadow-accent transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent3"
           >
             Перейти в каталог
           </Link>

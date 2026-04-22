@@ -15,7 +15,7 @@ export function AboutCta() {
       aria-labelledby="about-cta-heading"
     >
       <Container>
-        <div className="relative overflow-hidden rounded-3xl bg-dark px-8 md:px-16 py-16">
+        <div className="relative overflow-hidden rounded-3xl bg-dark px-6 md:px-16 py-12 md:py-16">
           {/* Glow blobs */}
           <div className="pointer-events-none absolute inset-0" aria-hidden="true">
             <div className="absolute left-0 top-0 w-96 h-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/20 blur-[80px]" />
@@ -28,12 +28,12 @@ export function AboutCta() {
               className="font-display font-semibold text-bg"
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)',
+                fontSize: 'clamp(1.3rem, 4vw, 2.5rem)',
               }}
             >
               Кавказ ждёт вас
             </h2>
-            <p className="text-bg/55 text-base leading-relaxed">
+            <p className="text-bg/55 text-sm md:text-base leading-relaxed">
               Начните с каталога - или добавьте свои книги, если есть что-то редкое.
               Каждое издание помогает сохранить знания для следующих поколений.
             </p>
@@ -44,7 +44,7 @@ export function AboutCta() {
                 <div key={item.label} className="flex flex-col items-center gap-1">
                   <dd
                     className="font-display font-semibold text-accent3 leading-none"
-                    style={{ fontFamily: 'var(--font-display)', fontSize: '2rem' }}
+                    style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 4vw, 2rem)' }}
                   >
                     {item.value}
                   </dd>
@@ -55,16 +55,16 @@ export function AboutCta() {
               ))}
             </dl>
 
-            <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="flex flex-col md:flex-row items-center gap-3">
               <Link
                 href="/catalog"
-                className="inline-flex items-center justify-center h-12 px-8 rounded-xl text-base font-medium bg-accent text-bg border border-accent hover:bg-accent2 shadow-accent-sm hover:shadow-accent transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent3"
+                className="inline-flex items-center justify-center w-full md:w-auto h-11 md:h-12 px-6 md:px-8 rounded-xl text-sm md:text-base font-medium bg-accent text-bg border border-accent hover:bg-accent2 shadow-accent-sm hover:shadow-accent transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent3"
               >
                 Перейти в каталог
               </Link>
               <Link
                 href="/add-book"
-                className="inline-flex items-center justify-center h-12 px-8 rounded-xl text-base font-medium text-bg/80 border border-bg/20 hover:bg-bg/10 hover:text-bg transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bg"
+                className="inline-flex items-center justify-center w-full md:w-auto h-11 md:h-12 px-6 md:px-8 rounded-xl text-sm md:text-base font-medium text-bg/80 border border-bg/20 hover:bg-bg/10 hover:text-bg transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bg"
               >
                 Добавить книгу
               </Link>

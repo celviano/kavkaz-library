@@ -47,31 +47,31 @@ export const CategoriesSection = memo(() => {
           <SectionHeading eyebrow="Разделы" title="Категории" id="categories-heading" />
         </div>
         <ul
-          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4"
+          className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"
           role="list"
           aria-label="Список категорий"
         >
-          {CATEGORIES.map((cat) => {
+          {CATEGORIES.slice(0, 6).map((cat) => {
             const count = counts[cat] ?? 0
             return (
-              <li key={cat}>
+              <li key={cat} className="flex">
                 <Link
                   href={`/catalog?category=${cat}`}
-                  className="flex flex-col gap-3 p-5 rounded-2xl bg-bg border border-surface2 hover:border-accent/30 hover:shadow-accent-sm transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shadow-card"
+                  className="flex flex-col gap-2 p-3 sm:p-4 rounded-2xl bg-bg border border-surface2 hover:border-accent/30 hover:shadow-accent-sm transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shadow-card w-full"
                   aria-label={`${CATEGORY_LABELS[cat]}: ${count} книг`}
                 >
                   <Badge category={cat} label={CATEGORY_LABELS[cat]} />
                   <span
-                    className="font-display font-semibold text-accent"
+                    className="font-semibold text-accent"
                     style={{
                       fontFamily: 'var(--font-display)',
-                      fontSize: '1.75rem',
+                      fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
                       lineHeight: 1,
                     }}
                   >
                     {count}
                   </span>
-                  <span className="text-[11px] text-ash uppercase tracking-wider">
+                  <span className="text-[8px] sm:text-[11px] text-ash uppercase tracking-wider">
                     {count === 1 ? 'книга' : count < 5 ? 'книги' : 'книг'}
                   </span>
                 </Link>
