@@ -4,7 +4,7 @@ import { Container } from '@/shared/ui/Container'
 export function AboutHero() {
   return (
     <section
-      className="relative overflow-hidden py-24 md:py-32"
+      className="relative overflow-hidden min-h-svh md:min-h-0 flex flex-col py-14 md:py-32"
       aria-labelledby="about-heading"
     >
       {/* Carpet pattern */}
@@ -61,22 +61,23 @@ export function AboutHero() {
         <path d="M820 5  L836 28 L804 28Z" fill="#f2ede6" opacity="0.6" />
       </svg>
 
-      <Container className="relative">
-        <div className="max-w-3xl mx-auto text-center flex flex-col items-center gap-6">
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-accent/20 bg-accent/6 px-5 py-2">
-            <span className="text-accent text-xs font-medium tracking-[2px] uppercase">
+      <Container className="relative flex-1 flex flex-col md:block">
+        <div className="flex-1 flex flex-col items-center justify-center md:justify-start max-w-3xl mx-auto text-center gap-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/6 px-4 py-1.5">
+            <span className="text-accent text-[10px] md:text-xs font-medium tracking-[2px] uppercase">
               О проекте
             </span>
           </div>
 
           <h1
             id="about-heading"
-            className="font-display font-normal text-4xl text-ink leading-[1.08]"
+            className="font-normal text-ink leading-[1.08]"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem, 5vw, 3rem)' }}
           >
             Кавказ - это не просто <em className="text-accent not-italic">география</em>
           </h1>
 
-          <p className="text-ash text-lg leading-relaxed max-w-2xl">
+          <p className="text-ash text-sm md:text-lg leading-relaxed max-w-2xl">
             Тысячелетия культур, языков и народов. История, которую писали очевидцы,
             путешественники, полководцы и учёные - и которую сегодня почти невозможно
             найти. CaucasusLibrary создан, чтобы это изменить.

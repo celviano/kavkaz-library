@@ -14,7 +14,7 @@ export const FeaturedBooks = memo(() => {
   return (
     <section
       aria-labelledby="featured-heading"
-      className="py-20 border-t border-surface2 relative overflow-hidden"
+      className="py-10 md:py-20 border-t border-surface2 relative overflow-hidden"
     >
       {/* Kubachi ornament background */}
       <svg
