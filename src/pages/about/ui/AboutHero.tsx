@@ -81,7 +81,6 @@ export function AboutHero() {
           >
             Кавказ - это не просто <em className="text-accent not-italic">география</em>
           </h1>
-
           <p className="text-ink/80 text-sm md:text-lg leading-relaxed max-w-2xl font-semibold">
             Тысячелетия культур, языков и народов. История, которую писали очевидцы,
             путешественники, полководцы и учёные - и которую сегодня почти невозможно

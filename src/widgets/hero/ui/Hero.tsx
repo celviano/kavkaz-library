@@ -105,7 +105,6 @@ export const Hero = memo(() => {
         style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg))' }}
         aria-hidden="true"
       />
-
       <Container className="relative flex-1 flex flex-col md:block py-16 md:py-32 xl:py-40">
 
         <div className="flex flex-col items-center justify-center text-center flex-1">
