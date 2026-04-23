@@ -51,7 +51,7 @@ const FAQ = [
 export function ContactsPage() {
   return (
     <main id="main-content">
-      <section className="relative overflow-hidden py-20 border-b border-surface2">
+      <section className="relative overflow-hidden min-h-svh md:min-h-0 flex flex-col py-14 md:py-20 border-b border-surface2">
         <svg className="absolute inset-0 w-full h-full opacity-[0.04]" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <pattern id="contacts-pat" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
@@ -61,14 +61,14 @@ export function ContactsPage() {
           </defs>
           <rect width="100%" height="100%" fill="url(#contacts-pat)"/>
         </svg>
-        <Container className="relative">
+        <Container className="relative flex-1 flex flex-col justify-center md:block">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-4">Контакты</p>
-            <h1 className="font-display font-normal text-ink leading-tight mb-4"
-              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(2rem, 5vw, 3.2rem)' }}>
+            <p className="text-[10px] md:text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3 md:mb-4">Контакты</p>
+            <h1 className="font-normal text-ink leading-tight mb-3 md:mb-4"
+              style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem, 5vw, 3.2rem)' }}>
               Будем рады помочь
             </h1>
-            <p className="text-ash text-lg leading-relaxed">
+            <p className="text-ash text-sm md:text-lg leading-relaxed">
               Есть вопросы о площадке, хотите разместить коллекцию или стать партнёром — напишите нам.
               Отвечаем в течение рабочего дня.
             </p>

@@ -1,9 +1,9 @@
 'use client'
 
-import { memo, useState } from 'react'
+import { memo, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Plus, LayoutDashboard } from 'lucide-react'
+import { Plus, LayoutDashboard, LogOut } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
 import { Container } from '@/shared/ui/Container'
 import { UserAvatar } from '@/entities/user'
@@ -50,7 +50,7 @@ function HeaderActions({ isSeller, isAdmin }: { isSeller: boolean; isAdmin: bool
       <Link
         href="/add-book"
         className={cn(
-          'inline-flex items-center gap-1.5 h-9 px-4 rounded-lg',
+          'hidden lg:flex items-center gap-1.5 h-9 px-4 rounded-lg',
           'text-sm font-medium',
           'bg-accent text-bg border border-accent',
           'hover:bg-accent2 hover:border-accent2',
@@ -70,128 +70,198 @@ export const Header = memo(() => {
   const { user } = useCurrentUser()
   const { isSeller, isAdmin } = useCurrentRole()
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [menuOpen])
+
+  // Close on route change
+  useEffect(() => { setMenuOpen(false) }, [pathname])
+
   return (
-    <header className="sticky top-0 z-50 border-b border-surface2/70 bg-bg/90 backdrop-blur-sm">
-      <Container>
-        <div className="flex h-16 items-center justify-between gap-4">
+    <>
+      <header className="sticky top-0 z-50 border-b border-surface2/70 bg-bg/90 backdrop-blur-sm">
+        <Container>
+          <div className="flex h-16 items-center justify-between gap-3">
 
-          {/* Logo */}
-          <Link
-            href="/"
-            className="flex items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent rounded-sm shrink-0"
-            aria-label="CaucasusLibrary — на главную"
-          >
-            <span className="text-accent"><MountainIcon /></span>
-            <span
-              className="font-display text-xl font-semibold tracking-wide text-ink leading-none"
-              style={{ fontFamily: 'var(--font-display)' }}
+            {/* Logo */}
+            <Link
+              href="/"
+              className="flex items-center gap-3 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent rounded-sm shrink-0"
+              aria-label="CaucasusLibrary — на главную"
             >
-              Caucasus<span className="text-accent italic">Library</span>
-            </span>
-          </Link>
-
-          {/* Desktop nav */}
-          <nav className="hidden md:flex justify-center items-center gap-1 flex-1" aria-label="Основная навигация">
-            {NAV_LINKS.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={cn(
-                  'px-4 py-2 rounded-lg text-sm transition-all duration-150',
-                  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
-                  pathname === href || pathname?.startsWith(href + '/')
-                    ? 'text-accent bg-accent/10 font-medium'
-                    : 'text-ash hover:text-ink hover:bg-surface',
-                )}
-                aria-current={pathname === href ? 'page' : undefined}
+              <span className="text-accent"><MountainIcon /></span>
+              <span
+                className="font-display text-xl font-semibold tracking-wide text-ink leading-none"
+                style={{ fontFamily: 'var(--font-display)' }}
               >
-                {label}
-              </Link>
-            ))}
-          </nav>
+                Caucasus<span className="text-accent italic">Library</span>
+              </span>
+            </Link>
 
-          {/* Right */}
-          <div className="hidden md:flex items-center gap-3">
-            {user && <HeaderActions isSeller={isSeller} isAdmin={isAdmin} />}
-            <UserAvatar />
-          </div>
-
-          {/* Mobile burger */}
-          <button
-            className={cn(
-              'md:hidden flex flex-col justify-center gap-[5px] w-10 h-10 rounded-lg',
-              'text-ash hover:text-ink hover:bg-surface',
-              'transition-colors duration-150 cursor-pointer items-center',
-            )}
-            onClick={() => setMenuOpen((prev) => !prev)}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
-            aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
-          >
-            <span className={cn('block w-5 h-px bg-current transition-all duration-200', menuOpen && 'translate-y-[6px] rotate-45')} />
-            <span className={cn('block w-5 h-px bg-current transition-all duration-200', menuOpen && 'opacity-0')} />
-            <span className={cn('block w-5 h-px bg-current transition-all duration-200', menuOpen && '-translate-y-[6px] -rotate-45')} />
-          </button>
-        </div>
-      </Container>
-
-      {/* Mobile menu */}
-      {menuOpen && (
-        <nav id="mobile-menu" className="md:hidden border-t border-surface2 bg-surface" aria-label="Мобильная навигация">
-          <Container>
-            <ul className="flex flex-col py-3 gap-1">
+            {/* Desktop nav */}
+            <nav className="hidden md:flex justify-center items-center gap-1 flex-1" aria-label="Основная навигация">
               {NAV_LINKS.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className={cn(
-                      'flex items-center px-3 py-2.5 text-sm rounded-lg transition-colors',
-                      pathname === href
-                        ? 'text-accent bg-accent/8 font-medium'
-                        : 'text-ash hover:text-ink hover:bg-surface2',
-                    )}
-                    onClick={() => setMenuOpen(false)}
-                    aria-current={pathname === href ? 'page' : undefined}
-                  >
-                    {label}
-                  </Link>
-                </li>
+                <Link
+                  key={href}
+                  href={href}
+                  className={cn(
+                    'px-4 py-2 rounded-lg text-sm transition-all duration-150',
+                    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',
+                    pathname === href || pathname?.startsWith(href + '/')
+                      ? 'text-accent bg-accent/10 font-medium'
+                      : 'text-ash hover:text-ink hover:bg-surface',
+                  )}
+                  aria-current={pathname === href ? 'page' : undefined}
+                >
+                  {label}
+                </Link>
               ))}
+            </nav>
 
-              {user && (isSeller || isAdmin) && (
-                <li>
+            {/* Right */}
+            <div className="hidden md:flex items-center gap-3">
+              {user && <HeaderActions isSeller={isSeller} isAdmin={isAdmin} />}
+              <UserAvatar />
+            </div>
+
+            {/* Mobile burger */}
+            <button
+              className={cn(
+                'md:hidden flex flex-col justify-center gap-1.25 w-10 h-10 rounded-lg',
+                'text-ash hover:text-ink hover:bg-surface',
+                'transition-colors duration-150 cursor-pointer items-center',
+              )}
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              aria-label={menuOpen ? 'Закрыть меню' : 'Открыть меню'}
+            >
+              <span className={cn('block w-5 h-px bg-current transition-all duration-200', menuOpen && 'translate-y-1.5 rotate-45')} />
+              <span className={cn('block w-5 h-px bg-current transition-all duration-200', menuOpen && 'opacity-0')} />
+              <span className={cn('block w-5 h-px bg-current transition-all duration-200', menuOpen && '-translate-y-1.5 -rotate-45')} />
+            </button>
+          </div>
+        </Container>
+      </header>
+
+      {/* Mobile menu overlay */}
+      {menuOpen && (
+        <div
+          id="mobile-menu"
+          className="fixed inset-0 z-40 md:hidden flex flex-col bg-bg"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Мобильная навигация"
+        >
+          <div className="h-16 shrink-0 border-b border-surface2/70" />
+
+          <div className="flex-1 overflow-y-auto flex flex-col">
+            <Container className="flex-1 flex flex-col">
+
+              {/* Main nav */}
+              <nav aria-label="Основная навигация">
+                <ul className="flex flex-col pt-4">
+                  {NAV_LINKS.map(({ href, label }) => (
+                    <li key={href}>
+                      <Link
+                        href={href}
+                        className={cn(
+                          'flex items-center justify-between py-3.5 border-b border-surface2 transition-colors',
+                          pathname === href ? 'text-accent' : 'text-ink hover:text-accent',
+                        )}
+                        style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 400, lineHeight: 1.1 }}
+                        onClick={() => setMenuOpen(false)}
+                        aria-current={pathname === href ? 'page' : undefined}
+                      >
+                        {label}
+                        {pathname === href && <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+
+              {/* Secondary links */}
+              <div className="flex flex-col pt-2">
+                {user && (isSeller || isAdmin) && (
                   <Link
                     href="/dashboard"
-                    className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg text-ash hover:text-ink hover:bg-surface2 transition-colors"
+                    className={cn(
+                      'flex items-center justify-between py-3.5 border-b border-surface2 transition-colors',
+                      pathname === '/dashboard' ? 'text-accent' : 'text-ink hover:text-accent',
+                    )}
+                    style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 400, lineHeight: 1.1 }}
                     onClick={() => setMenuOpen(false)}
                   >
-                    <LayoutDashboard size={14} strokeWidth={1.8}/>
                     Кабинет
+                    {pathname === '/dashboard' && <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />}
                   </Link>
-                </li>
-              )}
+                )}
+                <Link
+                  href="/favorites"
+                  className={cn(
+                    'flex items-center justify-between py-3.5 border-b border-surface2 transition-colors',
+                    pathname === '/favorites' ? 'text-accent' : 'text-ink hover:text-accent',
+                  )}
+                  style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 400, lineHeight: 1.1 }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Избранное
+                  {pathname === '/favorites' && <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" />}
+                </Link>
+                {user && (
+                  <button
+                    type="button"
+                    className="flex items-center gap-3 py-3 mt-1 text-sm text-ash hover:text-ink transition-colors cursor-pointer"
+                    onClick={async () => {
+                      const { createClient } = await import('@/shared/lib/supabase/client')
+                      const supabase = createClient()
+                      await supabase.auth.signOut()
+                      setMenuOpen(false)
+                    }}
+                  >
+                    <LogOut size={15} strokeWidth={1.6} />
+                    Выйти
+                  </button>
+                )}
+              </div>
 
-              {user && (
-                <li>
+              {/* Bottom: user / login */}
+              <div className="mt-auto pt-4 pb-6 border-t border-surface2">
+                {user ? (
                   <Link
-                    href="/add-book"
-                    className="flex items-center gap-2 px-3 py-2.5 text-sm rounded-lg text-accent font-medium hover:bg-accent/8 transition-colors"
+                    href="/profile"
+                    className="flex items-center gap-3 hover:opacity-80 transition-opacity"
                     onClick={() => setMenuOpen(false)}
                   >
-                    <Plus size={14} strokeWidth={2.5}/>
-                    Добавить книгу
+                    <span className="text-accent shrink-0"><MountainIcon /></span>
+                    <div className="flex flex-col min-w-0">
+                      <span
+                        className="text-base font-semibold text-ink leading-none"
+                        style={{ fontFamily: 'var(--font-display)' }}
+                      >
+                        Caucasus<span className="text-accent italic">Library</span>
+                      </span>
+                      <span className="text-xs text-ash truncate mt-0.5">{user.email}</span>
+                    </div>
                   </Link>
-                </li>
-              )}
+                ) : (
+                  <Link
+                    href="/auth/login"
+                    className="inline-flex items-center justify-center h-10 w-full rounded-xl text-sm font-medium text-ash border border-surface2 hover:text-ink hover:bg-surface transition-all"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Войти
+                  </Link>
+                )}
+              </div>
 
-              <li className="pt-2 mt-1 border-t border-surface2">
-                <div className="px-3 py-2"><UserAvatar /></div>
-              </li>
-            </ul>
-          </Container>
-        </nav>
+            </Container>
+          </div>
+        </div>
       )}
-    </header>
+    </>
   )
 })
 

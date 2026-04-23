@@ -1,82 +1,88 @@
 // src/pages/about/ui/AboutHero.tsx
+import Image from 'next/image'
 import { Container } from '@/shared/ui/Container'
+import aboutPainting from '../../../../public/images/about-hero-painting.jpg'
 
 export function AboutHero() {
   return (
     <section
-      className="relative overflow-hidden py-24 md:py-32"
+      className="relative overflow-hidden min-h-svh md:min-h-0 flex flex-col py-14 md:py-32"
       aria-labelledby="about-heading"
     >
-      {/* Carpet pattern */}
+      {/* Painting background */}
+      <div className="absolute inset-0" aria-hidden="true">
+        <Image
+          src={aboutPainting}
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
+          quality={90}
+        />
+      </div>
+
+      {/* Layer 1: gradient overlay */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(242,237,230,0.92) 0%, rgba(242,237,230,0.78) 45%, rgba(242,237,230,0.45) 75%, rgba(242,237,230,0.15) 100%)',
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Layer 2: warm tint */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{ background: 'rgba(242,237,230,0.15)' }}
+        aria-hidden="true"
+      />
+
+      {/* Layer 3: carpet pattern */}
       <svg
-        className="absolute inset-0 w-full h-full opacity-[0.04]"
+        className="absolute inset-0 w-full h-full opacity-[0.025]"
         preserveAspectRatio="xMidYMid slice"
         aria-hidden="true"
       >
         <defs>
-          <pattern
-            id="about-carpet"
-            x="0"
-            y="0"
-            width="80"
-            height="80"
-            patternUnits="userSpaceOnUse"
-          >
-            <polygon
-              points="40,6 74,40 40,74 6,40"
-              fill="none"
-              stroke="#2a5c45"
-              strokeWidth="1.5"
-            />
-            <polygon
-              points="40,18 62,40 40,62 18,40"
-              fill="none"
-              stroke="#8B6914"
-              strokeWidth="1"
-            />
+          <pattern id="about-carpet" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
+            <polygon points="40,6 74,40 40,74 6,40"   fill="none" stroke="#2a5c45" strokeWidth="1.5" />
+            <polygon points="40,18 62,40 40,62 18,40" fill="none" stroke="#8B6914" strokeWidth="1" />
             <polygon points="40,28 52,40 40,52 28,40" fill="#2a5c45" opacity="0.4" />
-            <circle cx="0" cy="0" r="2" fill="#8B6914" />
-            <circle cx="80" cy="0" r="2" fill="#8B6914" />
-            <circle cx="0" cy="80" r="2" fill="#8B6914" />
+            <circle cx="0"  cy="0"  r="2" fill="#8B6914" />
+            <circle cx="80" cy="0"  r="2" fill="#8B6914" />
+            <circle cx="0"  cy="80" r="2" fill="#8B6914" />
             <circle cx="80" cy="80" r="2" fill="#8B6914" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#about-carpet)" />
       </svg>
 
-      {/* Mountain silhouette */}
-      <svg
-        className="absolute bottom-0 left-0 w-full opacity-[0.05]"
-        viewBox="0 0 1200 120"
-        preserveAspectRatio="xMidYMax slice"
+      {/* Bottom fade */}
+      <div
+        className="absolute bottom-0 left-0 w-full h-32 pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg))' }}
         aria-hidden="true"
-      >
-        <path
-          d="M0 120 L0 70 L100 15 L180 55 L280 5 L380 50 L460 0 L560 45 L640 10 L740 55 L820 5 L920 50 L1000 15 L1100 55 L1200 20 L1200 120Z"
-          fill="#1B2212"
-        />
-        <path d="M280 5  L295 30 L265 30Z" fill="#f2ede6" opacity="0.6" />
-        <path d="M460 0  L478 26 L442 26Z" fill="#f2ede6" opacity="0.6" />
-        <path d="M640 10 L654 32 L626 32Z" fill="#f2ede6" opacity="0.55" />
-        <path d="M820 5  L836 28 L804 28Z" fill="#f2ede6" opacity="0.6" />
-      </svg>
+      />
 
-      <Container className="relative">
-        <div className="max-w-3xl mx-auto text-center flex flex-col items-center gap-6">
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-accent/20 bg-accent/6 px-5 py-2">
-            <span className="text-accent text-xs font-medium tracking-[2px] uppercase">
+      <Container className="relative flex-1 flex flex-col md:block">
+        <div className="flex-1 flex flex-col items-center justify-center md:justify-start max-w-3xl mx-auto text-center gap-6">
+          <div className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/6 px-4 py-1.5 backdrop-blur-[2px]">
+            <span className="text-accent text-[10px] md:text-xs font-medium tracking-[2px] uppercase">
               О проекте
             </span>
           </div>
 
           <h1
             id="about-heading"
-            className="font-display font-normal text-4xl text-ink leading-[1.08]"
+            className="font-normal text-ink leading-[1.08]"
+            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem, 5vw, 3rem)' }}
           >
             Кавказ - это не просто <em className="text-accent not-italic">география</em>
           </h1>
 
-          <p className="text-ash text-lg leading-relaxed max-w-2xl">
+          <p className="text-ink/80 text-sm md:text-lg leading-relaxed max-w-2xl font-semibold">
             Тысячелетия культур, языков и народов. История, которую писали очевидцы,
             путешественники, полководцы и учёные - и которую сегодня почти невозможно
             найти. CaucasusLibrary создан, чтобы это изменить.
