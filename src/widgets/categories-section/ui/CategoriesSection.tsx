@@ -57,17 +57,19 @@ export const CategoriesSection = memo(() => {
               <li key={cat} className="flex">
                 <Link
                   href={`/catalog?category=${cat}`}
-                  className="flex flex-col gap-2 p-3 sm:p-4 rounded-2xl bg-bg border border-surface2 hover:border-accent/30 hover:shadow-accent-sm transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent shadow-card w-full"
+                  className={
+                    'flex flex-col gap-2 p-3 sm:p-2 rounded-2xl ' +
+                    'bg-bg border border-surface2 hover:border-accent/30 ' +
+                    'hover:shadow-accent-sm transition-all duration-200 ' +
+                    'focus-visible:outline-2 focus-visible:outline-offset-2 ' +
+                    'focus-visible:outline-accent shadow-card w-full'
+                  }
                   aria-label={`${CATEGORY_LABELS[cat]}: ${count} книг`}
                 >
-                  <Badge category={cat} label={CATEGORY_LABELS[cat]} />
+                  <div className='flex justify-center md:justify-start '><Badge category={cat} label={CATEGORY_LABELS[cat]} /></div>
+                  
                   <span
-                    className="font-semibold text-accent"
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontSize: 'clamp(1.25rem, 3vw, 1.75rem)',
-                      lineHeight: 1,
-                    }}
+                    className="font-normal text-[12px] md:text-base  text-accent"
                   >
                     {count}
                   </span>

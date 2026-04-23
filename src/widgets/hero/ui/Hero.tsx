@@ -6,7 +6,10 @@ import heroPainting from '../../../../public/images/hero-painting.jpg'
 
 export const Hero = memo(() => {
   return (
-    <section className="relative overflow-hidden min-h-svh md:min-h-0 flex flex-col" aria-labelledby="hero-heading">
+    <section
+      className="relative overflow-hidden min-h-svh md:min-h-0 flex flex-col"
+      aria-labelledby="hero-heading"
+    >
       {/* Painting background */}
       <div className="absolute inset-0" aria-hidden="true">
         <Image
@@ -30,7 +33,7 @@ export const Hero = memo(() => {
         aria-hidden="true"
       />
 
-      {/* Layer 2: warm tint */} 
+      {/* Layer 2: warm tint */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{ background: 'rgba(242,237,230,0.18)' }}
@@ -102,11 +105,10 @@ export const Hero = memo(() => {
         style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg))' }}
         aria-hidden="true"
       />
+      <Container className="relative flex-1 flex flex-col md:block py-16 md:py-32 xl:py-40">
 
-      <Container className="relative flex-1 flex flex-col md:block">
-        <div className="flex flex-col items-center justify-center text-center flex-1 py-16 md:py-32 xl:py-40">
-          {/* Eyebrow */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-accent/20 bg-accent/6 px-4 py-1.5 mb-6 md:mb-8 backdrop-blur-[2px]">
+        <div className="flex flex-col items-center justify-center text-center flex-1">
+          <div className="flex w-fit mx-auto items-center gap-2 rounded-full border border-accent/20 bg-accent/6 px-4 py-1.5 mb-6 md:mb-8 backdrop-blur-[2px]">
             <span className="text-accent text-[10px] md:text-xs font-medium tracking-[2px] uppercase">
               Библиотека Кавказа
             </span>
@@ -133,7 +135,7 @@ export const Hero = memo(() => {
           </h1>
 
           {/* Description */}
-          <p className="text-ink/60 text-sm md:text-lg leading-relaxed max-w-2xl mb-8 md:mb-10">
+          <p className="text-ink/70 text-sm font-medium md:text-lg leading-relaxed max-w-2xl mb-8 md:mb-10">
             Книги по истории, культуре, языкам, литературе и биографиям народов Кавказа и
             Закавказья. Редкие издания, которые почти невозможно найти в обычной продаже.
           </p>
@@ -168,7 +170,7 @@ export const Hero = memo(() => {
                 >
                   {item.value}
                 </dd>
-                <dt className="text-xs text-ink/50 uppercase tracking-widest">
+                <dt className="text-xs text-ink/70 font-medium uppercase tracking-widest">
                   {item.label}
                 </dt>
               </div>
