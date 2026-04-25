@@ -19,7 +19,7 @@ export const BookFilter = memo<BookFilterProps>(({ selected, onChange, className
 
   return (
     <nav aria-label="Фильтр по категориям" className={className}>
-      <ul className="flex flex-wrap gap-2" role="list">
+      <ul className="flex gap-2 overflow-x-auto pb-1 md:flex-wrap md:overflow-x-visible md:pb-0 no-scrollbar" role="list">
         {allOptions.map(({ value, label }) => {
           const isActive = selected === value
           return (
