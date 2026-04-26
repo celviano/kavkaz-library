@@ -76,6 +76,7 @@ export const MyOrdersTab = memo<MyOrdersTabProps>(({ userId }) => {
               <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4 px-5 py-4 border-b border-surface2">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   {/* Book cover */}
+                  
                   <div className="w-10 h-14 rounded-lg bg-surface2 overflow-hidden flex-shrink-0 relative">
                     {order.bookCoverUrl ? (
                       <Image
