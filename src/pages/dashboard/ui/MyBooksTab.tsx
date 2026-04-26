@@ -5,18 +5,20 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { cn } from '@/shared/lib/cn'
 import { EmptyState } from '@/shared/ui/EmptyState'
+import { FilterChips } from '@/shared/ui/FilterChips'
 import { STATUS_LABELS, STATUS_COLORS } from '@/entities/book/model/types'
 import { useMyBooks, useUpdateBookStatus } from '@/features/dashboard/model/useDashboard'
 import type { BookStatus } from '@/entities/book/model/types'
 
 const STATUS_FILTERS: { value: BookStatus | 'all'; label: string }[] = [
-  { value: 'all', label: 'Все' },
-  { value: 'active', label: 'Активные' },
-  { value: 'pending', label: 'На модерации' },
-  { value: 'draft', label: 'Черновики' },
-  { value: 'sold', label: 'Проданные' },
+  { value: 'all',      label: 'Все' },
+  { value: 'active',   label: 'Активные' },
+  { value: 'pending',  label: 'На модерации' },
+  { value: 'draft',    label: 'Черновики' },
+  { value: 'sold',     label: 'Проданные' },
   { value: 'archived', label: 'Архив' },
 ]
+
 interface MyBooksTabProps {
   userId: string
 }
@@ -27,6 +29,12 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
   const { mutate: changeStatus, isPending } = useUpdateBookStatus(userId)
 
   const filtered = filter === 'all' ? books : books.filter((b) => b.status === filter)
+
+  const filterOptions = STATUS_FILTERS.map(({ value, label }) => ({
+    value,
+    label,
+    count: value !== 'all' ? books.filter((b) => b.status === value).length : undefined,
+  }))
 
   if (isLoading) {
     return (
@@ -40,30 +48,12 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
 
   return (
     <div className="flex flex-col gap-5">
-      {/* Filter tabs */}
-      <div className="flex flex-wrap gap-2">
-        {STATUS_FILTERS.map(({ value, label }) => (
-          <button
-            key={value}
-            type="button"
-            onClick={() => setFilter(value)}
-            className={cn(
-              'h-8 px-4 rounded-full text-xs font-medium border transition-all cursor-pointer',
-              'focus-visible:outline-2 focus-visible:outline-accent',
-              filter === value
-                ? 'bg-accent text-bg border-accent'
-                : 'bg-bg border-surface2 text-ash hover:border-surface3 hover:text-ink',
-            )}
-          >
-            {label}
-            {value !== 'all' && (
-              <span className="ml-1.5 opacity-60">
-                {books.filter((b) => b.status === value).length}
-              </span>
-            )}
-          </button>
-        ))}
-      </div>
+      {/* Filter chips */}
+      <FilterChips
+        options={filterOptions}
+        selected={filter}
+        onChange={(v) => setFilter(v as BookStatus | 'all')}
+      />
 
       {filtered.length === 0 ? (
         <EmptyState
@@ -80,9 +70,9 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
         <ul className="flex flex-col gap-3">
           {filtered.map((book) => (
             <li key={book.id}>
-              <div className="flex items-center gap-4 bg-surface border border-surface2 rounded-2xl p-4">
+              <div className="flex items-start gap-4 flex-wrap bg-surface border border-surface2 rounded-2xl p-4">
                 {/* Cover */}
-                <div className="w-12 h-16 rounded-lg bg-surface2 overflow-hidden flex-shrink-0 relative">
+                <div className="w-12 h-16 rounded-lg bg-surface2 overflow-hidden shrink-0 relative">
                   {book.coverUrl ? (
                     <Image
                       src={book.coverUrl}
@@ -98,7 +88,7 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                         height="16"
                         viewBox="0 0 24 24"
                         fill="none"
-                        stroke="#9e9080"
+                        stroke="var(--color-dim)"
                         strokeWidth="1.5"
                       >
                         <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
@@ -109,7 +99,7 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                 </div>
 
                 {/* Info */}
-                <div className="flex-1 min-w-0">
+                <div className="flex flex-col md:flex-row min-w-0">
                   <div className="flex items-center gap-2 mb-1 flex-wrap">
                     <span
                       className={cn(
@@ -131,11 +121,11 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                   </p>
                 </div>
 
-                {/* Actions */}
-                <div className="flex items-center gap-2 flex-shrink-0">
+                {/* Actions — wraps below cover+info on mobile, stays inline on sm+ */}
+                <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
                   <Link
                     href={`/book/${book.id}`}
-                    className="h-8 px-3 rounded-lg text-xs border border-surface2 text-ash hover:text-ink hover:bg-surface2 transition-colors inline-flex items-center"
+                    className="h-8 px-3 rounded-lg text-xs border border-steel2/40 text-steel2 hover:bg-steel/30 hover:border-steel2/60 transition-colors inline-flex items-center"
                   >
                     Просмотр
                   </Link>
@@ -145,7 +135,7 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                       type="button"
                       onClick={() => changeStatus({ bookId: book.id, status: 'sold' })}
                       disabled={isPending}
-                      className="h-8 px-3 rounded-lg text-xs border border-surface2 text-ash hover:text-ink hover:bg-surface2 transition-colors cursor-pointer disabled:opacity-50"
+                      className="h-8 px-3 rounded-lg text-xs border border-gold/40 text-gold hover:bg-gold/8 hover:border-gold/60 transition-colors cursor-pointer disabled:opacity-50"
                     >
                       Продана
                     </button>
@@ -154,11 +144,9 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                   {(book.status === 'active' || book.status === 'draft') && (
                     <button
                       type="button"
-                      onClick={() =>
-                        changeStatus({ bookId: book.id, status: 'archived' })
-                      }
+                      onClick={() => changeStatus({ bookId: book.id, status: 'archived' })}
                       disabled={isPending}
-                      className="h-8 px-3 rounded-lg text-xs border border-surface2 text-ash hover:text-ink hover:bg-surface2 transition-colors cursor-pointer disabled:opacity-50"
+                      className="h-8 px-3 rounded-lg text-xs border border-surface2 text-dim hover:text-ash hover:bg-surface2 transition-colors cursor-pointer disabled:opacity-50"
                     >
                       Архив
                     </button>
@@ -169,7 +157,7 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                       type="button"
                       onClick={() => changeStatus({ bookId: book.id, status: 'active' })}
                       disabled={isPending}
-                      className="h-8 px-3 rounded-lg text-xs border border-accent/30 text-accent hover:bg-accent/8 transition-colors cursor-pointer disabled:opacity-50"
+                      className="h-8 px-3 rounded-lg text-xs border border-accent/30 text-accent hover:bg-accent/8 hover:border-accent/50 transition-colors cursor-pointer disabled:opacity-50"
                     >
                       Восстановить
                     </button>

@@ -7,8 +7,9 @@ import { Plus, LayoutDashboard, LogOut } from 'lucide-react'
 import { cn } from '@/shared/lib/cn'
 import { Container } from '@/shared/ui/Container'
 import { UserAvatar } from '@/entities/user'
-import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
+import { useCurrentUser, useCurrentUserName, useCurrentUserImage } from '@/shared/hooks/useCurrentUser'
 import { useCurrentRole } from '@/shared/hooks/useCurrentRole'
+import { ProfileAvatar } from '@/entities/profile'
 
 const NAV_LINKS = [
   { href: '/catalog',  label: 'Каталог' },
@@ -69,6 +70,8 @@ export const Header = memo(() => {
   const [menuOpen, setMenuOpen] = useState(false)
   const { user } = useCurrentUser()
   const { isSeller, isAdmin } = useCurrentRole()
+  const userName = useCurrentUserName(user)
+  const userImage = useCurrentUserImage(user)
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -183,7 +186,7 @@ export const Header = memo(() => {
               </nav>
 
               {/* Secondary links */}
-              <div className="flex flex-col pt-2">
+              <div className="flex flex-col md:pt-2">
                 {user && (isSeller || isAdmin) && (
                   <Link
                     href="/dashboard"
@@ -213,7 +216,8 @@ export const Header = memo(() => {
                 {user && (
                   <button
                     type="button"
-                    className="flex items-center gap-3 py-3 mt-1 text-sm text-ash hover:text-ink transition-colors cursor-pointer"
+                    className="flex items-center justify-between w-full py-3.5 border-b border-surface2 text-rose-700 hover:text-rose-800 transition-colors cursor-pointer"
+                    style={{ fontFamily: 'var(--font-display)', fontSize: '1.25rem', fontWeight: 400, lineHeight: 1.1 }}
                     onClick={async () => {
                       const { createClient } = await import('@/shared/lib/supabase/client')
                       const supabase = createClient()
@@ -221,8 +225,8 @@ export const Header = memo(() => {
                       setMenuOpen(false)
                     }}
                   >
-                    <LogOut size={15} strokeWidth={1.6} />
                     Выйти
+                    <LogOut size={16} strokeWidth={1.6} />
                   </button>
                 )}
               </div>
@@ -235,13 +239,10 @@ export const Header = memo(() => {
                     className="flex items-center gap-3 hover:opacity-80 transition-opacity"
                     onClick={() => setMenuOpen(false)}
                   >
-                    <span className="text-accent shrink-0"><MountainIcon /></span>
+                    <ProfileAvatar avatarUrl={userImage} name={userName} size="sm" />
                     <div className="flex flex-col min-w-0">
-                      <span
-                        className="text-base font-semibold text-ink leading-none"
-                        style={{ fontFamily: 'var(--font-display)' }}
-                      >
-                        Caucasus<span className="text-accent italic">Library</span>
+                      <span className="text-sm font-medium text-ink leading-none truncate">
+                        {userName ?? 'Профиль'}
                       </span>
                       <span className="text-xs text-ash truncate mt-0.5">{user.email}</span>
                     </div>

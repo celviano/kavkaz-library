@@ -117,7 +117,7 @@ export function ContactsPage() {
               </div>
 
               <div className="flex items-start gap-4 bg-surface border border-surface2 rounded-2xl p-6">
-                <div className="w-11 h-11 rounded-xl bg-surface2 flex items-center justify-center text-ash shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-surface2 flex items-center justify-center text-ash flex-shrink-0">
                   <MapPin size={22} strokeWidth={1.6}/>
                 </div>
                 <div>
@@ -142,11 +142,11 @@ export function ContactsPage() {
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer"
                     className="group flex items-center gap-5 bg-surface border border-surface2 rounded-2xl p-5 hover:border-accent/30 transition-all">
                     {branded ? (
-                      <div className="w-12 h-12 rounded-xl overflow-hidden shrink-0 transition-transform group-hover:scale-105">
+                      <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 transition-transform group-hover:scale-105">
                         <Icon size={48}/>
                       </div>
                     ) : (
-                    <div className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105"
                       style={{ background: `${iconBg}18`, border: `1px solid ${iconBg}30`, color: iconBg }}>
                       <Icon size={22}/>
                     </div>
@@ -159,7 +159,7 @@ export function ContactsPage() {
                       <p className="text-xs text-ash leading-relaxed">{desc}</p>
                     </div>
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#a8998a" strokeWidth="1.8" strokeLinecap="round"
-                      className="shrink-0 group-hover:translate-x-0.5 transition-all" aria-hidden="true">
+                      className="flex-shrink-0 group-hover:translate-x-0.5 transition-all" aria-hidden="true">
                       <path d="M7 17L17 7M7 7h10v10"/>
                     </svg>
                   </a>
@@ -176,7 +176,7 @@ export function ContactsPage() {
                     <p className="text-bg/50 text-sm">Напишите нам — поможем с регистрацией и верификацией</p>
                   </div>
                   <a href="mailto:sellers@caucasuslibrary.ru"
-                    className="shrink-0 inline-flex items-center gap-2 h-10 px-5 rounded-xl text-sm font-medium bg-accent text-bg hover:bg-accent2 transition-all">
+                    className="flex-shrink-0 inline-flex items-center gap-2 h-10 px-5 rounded-xl text-sm font-medium bg-accent text-bg hover:bg-accent2 transition-all">
                     <Mail size={16} strokeWidth={1.8}/>
                     Написать
                   </a>

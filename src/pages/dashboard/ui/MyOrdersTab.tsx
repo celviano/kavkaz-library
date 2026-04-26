@@ -71,10 +71,10 @@ export const MyOrdersTab = memo<MyOrdersTabProps>(({ userId }) => {
 
         return (
           <li key={order.id}>
-            <div className="bg-surface border border-surface2 rounded-2xl overflow-hidden">
+            <div className="bg-surface border border-surface2 rounded-2xl overflow-hidden min-w-0">
               {/* Header */}
-              <div className="flex items-center justify-between gap-4 px-5 py-4 border-b border-surface2 flex-wrap">
-                <div className="flex items-center gap-3">
+              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4 px-5 py-4 border-b border-surface2">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
                   {/* Book cover */}
                   <div className="w-10 h-14 rounded-lg bg-surface2 overflow-hidden flex-shrink-0 relative">
                     {order.bookCoverUrl ? (
@@ -102,7 +102,7 @@ export const MyOrdersTab = memo<MyOrdersTabProps>(({ userId }) => {
                     )}
                   </div>
                   <div className="min-w-0">
-                    <p className="text-sm font-medium text-ink truncate">
+                    <p className="text-sm font-medium text-ink wrap-break-word">
                       {order.bookTitle ?? 'Книга удалена'}
                     </p>
                     <p className="text-xs text-ash">
@@ -124,7 +124,7 @@ export const MyOrdersTab = memo<MyOrdersTabProps>(({ userId }) => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
+                <div className="flex items-center w-full gap-2 flex-shrink-0 flex-wrap">
                   <span
                     className={cn(
                       'inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium border',
@@ -143,7 +143,7 @@ export const MyOrdersTab = memo<MyOrdersTabProps>(({ userId }) => {
               </div>
 
               {/* Body — order details */}
-              <div className="px-5 py-4 grid grid-cols-2 sm:grid-cols-3 gap-x-6 gap-y-3">
+              <div className="px-5 py-4 grid grid-cols-1 md:grid-cols-3 gap-x-6 gap-y-3">
                 <InfoRow label="Покупатель" value={order.fullName} />
                 <InfoRow label="Телефон" value={order.phone} />
                 <InfoRow label="Email" value={order.email} />
@@ -153,7 +153,7 @@ export const MyOrdersTab = memo<MyOrdersTabProps>(({ userId }) => {
                 />
                 <InfoRow label="Город" value={order.city} />
                 <InfoRow label="Индекс" value={order.postalCode} />
-                <div className="col-span-2 sm:col-span-3">
+                <div className="md:col-span-3">
                   <InfoRow
                     label="Адрес"
                     value={[
@@ -165,7 +165,7 @@ export const MyOrdersTab = memo<MyOrdersTabProps>(({ userId }) => {
                   />
                 </div>
                 {order.comment && (
-                  <div className="col-span-2 sm:col-span-3">
+                  <div className="md:col-span-3">
                     <InfoRow label="Комментарий" value={order.comment} />
                   </div>
                 )}
@@ -173,7 +173,7 @@ export const MyOrdersTab = memo<MyOrdersTabProps>(({ userId }) => {
 
               {/* Actions */}
               {(order.status === 'pending' || order.status === 'confirmed') && (
-                <div className="px-5 pb-4 flex gap-2">
+                <div className="px-5 pb-4 flex gap-2 flex-wrap">
                   {order.status === 'pending' && (
                     <>
                       <button

@@ -51,10 +51,15 @@ export const DashboardPage = memo(() => {
   }
 
   // Tabs config
-  const tabs: { id: Tab; label: string; count?: number }[] = [
+  const tabs: { id: Tab; label: string; shortLabel?: string; count?: number }[] = [
     { id: 'books',  label: 'Мои книги',  count: books.length },
     { id: 'orders', label: 'Запросы',    count: orders.length },
-    { id: admin ? 'admin-quotes' : 'quotes', label: admin ? 'Цитаты (модерация)' : 'Мои цитаты', count: pendingQuotes || undefined },
+    {
+      id: admin ? 'admin-quotes' : 'quotes',
+      label: admin ? 'Цитаты (модерация)' : 'Мои цитаты',
+      shortLabel: 'Цитаты',
+      count: pendingQuotes || undefined,
+    },
   ]
 
   return (
@@ -111,34 +116,37 @@ export const DashboardPage = memo(() => {
             </div>
 
             {/* Tabs */}
-            <div className="flex gap-1 bg-surface border max-w-2xl border-surface2 rounded-xl p-1">
-              {tabs.map(({ id, label, count }) => (
-                <button
-                  key={id}
-                  type="button"
-                  onClick={() => setActiveTab(id)}
-                  className={cn(
-                    'flex-1 flex items-center justify-center gap-2 h-9 rounded-lg text-sm font-medium transition-all cursor-pointer',
-                    activeTab === id
-                      ? 'bg-bg text-ink shadow-card'
-                      : 'text-ash hover:text-ink',
-                  )}
-                >
-                  {label}
-                  {count != null && count > 0 && (
-                    <span
-                      className={cn(
-                        'text-[11px] font-medium px-1.5 py-0.5 rounded-full',
-                        activeTab === id
-                          ? 'bg-accent/10 text-accent'
-                          : 'bg-surface2 text-dim',
-                      )}
-                    >
-                      {count}
-                    </span>
-                  )}
-                </button>
-              ))}
+            <div className="overflow-x-auto no-scrollbar -mx-1 px-1 sm:overflow-x-visible sm:mx-0 sm:px-0">
+              <div className="flex gap-1 bg-surface border min-w-max sm:min-w-0 sm:max-w-2xl border-surface2 rounded-xl p-1">
+                {tabs.map(({ id, label, shortLabel, count }) => (
+                  <button
+                    key={id}
+                    type="button"
+                    onClick={() => setActiveTab(id)}
+                    className={cn(
+                      'flex-1 flex items-center justify-center gap-2 h-9 px-3 rounded-lg text-sm font-medium transition-all cursor-pointer whitespace-nowrap',
+                      activeTab === id
+                        ? 'bg-bg text-ink shadow-card'
+                        : 'text-ash hover:text-ink',
+                    )}
+                  >
+                    <span className="md:hidden">{shortLabel ?? label}</span>
+                    <span className="hidden md:inline">{label}</span>
+                    {count != null && count > 0 && (
+                      <span
+                        className={cn(
+                          'text-[11px] font-medium px-1.5 py-0.5 rounded-full',
+                          activeTab === id
+                            ? 'bg-accent/10 text-accent'
+                            : 'bg-surface2 text-dim',
+                        )}
+                      >
+                        {count}
+                      </span>
+                    )}
+                  </button>
+                ))}
+              </div>
             </div>
 
             {/* Tab content */}
