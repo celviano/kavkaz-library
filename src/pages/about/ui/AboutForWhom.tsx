@@ -99,13 +99,13 @@ export function AboutForWhom() {
           {GROUPS.map(({ icon, title, text }) => (
             <div
               key={title}
-              className="flex items-start gap-5 bg-surface rounded-2xl border border-surface2 p-6 shadow-card"
+              className="flex flex-col  items-start gap-5 bg-surface rounded-2xl border border-surface2 p-6 shadow-card"
             >
-              <div className="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center flex-shrink-0">
-                {icon}
+              <div className="flex w-full flex-row justify-start items-center ">
+                <span className="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center flex-shrink-0">{icon}</span>
+                <h3 className="text-ink font-medium text-base ml-6">{title}</h3>
               </div>
               <div className="flex flex-col gap-1.5">
-                <h3 className="text-ink font-medium text-base">{title}</h3>
                 <p className="text-ash text-sm leading-relaxed">{text}</p>
               </div>
             </div>
