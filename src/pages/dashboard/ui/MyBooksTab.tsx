@@ -11,11 +11,11 @@ import { useMyBooks, useUpdateBookStatus } from '@/features/dashboard/model/useD
 import type { BookStatus } from '@/entities/book/model/types'
 
 const STATUS_FILTERS: { value: BookStatus | 'all'; label: string }[] = [
-  { value: 'all',      label: 'Все' },
-  { value: 'active',   label: 'Активные' },
-  { value: 'pending',  label: 'На модерации' },
-  { value: 'draft',    label: 'Черновики' },
-  { value: 'sold',     label: 'Проданные' },
+  { value: 'all', label: 'Все' },
+  { value: 'active', label: 'Активные' },
+  { value: 'pending', label: 'На модерации' },
+  { value: 'draft', label: 'Черновики' },
+  { value: 'sold', label: 'Проданные' },
   { value: 'archived', label: 'Архив' },
 ]
 
@@ -70,7 +70,7 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
         <ul className="flex flex-col gap-3">
           {filtered.map((book) => (
             <li key={book.id}>
-              <div className="flex items-start gap-4 flex-wrap bg-surface border border-surface2 rounded-2xl p-4">
+              <div className="flex flex-col md:flex-row md:items-start gap-4 bg-surface border border-surface2 rounded-2xl p-4">
                 {/* Cover */}
                 <div className="w-12 h-16 rounded-lg bg-surface2 overflow-hidden shrink-0 relative">
                   {book.coverUrl ? (
@@ -99,8 +99,8 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                 </div>
 
                 {/* Info */}
-                <div className="flex flex-col md:flex-row min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
+                <div className="flex-1 min-w-0 flex flex-col gap-1 sm:min-w-0">
+                  <div className="flex items-center gap-2 flex-wrap">
                     <span
                       className={cn(
                         'inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium border',
@@ -121,8 +121,8 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                   </p>
                 </div>
 
-                {/* Actions — wraps below cover+info on mobile, stays inline on sm+ */}
-                <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto">
+                {/* Actions */}
+                <div className="flex items-center gap-2 flex-wrap w-full sm:w-auto sm:shrink-0">
                   <Link
                     href={`/book/${book.id}`}
                     className="h-8 px-3 rounded-lg text-xs border border-steel2/40 text-steel2 hover:bg-steel/30 hover:border-steel2/60 transition-colors inline-flex items-center"
@@ -144,7 +144,9 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                   {(book.status === 'active' || book.status === 'draft') && (
                     <button
                       type="button"
-                      onClick={() => changeStatus({ bookId: book.id, status: 'archived' })}
+                      onClick={() =>
+                        changeStatus({ bookId: book.id, status: 'archived' })
+                      }
                       disabled={isPending}
                       className="h-8 px-3 rounded-lg text-xs border border-surface2 text-dim hover:text-ash hover:bg-surface2 transition-colors cursor-pointer disabled:opacity-50"
                     >

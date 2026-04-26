@@ -73,10 +73,9 @@ export const MyOrdersTab = memo<MyOrdersTabProps>(({ userId }) => {
           <li key={order.id}>
             <div className="bg-surface border border-surface2 rounded-2xl overflow-hidden min-w-0">
               {/* Header */}
-              <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-4 px-5 py-4 border-b border-surface2">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between md:gap-4 px-5 py-4 border-b border-surface2 gap-3">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   {/* Book cover */}
-                  
                   <div className="w-10 h-14 rounded-lg bg-surface2 overflow-hidden flex-shrink-0 relative">
                     {order.bookCoverUrl ? (
                       <Image
@@ -125,7 +124,7 @@ export const MyOrdersTab = memo<MyOrdersTabProps>(({ userId }) => {
                   </div>
                 </div>
 
-                <div className="flex items-center w-full gap-2 flex-shrink-0 flex-wrap">
+                <div className="flex items-center gap-2 flex-wrap w-full md:w-auto md:ml-auto md:flex-shrink-0">
                   <span
                     className={cn(
                       'inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium border',
