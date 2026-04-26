@@ -47,6 +47,16 @@
   --breakpoint-2xl: 90rem;
 }
 
+@layer utilities {
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 @layer base {
   *, *::before, *::after {
     box-sizing: border-box;

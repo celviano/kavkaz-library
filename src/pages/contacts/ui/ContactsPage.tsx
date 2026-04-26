@@ -10,6 +10,7 @@ const SOCIALS = [
     href:    'https://t.me/caucasuslibrary',
     Icon:    IconTelegram,
     iconBg:  '#2AABEE',
+    branded: false,
   },
   {
     label:   'ВКонтакте',
@@ -18,6 +19,7 @@ const SOCIALS = [
     href:    'https://vk.com/caucasuslibrary',
     Icon:    IconVK,
     iconBg:  '#0077FF',
+    branded: true,
   },
   {
     label:   'Канал в MAX',
@@ -26,6 +28,7 @@ const SOCIALS = [
     href:    'https://max.ru/caucasuslibrary',
     Icon:    IconMax,
     iconBg:  '#2a5c45',
+    branded: true,
   },
 ]
 
@@ -51,7 +54,7 @@ const FAQ = [
 export function ContactsPage() {
   return (
     <main id="main-content">
-      <section className="relative overflow-hidden min-h-svh md:min-h-0 flex flex-col py-14 md:py-20 border-b border-surface2">
+      <section className="relative overflow-hidden py-14 md:py-20 border-b border-surface2">
         <svg className="absolute inset-0 w-full h-full opacity-[0.04]" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>
             <pattern id="contacts-pat" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
@@ -61,7 +64,7 @@ export function ContactsPage() {
           </defs>
           <rect width="100%" height="100%" fill="url(#contacts-pat)"/>
         </svg>
-        <Container className="relative flex-1 flex flex-col justify-center md:block">
+        <Container className="relative">
           <div className="max-w-2xl">
             <p className="text-[10px] md:text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3 md:mb-4">Контакты</p>
             <h1 className="font-normal text-ink leading-tight mb-3 md:mb-4"
@@ -135,13 +138,19 @@ export function ContactsPage() {
               </div>
 
               <div className="flex flex-col gap-3">
-                {SOCIALS.map(({ label, handle, desc, href, Icon, iconBg }) => (
+                {SOCIALS.map(({ label, handle, desc, href, Icon, iconBg, branded }) => (
                   <a key={label} href={href} target="_blank" rel="noopener noreferrer"
                     className="group flex items-center gap-5 bg-surface border border-surface2 rounded-2xl p-5 hover:border-accent/30 transition-all">
+                    {branded ? (
+                      <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 transition-transform group-hover:scale-105">
+                        <Icon size={48}/>
+                      </div>
+                    ) : (
                     <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105"
                       style={{ background: `${iconBg}18`, border: `1px solid ${iconBg}30`, color: iconBg }}>
                       <Icon size={22}/>
                     </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                         <span className="text-sm font-medium text-ink">{label}</span>
