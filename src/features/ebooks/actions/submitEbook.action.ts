@@ -2,7 +2,6 @@
 
 import { redirect } from 'next/navigation'
 import { createClient } from '@/shared/lib/supabase/server'
-import { getFormatFromFile } from '@/entities/ebook/model/types'
 import type { CopyrightType } from '@/entities/ebook/model/types'
 import type { BookCategory } from '@/entities/book/model/types'
 
@@ -13,7 +12,7 @@ export interface SubmitEbookData {
   category:      BookCategory
   description:   string
   copyrightType: CopyrightType
-  fileBase64:    string   // base64 encoded file content
+  storagePath:   string
   fileName:      string
   fileType:      string
   fileSize:      number
@@ -32,56 +31,62 @@ export async function submitEbookAction(data: SubmitEbookData) {
     .single()
 
   const role   = profile?.role ?? 'user'
-  const status = role === 'admin' ? 'approved' : 'pending'
+  const status = role === 'admin' ? 'active' : 'pending'
 
-  // Декодируем base64 → Buffer
-  const base64Data  = data.fileBase64.split(',')[1] ?? data.fileBase64
-  const fileBuffer  = Buffer.from(base64Data, 'base64')
+  const ext    = data.fileName.split('.').pop()?.toLowerCase() ?? 'pdf'
 
-  // Генерируем уникальный id для файла
-  const ebookId  = crypto.randomUUID()
-  const ext      = data.fileName.split('.').pop()?.toLowerCase() ?? 'pdf'
-  const storagePath = `${user.id}/${ebookId}.${ext}`
-
-  // Загружаем файл в Supabase Storage bucket 'ebooks'
-  const { error: uploadError } = await supabase
-    .storage
-    .from('ebooks')
-    .upload(storagePath, fileBuffer, {
-      contentType: data.fileType,
-      upsert: false,
+  // Создаём запись в таблице books (каталог читает именно отсюда)
+  const { data: book, error: dbError } = await supabase
+    .from('books')
+    .insert({
+      title:          data.title.trim(),
+      author:         data.author.trim(),
+      year:           data.year ?? new Date().getFullYear(),
+      category:       data.category,
+      description:    data.description.trim() || null,
+      language:       'ru',
+      available:      true,
+      is_featured:    false,
+      status,
+      owner_id:       user.id,
+      book_type:      'ebook',
+      ebook_format:   ext,
+      ebook_file_url: data.storagePath,
+      ebook_size:     data.fileSize,
+      price:          null,
+      price_type:     null,
+      currency:       'RUB',
+      copies_total:   null,
+      copies_left:    null,
     })
+    .select('id')
+    .single()
 
-  if (uploadError) throw new Error(`Ошибка загрузки файла: ${uploadError.message}`)
+  if (dbError) {
+    // Откатываем загрузку файла из Storage
+    await supabase.storage.from('ebooks').remove([data.storagePath])
+    throw new Error(dbError.message)
+  }
 
-  // Определяем формат
-  const format = ext as ReturnType<typeof getFormatFromFile> ?? 'pdf'
-
-  // Сохраняем в таблицу ebooks
-  const { error: dbError } = await supabase
+  // Также сохраняем в таблицу ebooks для истории/модерации
+  await supabase
     .from('ebooks')
     .insert({
-      id:             ebookId,
+      id:             book.id,
       title:          data.title.trim(),
       author:         data.author.trim(),
       year:           data.year,
       category:       data.category,
       description:    data.description.trim() || null,
-      file_url:       storagePath,
+      file_url:       data.storagePath,
       file_name:      data.fileName,
-      file_format:    format,
+      file_format:    ext,
       file_size:      data.fileSize,
       user_id:        user.id,
       status,
       copyright_type: data.copyrightType,
       download_count: 0,
     })
-
-  if (dbError) {
-    // Откатываем загрузку файла
-    await supabase.storage.from('ebooks').remove([storagePath])
-    throw new Error(dbError.message)
-  }
 
   redirect('/dashboard?ebook_added=true')
 }

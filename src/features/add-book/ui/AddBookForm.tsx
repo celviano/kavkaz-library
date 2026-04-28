@@ -4,6 +4,7 @@ import { memo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useFormValidation } from '@/shared/hooks/useFormValidation'
 import { useSupabaseUpload } from '@/shared/hooks/useSupabaseUpload'
+import { createClient } from '@/shared/lib/supabase/client'
 import { addBookAction } from '../actions/addBook.action'
 import { submitEbookAction } from '@/features/ebooks/actions/submitEbook.action'
 import { addBookRules } from '../model/validation'
@@ -112,19 +113,31 @@ export const AddBookForm = memo<{ initialBookType?: 'physical' | 'ebook' }>(({ i
           copiesTotal: parseInt(values.copies || '1', 10),
         })
       } else {
-        const fileBase64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader()
-          reader.onload  = () => resolve(reader.result as string)
-          reader.onerror = () => reject(new Error('Ошибка чтения файла'))
-          reader.readAsDataURL(ebookFile!)
-        })
+        // Загружаем файл напрямую с клиента в Supabase Storage (без base64 через Server Action)
+        const supabase = createClient()
+        const ext = ebookFile!.name.split('.').pop()?.toLowerCase() ?? 'pdf'
+        const ebookId = crypto.randomUUID()
+        const storagePath = `user-uploads/${ebookId}.${ext}`
 
+        const { error: uploadError } = await supabase.storage
+          .from('ebooks')
+          .upload(storagePath, ebookFile!, {
+            contentType: ebookFile!.type,
+            upsert: false,
+          })
+
+        if (uploadError) throw new Error(`Ошибка загрузки файла: ${uploadError.message}`)
+
+        // Передаём в Server Action только путь к файлу (не сам файл)
         await submitEbookAction({
           title: values.title, author: values.author,
           year: values.year ? parseInt(values.year, 10) : null,
           category: selects.category as BookCategory, description: values.description,
-          copyrightType, fileBase64, fileName: ebookFile!.name,
-          fileType: ebookFile!.type, fileSize: ebookFile!.size,
+          copyrightType,
+          storagePath,
+          fileName: ebookFile!.name,
+          fileType: ebookFile!.type,
+          fileSize: ebookFile!.size,
         })
       }
     } catch (err) {
