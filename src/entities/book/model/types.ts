@@ -62,6 +62,10 @@ export interface BookRow {
   copies_left:    number | null
   status:         BookStatus
   owner_id:       string | null
+  book_type:      'physical' | 'ebook' | null
+  ebook_format:   string | null
+  ebook_file_url: string | null
+  ebook_size:     number | null
   created_at:     string
 }
 
@@ -90,6 +94,10 @@ export interface Book {
   copiesLeft:    number
   status:        BookStatus
   ownerId:       string | null
+  bookType:      'physical' | 'ebook'
+  ebookFormat:   string | null
+  ebookFileUrl:  string | null
+  ebookSize:     number | null
 }
 
 export interface BookSlide {
@@ -123,5 +131,9 @@ export function mapBookRow(row: BookRow): Book {
     copiesLeft:    row.copies_left ?? 0,
     status:        row.status ?? 'active',
     ownerId:       row.owner_id,
+    bookType:      row.book_type ?? 'physical',
+    ebookFormat:   row.ebook_format ?? null,
+    ebookFileUrl:  row.ebook_file_url ?? null,
+    ebookSize:     row.ebook_size ?? null,
   }
 }

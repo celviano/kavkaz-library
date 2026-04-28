@@ -33,6 +33,10 @@ const nextConfig = {
     ],
   },
 
+  serverActions: {
+    bodySizeLimit: '10mb', // ← Добавлено
+  },
+
   async headers() {
     return [
       {

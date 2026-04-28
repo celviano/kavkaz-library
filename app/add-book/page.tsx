@@ -5,10 +5,19 @@ import { AddBookForm } from '@/features/add-book'
 
 export const metadata: Metadata = { title: 'Добавить книгу', robots: { index: false } }
 
-export default async function Page() {
+interface PageProps {
+  searchParams: Promise<{ type?: string }>
+}
+
+export default async function Page(props: PageProps) {
+  const searchParams = await props.searchParams
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/auth/login')
 
-  return <AddBookForm />
+  const initialBookType = (searchParams.type === 'ebook' || searchParams.type === 'physical') 
+    ? searchParams.type 
+    : 'physical'
+
+  return <AddBookForm initialBookType={initialBookType} />
 }

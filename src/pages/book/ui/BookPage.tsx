@@ -10,6 +10,8 @@ import { BookGrid } from '@/widgets/book-grid'
 import { BookSlider } from '@/widgets/book-slider'
 import { BookMetaGrid } from '@/widgets/book-meta'
 import { BookPurchaseBlock } from '@/widgets/book-purchase'
+import { EbookDownloadBlock } from '@/widgets/ebook-download/ui/EbookDownloadBlock'
+import { EbookBadge } from '@/shared/ui/EbookBadge'
 import { SellerBlock } from '@/widgets/seller-block'
 import { CATEGORY_LABELS } from '@/shared/config/constants'
 import { useBook, useSimilarBooks } from '@/entities/book'
@@ -148,7 +150,12 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
             <div className="flex flex-col gap-7">
               <div className="flex flex-col gap-3">
                 <div className="flex items-center justify-between">
-                  <Badge category={book.category} label={categoryLabel} />
+                  <div className="flex items-center gap-2">
+                    <Badge category={book.category} label={categoryLabel} />
+                    {book.bookType === 'ebook' && (
+                      <EbookBadge format={book.ebookFormat as import('@/entities/ebook/model/types').EbookFormat ?? undefined} />
+                    )}
+                  </div>
                   <FavoriteButton bookId={book.id} />
                 </div>
                 <h1
@@ -201,8 +208,8 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
 
               <hr className="border-surface2" />
 
-              {/* Seller block */}
-              {book.ownerId && (
+              {/* Seller block — только для бумажных */}
+              {book.bookType !== 'ebook' && book.ownerId && (
                 <div>
                   <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">
                     Продавец
@@ -211,7 +218,11 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
                 </div>
               )}
 
-              <BookPurchaseBlock book={book} />
+              {/* Purchase or Download block */}
+              {book.bookType === 'ebook'
+                ? <EbookDownloadBlock book={book} />
+                : <BookPurchaseBlock book={book} />
+              }
             </div>
           </div>
 
