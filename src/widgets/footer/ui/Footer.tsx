@@ -4,9 +4,9 @@ import { Container } from '@/shared/ui/Container'
 import { IconTelegram, IconVK, IconMax } from '@/shared/ui/SocialIcons'
 
 const SOCIALS = [
-  { href: 'https://t.me/caucasuslibrary',   label: 'Telegram',  Icon: IconTelegram },
-  { href: 'https://vk.com/caucasuslibrary', label: 'ВКонтакте', Icon: IconVK },
-  { href: 'https://max.ru/caucasuslibrary', label: 'MAX',       Icon: IconMax },
+  { href: 'https://t.me/caucasuslibrary',   label: 'Telegram',  Icon: IconTelegram, branded: false },
+  { href: 'https://vk.com/caucasuslibrary', label: 'ВКонтакте', Icon: IconVK,       branded: true  },
+  { href: 'https://max.ru/caucasuslibrary', label: 'MAX',       Icon: IconMax,      branded: true  },
 ]
 
 const NAV = [
@@ -42,16 +42,20 @@ export const Footer = memo(() => {
                   Мы в соцсетях
                 </p>
                 <div className="flex items-center gap-2">
-                  {SOCIALS.map(({ href, label, Icon }) => (
+                  {SOCIALS.map(({ href, label, Icon, branded }) => (
                     <a
                       key={href}
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={label}
-                      className="w-8 h-8 rounded-lg flex items-center justify-center text-ash bg-surface2 hover:text-ink hover:bg-surface3 transition-all focus-visible:outline-2 focus-visible:outline-accent"
+                      className={
+                        branded
+                          ? 'w-8 h-8 rounded-lg overflow-hidden flex items-center justify-center hover:opacity-80 transition-opacity focus-visible:outline-2 focus-visible:outline-accent'
+                          : 'w-8 h-8 rounded-lg flex items-center justify-center text-ash bg-surface2 hover:text-ink hover:bg-surface3 transition-all focus-visible:outline-2 focus-visible:outline-accent'
+                      }
                     >
-                      <Icon size={18}/>
+                      <Icon size={branded ? 32 : 18}/>
                     </a>
                   ))}
                 </div>
@@ -59,7 +63,7 @@ export const Footer = memo(() => {
             </div>
 
             <nav aria-label="Навигация в подвале">
-              <ul className="flex flex-wrap gap-x-8 gap-y-3">
+              <ul className="flex flex-wrap justify-center md:justify-start gap-x-8 gap-y-3">
                 {NAV.map(({ href, label }) => (
                   <li key={href}>
                     <Link
