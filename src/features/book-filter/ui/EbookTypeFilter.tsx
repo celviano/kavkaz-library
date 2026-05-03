@@ -56,7 +56,7 @@ export const EbookTypeFilter = memo<EbookTypeFilterProps>(({ value, onChange, cl
             type="button"
             onClick={() => onChange(opt.value)}
             className={cn(
-              'inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-xs font-medium border transition-all',
+              'cursor-pointer inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-xs font-medium border transition-all',
               value === opt.value
                 ? 'bg-ink text-bg border-ink'
                 : 'bg-bg text-ash border-surface2 hover:border-ink/30 hover:text-ink',
