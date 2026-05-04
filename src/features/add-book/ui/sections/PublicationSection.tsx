@@ -1,43 +1,28 @@
 import { FormField } from '@/shared/ui/FormField'
 import { Input } from '@/shared/ui/Input'
 import { FormSection } from '../FormSection'
-import type { AddBookValues } from '../../model/types'
+import type { UseFormReturn } from 'react-hook-form'
+import type { AddPhysicalBookValues } from '@/shared/lib/zod/schemas'
 
 interface PublicationSectionProps {
-  values:   AddBookValues
-  onChange: (field: keyof AddBookValues, value: string) => void
+  form: UseFormReturn<AddPhysicalBookValues>
 }
 
-export function PublicationSection({ values, onChange }: PublicationSectionProps) {
+export function PublicationSection({ form }: PublicationSectionProps) {
+  const { register } = form
+
   return (
     <FormSection title="Сведения об издании">
       <div className="grid grid-cols-2 gap-4">
         <FormField label="Издательство">
-          <Input
-            placeholder="Тип. Деп. уделов"
-            maxLength={200}
-            value={values.publisherName}
-            onChange={(e) => onChange('publisherName', e.target.value)}
-          />
+          <Input placeholder="Тип. Деп. уделов" maxLength={200} {...register('publisherName')} />
         </FormField>
-
         <FormField label="Город издания">
-          <Input
-            placeholder="Санкт-Петербург"
-            maxLength={100}
-            value={values.publisherCity}
-            onChange={(e) => onChange('publisherCity', e.target.value)}
-          />
+          <Input placeholder="Санкт-Петербург" maxLength={100} {...register('publisherCity')} />
         </FormField>
       </div>
-
       <FormField label="Издание / выпуск">
-        <Input
-          placeholder="1-е издание"
-          maxLength={100}
-          value={values.edition}
-          onChange={(e) => onChange('edition', e.target.value)}
-        />
+        <Input placeholder="1-е издание" maxLength={100} {...register('edition')} />
       </FormField>
     </FormSection>
   )

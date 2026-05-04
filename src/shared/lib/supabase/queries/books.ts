@@ -7,6 +7,7 @@ export interface BooksQueryParams {
   search?:   string
   page?:     number
   pageSize?: number
+  bookType?: 'physical' | 'ebook'
 }
 
 export interface BooksQueryResult {
@@ -20,14 +21,14 @@ export interface BooksQueryResult {
 // Public catalog — only active books
 export async function fetchBooks(params: BooksQueryParams = {}): Promise<BooksQueryResult> {
   const supabase = createClient()
-  const { category, search, page = 1, pageSize = 12 } = params
+  const { category, search, page = 1, pageSize = 12, bookType } = params
   const from = (page - 1) * pageSize
   const to   = from + pageSize - 1
 
   let query = supabase
     .from('books')
     .select('*', { count: 'exact' })
-    .eq('status', 'active')          // only active books in catalog
+    .eq('status', 'active')
     .order('year', { ascending: false })
     .range(from, to)
 
@@ -36,6 +37,12 @@ export async function fetchBooks(params: BooksQueryParams = {}): Promise<BooksQu
   }
   if (search && search.trim().length > 0) {
     query = query.or(`title.ilike.%${search.trim()}%,author.ilike.%${search.trim()}%`)
+  }
+  if (bookType === 'physical') {
+    query = query.or('book_type.eq.physical,book_type.is.null')
+  }
+  if (bookType === 'ebook') {
+    query = query.eq('book_type', 'ebook')
   }
 
   const { data, error, count } = await query

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { cn } from '@/shared/lib/cn'
 import { Badge } from '@/shared/ui/Badge'
+import { EbookBadge } from '@/shared/ui/EbookBadge'
 import { CATEGORY_LABELS } from '@/shared/config/constants'
 import { FavoriteButton } from '@/features/favorites'
 import type { Book } from '../model/types'
@@ -111,7 +112,12 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
       <div className="flex flex-col gap-2.5 p-4 flex-1">
         <div className="flex items-center justify-between gap-2 flex-wrap">
           <Badge category={category} label={CATEGORY_LABELS[category]} />
-          <AvailabilityBadge book={book} />
+          <div className="flex items-center gap-1.5">
+            {book.bookType === 'ebook' && (
+              <EbookBadge format={book.ebookFormat as import('@/entities/ebook/model/types').EbookFormat ?? undefined} />
+            )}
+            {book.bookType !== 'ebook' && <AvailabilityBadge book={book} />}
+          </div>
         </div>
 
         <h3

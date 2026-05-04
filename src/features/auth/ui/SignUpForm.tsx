@@ -1,45 +1,24 @@
 'use client'
 
-import { useState } from 'react'
 import Link from 'next/link'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { AuthCard } from './AuthCard'
 import { AuthInput } from './AuthInput'
 import { OAuthButton } from './OAuthButton'
 import { AuthDivider } from './AuthDivider'
 import { ErrorBanner } from '@/shared/ui/ErrorBanner'
 import { signUpAction } from '../actions/auth.actions'
-import { useFormValidation } from '@/shared/hooks/useFormValidation'
-import { rules } from '@/shared/lib/validation'
-
-interface SignUpValues {
-  name: string
-  email: string
-  password: string
-}
-
-const SIGNUP_RULES = {
-  name: [rules.required('Введите имя'), rules.minLength(2)],
-  email: [rules.required('Введите email'), rules.email()],
-  password: [rules.required('Введите пароль'), rules.minLength(6, 'Минимум 6 символов')],
-}
+import { signUpSchema } from '@/shared/lib/zod/schemas'
+import type { SignUpValues } from '@/shared/lib/zod/schemas'
 
 export function SignUpForm({ error }: { error?: string }) {
-  const [values, setValues] = useState<SignUpValues>({
-    name: '',
-    email: '',
-    password: '',
-  })
-  const { getFieldError, touchField, validateAll } = useFormValidation<SignUpValues>({
-    rules: SIGNUP_RULES,
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignUpValues>({
+    resolver: zodResolver(signUpSchema),
   })
 
-  function handleChange(field: keyof SignUpValues, value: string) {
-    setValues((prev) => ({ ...prev, [field]: value }))
-    touchField(field, value)
-  }
-
-  async function handleSubmit(formData: FormData) {
-    if (!validateAll(values)) return
+  async function onSubmit(_: SignUpValues, e?: React.BaseSyntheticEvent) {
+    const formData = new FormData(e?.target as HTMLFormElement)
     await signUpAction(formData)
   }
 
@@ -48,56 +27,45 @@ export function SignUpForm({ error }: { error?: string }) {
       <div className="flex flex-col gap-4">
         <OAuthButton provider="google" label="Зарегистрироваться через Google" />
         <AuthDivider />
-        <form action={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
           <AuthInput
             label="Имя"
-            name="name"
             type="text"
             placeholder="Ваше имя"
             autoComplete="name"
-            value={values.name}
-            onChange={(e) => handleChange('name', e.target.value)}
-            error={getFieldError('name')}
-            required
+            error={errors.name?.message}
+            {...register('name')}
           />
           <AuthInput
             label="Email"
-            name="email"
             type="email"
             placeholder="you@example.com"
             autoComplete="email"
-            value={values.email}
-            onChange={(e) => handleChange('email', e.target.value)}
-            error={getFieldError('email')}
-            required
+            error={errors.email?.message}
+            {...register('email')}
           />
           <AuthInput
             label="Пароль"
-            name="password"
             type="password"
             placeholder="Минимум 6 символов"
             autoComplete="new-password"
-            value={values.password}
-            onChange={(e) => handleChange('password', e.target.value)}
-            error={getFieldError('password')}
-            required
+            error={errors.password?.message}
+            {...register('password')}
           />
 
           {error && <ErrorBanner message={decodeURIComponent(error)} />}
 
           <button
             type="submit"
-            className="mt-1 h-11 w-full rounded-xl bg-accent text-bg text-sm font-medium border border-accent hover:bg-accent2 hover:border-accent2 transition-all duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            disabled={isSubmitting}
+            className="mt-1 h-11 w-full rounded-xl bg-accent text-bg text-sm font-medium border border-accent hover:bg-accent2 hover:border-accent2 transition-all duration-200 cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:opacity-60"
           >
-            Зарегистрироваться
+            {isSubmitting ? 'Создаём аккаунт...' : 'Зарегистрироваться'}
           </button>
         </form>
         <p className="text-center text-sm text-ash">
           Уже есть аккаунт?{' '}
-          <Link
-            href="/auth/login"
-            className="text-accent hover:text-accent2 font-medium transition-colors"
-          >
+          <Link href="/auth/login" className="text-accent hover:text-accent2 font-medium transition-colors">
             Войти
           </Link>
         </p>

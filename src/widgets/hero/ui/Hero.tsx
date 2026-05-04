@@ -26,8 +26,8 @@ export const Hero = memo(() => {
           {/* Badge — pinned to top on mobile, inline on md+ */}
           <div className="absolute top-10 left-0 right-0 flex justify-center md:static md:mb-8">
             <div className="flex w-fit items-center gap-2 rounded-full border border-accent/20 bg-accent/6 px-4 py-1.5 backdrop-blur-[2px]">
-              <span className="text-accent text-[10px] md:text-xs font-medium tracking-[2px] uppercase">
-                Библиотека Кавказа
+              <span className="text-accent text-[10px] md:text-xs font-semibold tracking-[2px] uppercase">
+                Главная страница
               </span>
             </div>
           </div>
@@ -35,7 +35,7 @@ export const Hero = memo(() => {
           {/* Heading */}
           <h1
             id="hero-heading"
-            className="flex flex-col text-ink leading-[1.05] tracking-tight mb-4 md:mb-6"
+            className="flex flex-col text-ink font-medium leading-[1.05] tracking-tight mb-4 md:mb-6"
             style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2rem, 7vw, 5rem)',
