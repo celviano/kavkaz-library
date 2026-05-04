@@ -10,7 +10,7 @@ export type BookCategory =
   | 'atlases'
   | 'other'
 
-export type BookCondition = 'new' | 'good' | 'fair' | 'poor'
+export type BookCondition = 'new' | 'good' | 'fair' | 'poor' | 'excellent'
 
 export type BookStatus = 'draft' | 'pending' | 'active' | 'sold' | 'archived'
 
@@ -19,6 +19,7 @@ export const CONDITION_LABELS: Record<BookCondition, string> = {
   good: 'Хорошее',
   fair: 'Удовлетворительное',
   poor: 'Потрёпанное',
+  excellent: 'Отличное'
 }
 
 export const STATUS_LABELS: Record<BookStatus, string> = {

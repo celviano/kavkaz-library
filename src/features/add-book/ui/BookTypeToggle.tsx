@@ -18,7 +18,7 @@ export const BookTypeToggle = memo<BookTypeToggleProps>(({ value, onChange }) =>
   const handleChange = (newType: BookType) => {
     onChange(newType)
     // Обновляем URL с query параметром
-    const params = new URLSearchParams(searchParams)
+    const params = new URLSearchParams(searchParams ?? '')
     params.set('type', newType)
     router.push(`/add-book?${params.toString()}`, { scroll: false })
   }

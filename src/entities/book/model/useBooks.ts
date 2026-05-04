@@ -2,15 +2,23 @@
 
 import { useQuery } from '@tanstack/react-query'
 import { queryKeys } from '@/shared/lib/supabase/queries/queryKeys'
-import { fetchBooks, fetchFeaturedBooks, fetchBookById, fetchSimilarBooks } from '@/shared/lib/supabase/queries/books'
+import {
+  fetchBooks,
+  fetchFeaturedBooks,
+  fetchBookById,
+  fetchSimilarBooks,
+} from '@/shared/lib/supabase/queries/books'
 import type { BookCategory } from './types'
 
-export function useBooks(params: {
-  category?: BookCategory | 'all'
-  search?: string
-  page?: number
-  pageSize?: number
-} = {}) {
+export function useBooks(
+  params: {
+    category?: BookCategory | 'all'
+    search?: string
+    page?: number
+    pageSize?: number
+    bookType?: 'physical' | 'ebook'
+  } = {},
+) {
   return useQuery({
     queryKey: queryKeys.books.list(params),
     queryFn: () => fetchBooks(params),
@@ -43,7 +51,8 @@ export function useSimilarBooks(bookId: string, category: BookCategory) {
 export function useCategoryCounts() {
   return useQuery({
     queryKey: ['books', 'category-counts'],
-    queryFn: () => import('@/shared/lib/supabase/queries/books').then(m => m.fetchCategoryCounts()),
+    queryFn: () =>
+      import('@/shared/lib/supabase/queries/books').then((m) => m.fetchCategoryCounts()),
     staleTime: 5 * 60 * 1000,
   })
 }

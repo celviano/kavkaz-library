@@ -1,7 +1,7 @@
 'use client'
 
 import { memo, useCallback, useState } from 'react'
-import { useDropzone } from 'react-dropzone'
+import { useDropzone, FileRejection } from 'react-dropzone'
 import { cn } from '@/shared/lib/cn'
 import { FormSection } from '../FormSection'
 import { FormField } from '@/shared/ui/FormField'
@@ -39,15 +39,15 @@ const FORMAT_ICONS: Record<EbookFormat, string> = {
 export const EbookUploadSection = memo<EbookUploadSectionProps>(({ file, onFile, error }) => {
   const [sizeError, setSizeError] = useState<string | null>(null)
 
-  const onDrop = useCallback((accepted: File[], rejected: { errors: { message: string }[] }[]) => {
+  const onDrop = useCallback((acceptedFiles: File[], fileRejections: FileRejection[]) => {
     setSizeError(null)
-    if (rejected.length > 0) {
-      const err = rejected[0].errors[0]?.message
+    if (fileRejections.length > 0) {
+      const err = fileRejections[0].errors[0]?.message
       setSizeError(err ?? 'Неподдерживаемый файл')
       return
     }
-    if (accepted[0]) {
-      onFile(accepted[0])
+    if (acceptedFiles[0]) {
+      onFile(acceptedFiles[0])
     }
   }, [onFile])
 

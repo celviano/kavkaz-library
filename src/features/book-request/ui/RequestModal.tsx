@@ -1,6 +1,8 @@
 'use client'
 
-import { memo, useState, useEffect } from 'react'
+import { memo, useEffect } from 'react'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { FormField } from '@/shared/ui/FormField'
 import { Input } from '@/shared/ui/Input'
@@ -10,7 +12,8 @@ import { QuantityInput } from '@/shared/ui/QuantityInput'
 import { DeliveryPicker } from './DeliveryPicker'
 import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 import { createOrder } from '@/shared/lib/supabase/queries/orders'
-import type { DeliveryType } from '@/shared/lib/supabase/queries/orders'
+import { requestOrderSchema } from '@/shared/lib/zod/schemas'
+import type { RequestOrderValues } from '@/shared/lib/zod/schemas'
 import type { Book } from '@/entities/book'
 
 interface RequestModalProps {
@@ -22,25 +25,17 @@ interface RequestModalProps {
 export const RequestModal = memo<RequestModalProps>(({ book, sellerId, onClose }) => {
   const { user } = useCurrentUser()
 
-  const [fullName,     setFullName]     = useState('')
-  const [phone,        setPhone]        = useState('')
-  const [email,        setEmail]        = useState(user?.email ?? '')
-  const [city,         setCity]         = useState('')
-  const [address,      setAddress]      = useState('')
-  const [apartment,    setApartment]    = useState('')
-  const [postalCode,   setPostalCode]   = useState('')
-  const [deliveryType, setDeliveryType] = useState<DeliveryType>('sdek')
-  const [quantity,     setQuantity]     = useState(1)
-  const [comment,      setComment]      = useState('')
-
-  const { mutate: sendOrder, isPending, isSuccess, error } = useMutation({
-    mutationFn: () => createOrder({
-      bookId: book.id, sellerId,
-      fullName, phone, email,
-      deliveryType, address, city, postalCode, apartment,
-      quantity, comment,
-    }),
+  const { register, control, handleSubmit, watch, formState: { errors } } = useForm<RequestOrderValues>({
+    resolver: zodResolver(requestOrderSchema),
+    defaultValues: {
+      email:        user?.email ?? '',
+      deliveryType: 'sdek',
+      quantity:     1,
+    },
   })
+
+  const quantity = watch('quantity') ?? 1
+  const totalPrice = book.price != null ? book.price * quantity : null
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
@@ -52,16 +47,24 @@ export const RequestModal = memo<RequestModalProps>(({ book, sellerId, onClose }
     }
   }, [onClose])
 
-  const totalPrice = book.price != null ? book.price * quantity : null
+  const { mutate: sendOrder, isPending, isSuccess, error } = useMutation({
+    mutationFn: (data: RequestOrderValues) => createOrder({
+      bookId: book.id, sellerId,
+      fullName: data.fullName, phone: data.phone, email: data.email,
+      deliveryType: data.deliveryType, address: data.address,
+      city: data.city, postalCode: data.postalCode,
+      apartment: data.apartment ?? '', quantity: data.quantity,
+      comment: data.comment ?? '',
+    }),
+  })
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" onClick={onClose} aria-hidden="true"/>
 
-      <div
-        className="relative z-10 w-full sm:max-w-xl bg-bg rounded-t-3xl sm:rounded-3xl border border-surface2 shadow-accent-lg flex flex-col max-h-[92vh]"
-        role="dialog" aria-modal="true" aria-labelledby="order-modal-title"
-      >
+      <div className="relative z-10 w-full sm:max-w-xl bg-bg rounded-t-3xl sm:rounded-3xl border border-surface2 shadow-accent-lg flex flex-col max-h-[92vh]"
+        role="dialog" aria-modal="true" aria-labelledby="order-modal-title">
+
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-surface2 flex-shrink-0">
           <div>
@@ -78,7 +81,6 @@ export const RequestModal = memo<RequestModalProps>(({ book, sellerId, onClose }
           </button>
         </div>
 
-        {/* Success */}
         {isSuccess ? (
           <div className="flex flex-col items-center gap-5 py-12 px-6 text-center">
             <div className="w-14 h-14 rounded-2xl bg-accent/10 border border-accent/20 flex items-center justify-center">
@@ -105,24 +107,21 @@ export const RequestModal = memo<RequestModalProps>(({ book, sellerId, onClose }
           </div>
 
         ) : (
-          <form onSubmit={(e) => { e.preventDefault(); sendOrder() }} className="flex flex-col overflow-hidden">
+          <form onSubmit={handleSubmit((data) => sendOrder(data))} className="flex flex-col overflow-hidden">
             <div className="overflow-y-auto px-6 py-5 flex flex-col gap-6">
 
               <section>
                 <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-4">Личные данные</p>
                 <div className="flex flex-col gap-3">
-                  <FormField label="ФИО" required>
-                    <Input value={fullName} onChange={e => setFullName(e.target.value)}
-                      placeholder="Иванов Иван Иванович" required maxLength={200} />
+                  <FormField label="ФИО" required error={errors.fullName?.message}>
+                    <Input placeholder="Иванов Иван Иванович" maxLength={200} error={errors.fullName?.message} {...register('fullName')} />
                   </FormField>
                   <div className="grid grid-cols-2 gap-3">
-                    <FormField label="Телефон" required>
-                      <Input type="tel" value={phone} onChange={e => setPhone(e.target.value)}
-                        placeholder="+7 999 000-00-00" required maxLength={20} />
+                    <FormField label="Телефон" required error={errors.phone?.message}>
+                      <Input type="tel" placeholder="+7 999 000-00-00" maxLength={20} error={errors.phone?.message} {...register('phone')} />
                     </FormField>
-                    <FormField label="Email" required>
-                      <Input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                        placeholder="you@mail.ru" required maxLength={200} />
+                    <FormField label="Email" required error={errors.email?.message}>
+                      <Input type="email" placeholder="you@mail.ru" maxLength={200} error={errors.email?.message} {...register('email')} />
                     </FormField>
                   </div>
                 </div>
@@ -130,29 +129,29 @@ export const RequestModal = memo<RequestModalProps>(({ book, sellerId, onClose }
 
               <section>
                 <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-4">Способ доставки</p>
-                <DeliveryPicker value={deliveryType} onChange={setDeliveryType} />
+                <Controller
+                  control={control}
+                  name="deliveryType"
+                  render={({ field }) => <DeliveryPicker value={field.value} onChange={field.onChange} />}
+                />
               </section>
 
               <section>
                 <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-4">Адрес доставки</p>
                 <div className="flex flex-col gap-3">
                   <div className="grid grid-cols-2 gap-3">
-                    <FormField label="Город" required>
-                      <Input value={city} onChange={e => setCity(e.target.value)}
-                        placeholder="Москва" required maxLength={100} />
+                    <FormField label="Город" required error={errors.city?.message}>
+                      <Input placeholder="Москва" maxLength={100} error={errors.city?.message} {...register('city')} />
                     </FormField>
-                    <FormField label="Индекс" required>
-                      <Input value={postalCode} onChange={e => setPostalCode(e.target.value)}
-                        placeholder="123456" required maxLength={10} />
+                    <FormField label="Индекс" required error={errors.postalCode?.message}>
+                      <Input placeholder="123456" maxLength={10} error={errors.postalCode?.message} {...register('postalCode')} />
                     </FormField>
                   </div>
-                  <FormField label="Улица, дом" required>
-                    <Input value={address} onChange={e => setAddress(e.target.value)}
-                      placeholder="ул. Арбат, д. 1" required maxLength={300} />
+                  <FormField label="Улица, дом" required error={errors.address?.message}>
+                    <Input placeholder="ул. Арбат, д. 1" maxLength={300} error={errors.address?.message} {...register('address')} />
                   </FormField>
                   <FormField label="Квартира / офис">
-                    <Input value={apartment} onChange={e => setApartment(e.target.value)}
-                      placeholder="кв. 10" maxLength={20} />
+                    <Input placeholder="кв. 10" maxLength={20} {...register('apartment')} />
                   </FormField>
                 </div>
               </section>
@@ -160,11 +159,16 @@ export const RequestModal = memo<RequestModalProps>(({ book, sellerId, onClose }
               <section>
                 <div className="flex flex-col gap-3">
                   <FormField label="Количество экземпляров" required>
-                    <QuantityInput value={quantity} min={1} max={book.copiesLeft || 99} onChange={setQuantity} />
+                    <Controller
+                      control={control}
+                      name="quantity"
+                      render={({ field }) => (
+                        <QuantityInput value={field.value} min={1} max={book.copiesLeft || 99} onChange={field.onChange} />
+                      )}
+                    />
                   </FormField>
                   <FormField label="Комментарий">
-                    <Textarea value={comment} onChange={e => setComment(e.target.value)}
-                      placeholder="Уточните детали или задайте вопрос..." rows={2} maxLength={500} />
+                    <Textarea placeholder="Уточните детали или задайте вопрос..." rows={2} maxLength={500} {...register('comment')} />
                   </FormField>
                 </div>
               </section>
@@ -172,7 +176,6 @@ export const RequestModal = memo<RequestModalProps>(({ book, sellerId, onClose }
               <ErrorBanner message={error instanceof Error ? error.message : null} />
             </div>
 
-            {/* Footer */}
             <div className="px-6 py-4 border-t border-surface2 flex-shrink-0 bg-bg rounded-b-3xl">
               {totalPrice != null && (
                 <div className="flex items-center justify-between mb-3">
