@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { Crimson_Pro, Open_Sans } from 'next/font/google'
+import { Open_Sans } from 'next/font/google'
 import { Header } from '@/widgets/header'
 import { Footer } from '@/widgets/footer'
 import { QueryProvider } from '@/app/providers/QueryProvider'
