@@ -12,22 +12,22 @@ import quotePainting from '../../../../public/images/quote-banner-painting.jpg'
 // Fallback цитата если в БД ничего нет
 const FALLBACK_QUOTES = [
   {
-    text:   'Кавказ — это целый мир, сжатый между двух морей.',
+    text: 'Кавказ — это целый мир, сжатый между двух морей.',
     author: 'Александр Дюма',
     source: '«Кавказ», 1859',
   },
   {
-    text:   'Здесь каждый камень — памятник, каждая гора — история.',
+    text: 'Здесь каждый камень — памятник, каждая гора — история.',
     author: 'Михаил Лермонтов',
     source: 'Из путевых заметок',
   },
   {
-    text:   'Нигде в мире на столь малом пространстве не уместилось столько народов, языков и судеб.',
+    text: 'Нигде в мире на столь малом пространстве не уместилось столько народов, языков и судеб.',
     author: 'Николай Дубровин',
     source: '«Этнография народов Кавказа», 1871',
   },
   {
-    text:   'Кавказские горы — это не просто хребет, это граница между мирами.',
+    text: 'Кавказские горы — это не просто хребет, это граница между мирами.',
     author: 'Семён Броневский',
     source: '«Описание Кавказа», 1823',
   },
@@ -87,13 +87,30 @@ export const QuoteBanner = memo(() => {
           aria-hidden="true"
         >
           <defs>
-            <pattern id="quote-carpet" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-              <polygon points="40,6 74,40 40,74 6,40"   fill="none" stroke="#2a5c45" strokeWidth="1.5" />
-              <polygon points="40,18 62,40 40,62 18,40" fill="none" stroke="#8B6914" strokeWidth="1" />
+            <pattern
+              id="quote-carpet"
+              x="0"
+              y="0"
+              width="80"
+              height="80"
+              patternUnits="userSpaceOnUse"
+            >
+              <polygon
+                points="40,6 74,40 40,74 6,40"
+                fill="none"
+                stroke="#2a5c45"
+                strokeWidth="1.5"
+              />
+              <polygon
+                points="40,18 62,40 40,62 18,40"
+                fill="none"
+                stroke="#8B6914"
+                strokeWidth="1"
+              />
               <polygon points="40,28 52,40 40,52 28,40" fill="#2a5c45" opacity="0.4" />
-              <circle cx="0"  cy="0"  r="2" fill="#8B6914" />
-              <circle cx="80" cy="0"  r="2" fill="#8B6914" />
-              <circle cx="0"  cy="80" r="2" fill="#8B6914" />
+              <circle cx="0" cy="0" r="2" fill="#8B6914" />
+              <circle cx="80" cy="0" r="2" fill="#8B6914" />
+              <circle cx="0" cy="80" r="2" fill="#8B6914" />
               <circle cx="80" cy="80" r="2" fill="#8B6914" />
             </pattern>
           </defs>
@@ -105,17 +122,30 @@ export const QuoteBanner = memo(() => {
             {/* Large decorative quote mark */}
             <span
               className="font-display text-accent/10 leading-none select-none absolute -top-6 left-1/2 -translate-x-1/2"
-              style={{ fontFamily: 'var(--font-display)', fontSize: '10rem', lineHeight: 1 }}
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: '10rem',
+                lineHeight: 1,
+              }}
               aria-hidden="true"
             >
               «
             </span>
 
             {/* Ornament top */}
-            <div className="flex items-center justify-center gap-4 mb-8" aria-hidden="true">
+            <div
+              className="flex items-center justify-center gap-4 mb-8"
+              aria-hidden="true"
+            >
               <div className="h-px flex-1 max-w-[80px] bg-gradient-to-r from-transparent to-surface3" />
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <polygon points="10,1 19,10 10,19 1,10" fill="none" stroke="#2a5c45" strokeWidth="1.2" opacity="0.4" />
+                <polygon
+                  points="10,1 19,10 10,19 1,10"
+                  fill="none"
+                  stroke="#2a5c45"
+                  strokeWidth="1.2"
+                  opacity="0.4"
+                />
                 <polygon points="10,5 15,10 10,15 5,10" fill="#2a5c45" opacity="0.25" />
                 <circle cx="10" cy="10" r="2" fill="#8B6914" opacity="0.5" />
               </svg>
@@ -150,10 +180,19 @@ export const QuoteBanner = memo(() => {
             )}
 
             {/* Ornament bottom */}
-            <div className="flex items-center justify-center gap-4 mb-8" aria-hidden="true">
+            <div
+              className="flex items-center justify-center gap-4 mb-8"
+              aria-hidden="true"
+            >
               <div className="h-px flex-1 max-w-[80px] bg-gradient-to-r from-transparent to-surface3" />
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <polygon points="10,1 19,10 10,19 1,10" fill="none" stroke="#2a5c45" strokeWidth="1.2" opacity="0.4" />
+                <polygon
+                  points="10,1 19,10 10,19 1,10"
+                  fill="none"
+                  stroke="#2a5c45"
+                  strokeWidth="1.2"
+                  opacity="0.4"
+                />
                 <polygon points="10,5 15,10 10,15 5,10" fill="#2a5c45" opacity="0.25" />
                 <circle cx="10" cy="10" r="2" fill="#8B6914" opacity="0.5" />
               </svg>
@@ -168,17 +207,23 @@ export const QuoteBanner = memo(() => {
                 className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded group"
               >
                 Предложить цитату
-                <span className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">
+                <span
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                  aria-hidden="true"
+                >
                   →
                 </span>
               </button>
             ) : (
               <Link
                 href="/auth/login"
-                className="inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded group"
+                className="cursor-pointer inline-flex items-center gap-2 text-sm font-medium text-accent hover:text-accent2 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded group"
               >
                 Предложить цитату
-                <span className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">
+                <span
+                  className="transition-transform duration-200 group-hover:translate-x-1"
+                  aria-hidden="true"
+                >
                   →
                 </span>
               </Link>
