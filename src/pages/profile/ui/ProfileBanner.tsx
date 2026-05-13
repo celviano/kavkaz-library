@@ -9,8 +9,7 @@ interface ProfileBannerProps {
 export const ProfileBanner: FC<ProfileBannerProps> = ({ variant = 'default', className }) => (
   <div
     className={cn(
-      'relative h-28 overflow-hidden',
-      variant === 'seller' ? 'bg-dark' : 'bg-surface2',
+      'relative h-28 overflow-hidden bg-surface2',
       className,
     )}
     aria-hidden="true"

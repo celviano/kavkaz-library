@@ -44,9 +44,9 @@ export const AddQuoteModal = memo<AddQuoteModalProps>(({ userId, onClose }) => {
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
       <div className="absolute inset-0 bg-ink/50 backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
 
-      <div className="relative w-full sm:max-w-lg bg-bg rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden">
+      <div className="relative w-full sm:max-w-lg bg-bg rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden m-4">
         {/* Header */}
-        <div className="px-6 py-5 border-b border-surface2 flex items-center justify-between flex-shrink-0">
+        <div className="px-6 py-5 border-b border-surface2 flex items-start justify-between flex-shrink-0">
           <div>
             <h2 className="text-base font-semibold text-ink">Предложить цитату</h2>
             <p className="text-xs text-ash mt-0.5">После проверки цитата появится на главной странице</p>
