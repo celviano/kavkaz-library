@@ -33,7 +33,7 @@ export const BookTypeToggle = memo<BookTypeToggleProps>(({ value, onChange }) =>
           type="button"
           onClick={() => handleChange('physical')}
           className={cn(
-            'flex items-center gap-2 h-9 px-5 rounded-lg text-sm font-medium transition-all',
+            'flex items-center gap-2 h-9 px-5 rounded-lg cursor-pointer text-sm font-medium transition-all',
             value === 'physical'
               ? 'bg-bg text-ink shadow-card'
               : 'text-ash hover:text-ink',

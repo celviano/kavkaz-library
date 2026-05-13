@@ -105,12 +105,11 @@ export async function fetchAllEbooks(): Promise<Ebook[]> {
 // Обновить статус ebook (апрув/отклонение)
 export async function updateEbookStatus(
   ebookId: string,
-
   status: 'approved' | 'rejected',
-
   rejectionReason?: string,
 ): Promise<void> {
   const supabase = createClient()
+
   const { error } = await supabase
     .from('ebooks')
     .update({
@@ -121,6 +120,15 @@ export async function updateEbookStatus(
     .eq('id', ebookId)
 
   if (error) throw new Error(error.message)
+
+  // Синхронизируем статус в таблице books (каталог читает оттуда)
+  const bookStatus = status === 'approved' ? 'active' : 'archived'
+  const { error: bookError } = await supabase
+    .from('books')
+    .update({ status: bookStatus })
+    .eq('id', ebookId)
+
+  if (bookError) throw new Error(bookError.message)
 }
 
 // Увеличить счётчик загрузок

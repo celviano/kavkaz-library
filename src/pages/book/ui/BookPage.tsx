@@ -3,7 +3,7 @@
 import { memo } from 'react'
 import { Container } from '@/shared/ui/Container'
 import { Breadcrumb } from '@/shared/ui/Breadcrumb'
-import { BookSlider } from '@/widgets/book-slider'
+import { BookSlider, BookCover } from '@/widgets/book-slider'
 import { BookMetaGrid } from '@/widgets/book-meta'
 import { CATEGORY_LABELS } from '@/shared/config/constants'
 import { useBook, useSimilarBooks } from '@/entities/book'
@@ -42,13 +42,22 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
 
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 xl:gap-20 mb-16">
             <div className="min-w-0 w-full">
-              <BookSlider
-                title={book.title}
-                year={book.year}
-                category={categoryLabel}
-                coverUrl={book.coverUrl}
-                images={book.images}
-              />
+              {book.bookType === 'ebook' ? (
+                <BookCover
+                  title={book.title}
+                  year={book.year}
+                  category={categoryLabel}
+                  coverUrl={book.coverUrl}
+                />
+              ) : (
+                <BookSlider
+                  title={book.title}
+                  year={book.year}
+                  category={categoryLabel}
+                  coverUrl={book.coverUrl}
+                  images={book.images}
+                />
+              )}
             </div>
 
             <div className="flex flex-col gap-7">

@@ -3,17 +3,27 @@ import { cn } from '@/shared/lib/cn'
 import { EBOOK_FORMAT_LABELS } from '@/entities/ebook/model/types'
 import type { EbookFormat } from '@/entities/ebook/model/types'
 
+const FORMAT_COLORS: Record<EbookFormat, string> = {
+  pdf:  'bg-red-50 text-red-600 border-red-200',
+  epub: 'bg-accent/10 text-accent border-accent/20',
+  djvu: 'bg-gold/10 text-gold border-gold/20',
+  txt:  'bg-surface2 text-ash border-surface3',
+  mobi: 'bg-orange-50 text-orange-600 border-orange-200',
+}
+
 interface EbookBadgeProps {
   format?:    EbookFormat
   className?: string
 }
 
 export const EbookBadge = memo<EbookBadgeProps>(({ format, className }) => {
+  const colors = format ? FORMAT_COLORS[format] : 'bg-surface2 text-ash border-surface3'
+
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium',
-        'bg-blue-50 text-blue-600 border border-blue-200',
+        'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium border',
+        colors,
         className,
       )}
     >

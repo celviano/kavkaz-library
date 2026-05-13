@@ -185,6 +185,12 @@ export const AddBookForm = memo<{ initialBookType?: BookType }>(
             fileType: ebookFile!.type,
             fileSize: ebookFile!.size,
             coverUrl,
+            pages:         data.pages ? parseInt(data.pages, 10) : null,
+            language:      data.language ?? 'Русский',
+            publisherName: data.publisherName ?? '',
+            publisherCity: data.publisherCity ?? '',
+            edition:       data.edition ?? '',
+            tags:          data.tags ?? '',
           })
         }
 

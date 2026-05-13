@@ -6,9 +6,10 @@ import { EmptyState } from '@/shared/ui/EmptyState'
 import {
   EBOOK_STATUS_LABELS,
   EBOOK_STATUS_COLORS,
-  EBOOK_FORMAT_LABELS,
   formatFileSize,
 } from '@/entities/ebook/model/types'
+import { EbookBadge } from '@/shared/ui/EbookBadge'
+import type { EbookFormat } from '@/entities/ebook/model/types'
 import { useMyEbooks } from '@/features/ebooks/model/useEbooks'
 
 interface MyEbooksTabProps {
@@ -59,9 +60,7 @@ export const MyEbooksTab = memo<MyEbooksTabProps>(({ userId }) => {
 
           {/* Meta */}
           <div className="flex items-center gap-3 flex-wrap">
-            <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">
-              {EBOOK_FORMAT_LABELS[ebook.fileFormat]}
-            </span>
+            <EbookBadge format={ebook.fileFormat as EbookFormat} />
             <span className="text-xs text-dim">{formatFileSize(ebook.fileSize)}</span>
             {ebook.status === 'approved' && (
               <span className="text-xs text-dim">📥 {ebook.downloadCount} загрузок</span>

@@ -17,6 +17,12 @@ export interface SubmitEbookData {
   fileType:      string
   fileSize:      number
   coverUrl:      string
+  pages:         number | null
+  language:      string
+  publisherName: string
+  publisherCity: string
+  edition:       string
+  tags:          string
 }
 
 export async function submitEbookAction(data: SubmitEbookData) {
@@ -45,12 +51,17 @@ export async function submitEbookAction(data: SubmitEbookData) {
       year:           data.year ?? new Date().getFullYear(),
       category:       data.category,
       description:    data.description.trim() || null,
-      language:       'ru',
+      language:       data.language || 'Русский',
       available:      true,
       is_featured:    false,
       status,
       owner_id:       user.id,
       cover_url:      data.coverUrl || null,
+      pages:          data.pages,
+      publisher_name: data.publisherName.trim() || null,
+      publisher_city: data.publisherCity.trim() || null,
+      edition:        data.edition.trim() || null,
+      tags:           data.tags ? data.tags.split(',').map((t) => t.trim()).filter(Boolean) : [],
       book_type:      'ebook',
       ebook_format:   ext,
       ebook_file_url: data.storagePath,
