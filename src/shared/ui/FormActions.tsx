@@ -1,21 +1,22 @@
 import { type ReactNode } from 'react'
+
 import { cn } from '@/shared/lib/cn'
 
 interface FormActionsProps {
-  submitLabel?:    string
-  cancelLabel?:    string
-  submitting?:     boolean
+  submitLabel?: string
+  cancelLabel?: string
+  submitting?: boolean
   submittingLabel?: string
-  onCancel?:       () => void
-  className?:      string
-  align?:          'left' | 'right'
-  children?:       ReactNode   // for extra actions
+  onCancel?: () => void
+  className?: string
+  align?: 'left' | 'right'
+  children?: ReactNode // for extra actions
 }
 
 export function FormActions({
-  submitLabel     = 'Сохранить',
-  cancelLabel     = 'Отмена',
-  submitting      = false,
+  submitLabel = 'Сохранить',
+  cancelLabel = 'Отмена',
+  submitting = false,
   submittingLabel = 'Сохраняем...',
   onCancel,
   className,
@@ -23,11 +24,13 @@ export function FormActions({
   children,
 }: FormActionsProps) {
   return (
-    <div className={cn(
-      'flex gap-3',
-      align === 'right' ? 'justify-end' : 'justify-start',
-      className,
-    )}>
+    <div
+      className={cn(
+        'flex gap-3',
+        align === 'right' ? 'justify-end' : 'justify-start',
+        className,
+      )}
+    >
       {children}
 
       {onCancel && (
@@ -50,7 +53,9 @@ export function FormActions({
             <span className="w-4 h-4 rounded-full border-2 border-bg/30 border-t-bg animate-spin" />
             {submittingLabel}
           </span>
-        ) : submitLabel}
+        ) : (
+          submitLabel
+        )}
       </button>
     </div>
   )

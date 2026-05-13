@@ -1,21 +1,22 @@
 'use client'
 
 import { memo, useState } from 'react'
-import { cn } from '@/shared/lib/cn'
-import { EmptyState } from '@/shared/ui/EmptyState'
+
+import type { EbookFormat } from '@/entities/ebook/model/types'
+import type { Ebook } from '@/entities/ebook/model/types'
 import {
-  EBOOK_STATUS_LABELS,
   EBOOK_STATUS_COLORS,
+  EBOOK_STATUS_LABELS,
   formatFileSize,
 } from '@/entities/ebook/model/types'
-import { EbookBadge } from '@/shared/ui/EbookBadge'
-import type { EbookFormat } from '@/entities/ebook/model/types'
 import { useAllEbooks, useUpdateEbookStatus } from '@/features/ebooks/model/useEbooks'
-import type { Ebook } from '@/entities/ebook/model/types'
+import { cn } from '@/shared/lib/cn'
+import { EbookBadge } from '@/shared/ui/EbookBadge'
+import { EmptyState } from '@/shared/ui/EmptyState'
 
 function EbookAdminCard({ ebook }: { ebook: Ebook }) {
   const [rejectReason, setRejectReason] = useState('')
-  const [showReject,   setShowReject]   = useState(false)
+  const [showReject, setShowReject] = useState(false)
   const { mutate: updateStatus, isPending } = useUpdateEbookStatus()
 
   function handleApprove() {
@@ -23,7 +24,10 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
   }
 
   function handleReject() {
-    if (!showReject) { setShowReject(true); return }
+    if (!showReject) {
+      setShowReject(true)
+      return
+    }
     updateStatus({ ebookId: ebook.id, status: 'rejected', reason: rejectReason })
     setShowReject(false)
   }
@@ -34,23 +38,28 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
       <div className="flex items-start gap-3">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-ink">{ebook.title}</p>
-          <p className="text-xs text-ash mt-0.5">{ebook.author}{ebook.year ? `, ${ebook.year}` : ''}</p>
+          <p className="text-xs text-ash mt-0.5">
+            {ebook.author}
+            {ebook.year ? `, ${ebook.year}` : ''}
+          </p>
         </div>
-        <span className={cn(
-          'inline-flex items-center h-6 px-2.5 rounded-full text-[11px] font-medium border flex-shrink-0',
-          EBOOK_STATUS_COLORS[ebook.status],
-        )}>
+        <span
+          className={cn(
+            'inline-flex items-center h-6 px-2.5 rounded-full text-[11px] font-medium border flex-shrink-0',
+            EBOOK_STATUS_COLORS[ebook.status],
+          )}
+        >
           {EBOOK_STATUS_LABELS[ebook.status]}
         </span>
       </div>
 
       {/* Meta */}
       <div className="flex items-center gap-3 flex-wrap">
-        {ebook.fileFormat && (
-          <EbookBadge format={ebook.fileFormat as EbookFormat} />
-        )}
+        {ebook.fileFormat && <EbookBadge format={ebook.fileFormat as EbookFormat} />}
         <span className="text-xs text-dim">{formatFileSize(ebook.fileSize)}</span>
-        <span className="text-xs text-dim">{ebook.createdAt.toLocaleDateString('ru-RU')}</span>
+        <span className="text-xs text-dim">
+          {ebook.createdAt.toLocaleDateString('ru-RU')}
+        </span>
       </div>
 
       {/* Reject reason input */}
@@ -70,7 +79,10 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
           <button
             type="button"
             disabled={isPending}
-            onClick={() => { setShowReject(false); handleApprove() }}
+            onClick={() => {
+              setShowReject(false)
+              handleApprove()
+            }}
             className="h-8 px-4 rounded-lg text-xs font-medium bg-accent text-bg border border-accent hover:bg-accent2 transition-all disabled:opacity-50"
           >
             Одобрить
@@ -107,15 +119,18 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
 export const AdminEbooksTab = memo(() => {
   const { data: ebooks = [], isLoading } = useAllEbooks()
 
-  const pending  = ebooks.filter(e => e.status === 'pending')
-  const approved = ebooks.filter(e => e.status === 'approved')
-  const rejected = ebooks.filter(e => e.status === 'rejected')
+  const pending = ebooks.filter((e) => e.status === 'pending')
+  const approved = ebooks.filter((e) => e.status === 'approved')
+  const rejected = ebooks.filter((e) => e.status === 'rejected')
 
   if (isLoading) {
     return (
       <div className="flex flex-col gap-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-28 rounded-2xl bg-surface border border-surface2 animate-pulse" />
+          <div
+            key={i}
+            className="h-28 rounded-2xl bg-surface border border-surface2 animate-pulse"
+          />
         ))}
       </div>
     )
@@ -138,7 +153,9 @@ export const AdminEbooksTab = memo(() => {
             На рассмотрении · {pending.length}
           </h3>
           <div className="flex flex-col gap-3">
-            {pending.map(e => <EbookAdminCard key={e.id} ebook={e} />)}
+            {pending.map((e) => (
+              <EbookAdminCard key={e.id} ebook={e} />
+            ))}
           </div>
         </div>
       )}
@@ -148,7 +165,9 @@ export const AdminEbooksTab = memo(() => {
             Одобрены · {approved.length}
           </h3>
           <div className="flex flex-col gap-3">
-            {approved.map(e => <EbookAdminCard key={e.id} ebook={e} />)}
+            {approved.map((e) => (
+              <EbookAdminCard key={e.id} ebook={e} />
+            ))}
           </div>
         </div>
       )}
@@ -158,7 +177,9 @@ export const AdminEbooksTab = memo(() => {
             Отклонены · {rejected.length}
           </h3>
           <div className="flex flex-col gap-3">
-            {rejected.map(e => <EbookAdminCard key={e.id} ebook={e} />)}
+            {rejected.map((e) => (
+              <EbookAdminCard key={e.id} ebook={e} />
+            ))}
           </div>
         </div>
       )}

@@ -1,20 +1,27 @@
+import type { UseFormReturn } from 'react-hook-form'
 import { Controller } from 'react-hook-form'
+
+import type { BookCondition } from '@/entities/book/model/types'
+import type { AddPhysicalBookValues } from '@/shared/lib/zod/schemas'
 import { FormField } from '@/shared/ui/FormField'
 import { Input } from '@/shared/ui/Input'
-import { Select } from '@/shared/ui/Select'
 import { SegmentedControl } from '@/shared/ui/SegmentedControl'
+import { Select } from '@/shared/ui/Select'
+
+import { CONDITION_OPTIONS, PRICE_TYPE_OPTIONS } from '../../model/options'
 import { FormSection } from '../FormSection'
-import { PRICE_TYPE_OPTIONS, CONDITION_OPTIONS } from '../../model/options'
-import type { UseFormReturn } from 'react-hook-form'
-import type { AddPhysicalBookValues } from '@/shared/lib/zod/schemas'
-import type { BookCondition } from '@/entities/book/model/types'
 
 interface SaleSectionProps {
   form: UseFormReturn<AddPhysicalBookValues>
 }
 
 export function SaleSection({ form }: SaleSectionProps) {
-  const { register, control, watch, formState: { errors } } = form
+  const {
+    register,
+    control,
+    watch,
+    formState: { errors },
+  } = form
   const priceType = watch('priceType')
 
   return (
@@ -36,7 +43,10 @@ export function SaleSection({ form }: SaleSectionProps) {
       {priceType === 'fixed' && (
         <FormField label="Цена (₽)" required error={errors.price?.message}>
           <Input
-            type="number" min={0} max={9999999} step={50}
+            type="number"
+            min={0}
+            max={9999999}
+            step={50}
             placeholder="1500"
             error={errors.price?.message}
             {...register('price')}
@@ -61,10 +71,7 @@ export function SaleSection({ form }: SaleSectionProps) {
         </FormField>
 
         <FormField label="Количество экземпляров" error={errors.copies?.message}>
-          <Input
-            type="number" min={1} max={99}
-            {...register('copies')}
-          />
+          <Input type="number" min={1} max={99} {...register('copies')} />
         </FormField>
       </div>
     </FormSection>

@@ -1,9 +1,11 @@
 'use client'
 
 import { memo } from 'react'
-import { cn } from '@/shared/lib/cn'
-import { FormSection } from '../FormSection'
+
 import type { CopyrightType } from '@/entities/ebook/model/types'
+import { cn } from '@/shared/lib/cn'
+
+import { FormSection } from '../FormSection'
 
 const COPYRIGHT_OPTIONS: { value: CopyrightType; label: string; desc: string }[] = [
   {

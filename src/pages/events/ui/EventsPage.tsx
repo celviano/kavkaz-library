@@ -1,13 +1,14 @@
 'use client'
 
-import { memo, useState, useMemo } from 'react'
-import { Container } from '@/shared/ui/Container'
-import { PageHeading } from '@/shared/ui/PageHeading'
-import { EmptyState } from '@/shared/ui/EmptyState'
+import { memo, useMemo, useState } from 'react'
+
+import type { EventType } from '@/entities/event'
 import { EventCard } from '@/entities/event'
 import { MOCK_EVENTS } from '@/entities/event'
 import { EventFilter } from '@/features/event-filter'
-import type { EventType } from '@/entities/event'
+import { Container } from '@/shared/ui/Container'
+import { EmptyState } from '@/shared/ui/EmptyState'
+import { PageHeading } from '@/shared/ui/PageHeading'
 
 type FilterValue = EventType | 'all' | 'upcoming' | 'online'
 
@@ -115,16 +116,16 @@ function AnnounceBanner() {
 
 export const EventsPage = memo(() => {
   const [filter, setFilter] = useState<FilterValue>('upcoming')
-  const now = new Date()
 
   const filtered = useMemo(() => {
+    const now = new Date()
     return MOCK_EVENTS.filter((event) => {
       if (filter === 'upcoming') return event.startsAt > now
       if (filter === 'online') return event.isOnline
       if (filter === 'all') return true
       return event.type === filter
     }).sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime())
-  }, [filter, now])
+  }, [filter])
 
   return (
     <main id="main-content">

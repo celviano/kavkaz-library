@@ -1,11 +1,13 @@
 'use client'
 
 import { memo } from 'react'
+
+import { ProfileAvatar } from '@/entities/profile'
+import { getFullName, ROLE_LABELS, useProfile, useSellerStats } from '@/entities/profile'
 import { Container } from '@/shared/ui/Container'
 import { EmptyState } from '@/shared/ui/EmptyState'
 import { SectionHeading } from '@/shared/ui/SectionHeading'
-import { ProfileAvatar } from '@/entities/profile'
-import { useProfile, useSellerStats, getFullName, ROLE_LABELS } from '@/entities/profile'
+
 import { SellerBooksGrid } from './SellerBooksGrid'
 interface SellerPageProps {
   sellerId: string

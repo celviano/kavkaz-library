@@ -16,7 +16,9 @@ export const Breadcrumb: FC<BreadcrumbProps> = ({ items }) => (
       {items.map((item, i) => (
         <li key={i} className="flex items-center gap-2">
           {i > 0 && (
-            <span aria-hidden="true" className="text-surface3">›</span>
+            <span aria-hidden="true" className="text-surface3">
+              ›
+            </span>
           )}
           {item.href ? (
             <Link

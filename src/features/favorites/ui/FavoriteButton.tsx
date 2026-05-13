@@ -1,8 +1,10 @@
 'use client'
 
 import { memo } from 'react'
-import { cn } from '@/shared/lib/cn'
+
 import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
+import { cn } from '@/shared/lib/cn'
+
 import { useFavoriteIds, useToggleFavorite } from '../model/useFavorites'
 
 interface FavoriteButtonProps {
@@ -18,7 +20,7 @@ export const FavoriteButton = memo<FavoriteButtonProps>(({ bookId, className }) 
   const isFav = favoriteIds.includes(bookId)
 
   function handleClick(e: React.MouseEvent) {
-    e.preventDefault()   // не переходить по ссылке карточки
+    e.preventDefault() // не переходить по ссылке карточки
     e.stopPropagation()
 
     if (!user) {

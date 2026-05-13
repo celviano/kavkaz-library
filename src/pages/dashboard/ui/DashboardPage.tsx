@@ -2,21 +2,23 @@
 
 import { memo, useState } from 'react'
 import Link from 'next/link'
+
+import { isAdmin, useProfile } from '@/entities/profile'
+import { useMyBooks, useMyOrders } from '@/features/dashboard/model/useDashboard'
+import { useAllEbooks, useMyEbooks } from '@/features/ebooks/model/useEbooks'
+import { useAllQuotes, useMyQuotes } from '@/features/quotes/model/useQuotes'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 import { cn } from '@/shared/lib/cn'
 import { Container } from '@/shared/ui/Container'
-import { PageHeading } from '@/shared/ui/PageHeading'
 import { EmptyState } from '@/shared/ui/EmptyState'
-import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
-import { useProfile, isAdmin } from '@/entities/profile'
-import { useMyBooks, useMyOrders } from '@/features/dashboard/model/useDashboard'
-import { useMyQuotes, useAllQuotes } from '@/features/quotes/model/useQuotes'
-import { useMyEbooks, useAllEbooks } from '@/features/ebooks/model/useEbooks'
+import { PageHeading } from '@/shared/ui/PageHeading'
+
+import { AdminEbooksTab } from './AdminEbooksTab'
+import { AdminQuotesTab } from './AdminQuotesTab'
 import { MyBooksTab } from './MyBooksTab'
+import { MyEbooksTab } from './MyEbooksTab'
 import { MyOrdersTab } from './MyOrdersTab'
 import { MyQuotesTab } from './MyQuotesTab'
-import { AdminQuotesTab } from './AdminQuotesTab'
-import { MyEbooksTab } from './MyEbooksTab'
-import { AdminEbooksTab } from './AdminEbooksTab'
 
 type Tab = 'books' | 'orders' | 'quotes' | 'admin-quotes' | 'ebooks' | 'admin-ebooks'
 

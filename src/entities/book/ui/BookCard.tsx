@@ -1,13 +1,15 @@
 'use client'
 
 import { memo, useState } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+
+import { FavoriteButton } from '@/features/favorites'
+import { CATEGORY_LABELS } from '@/shared/config/constants'
 import { cn } from '@/shared/lib/cn'
 import { Badge } from '@/shared/ui/Badge'
 import { EbookBadge } from '@/shared/ui/EbookBadge'
-import { CATEGORY_LABELS } from '@/shared/config/constants'
-import { FavoriteButton } from '@/features/favorites'
+
 import type { Book } from '../model/types'
 
 interface BookCardProps {
@@ -19,7 +21,10 @@ function AvailabilityBadge({ book }: { book: Book }) {
   if (book.status === 'sold' || (!book.available && book.status !== 'active')) {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface2 text-dim border border-surface3">
-        <span className="w-1.5 h-1.5 rounded-full bg-surface3 shrink-0" aria-hidden="true"/>
+        <span
+          className="w-1.5 h-1.5 rounded-full bg-surface3 shrink-0"
+          aria-hidden="true"
+        />
         Распродана
       </span>
     )
@@ -27,14 +32,17 @@ function AvailabilityBadge({ book }: { book: Book }) {
   if (book.available && book.copiesLeft > 0) {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-accent/10 text-accent border border-accent/20">
-        <span className="w-1.5 h-1.5 rounded-full bg-accent shrink-0" aria-hidden="true"/>
+        <span
+          className="w-1.5 h-1.5 rounded-full bg-accent shrink-0"
+          aria-hidden="true"
+        />
         В наличии
       </span>
     )
   }
   return (
     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-gold/10 text-gold border border-gold/20">
-      <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" aria-hidden="true"/>
+      <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" aria-hidden="true" />
       Предзаказ
     </span>
   )
@@ -61,7 +69,6 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
       aria-label={`${title} — ${author}, ${year} год`}
     >
       <div className="relative aspect-3/4 overflow-hidden bg-surface2">
-
         {showImage && (
           <Image
             src={coverUrl!}
@@ -84,10 +91,16 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
             >
               {year}
             </span>
-            <svg width="36" height="28" viewBox="0 0 36 28" fill="none" className="opacity-[0.18]">
+            <svg
+              width="36"
+              height="28"
+              viewBox="0 0 36 28"
+              fill="none"
+              className="opacity-[0.18]"
+            >
               <path d="M4 26L13 6L22 26H4Z" fill="var(--color-accent)" />
               <path d="M16 26L24 10L32 26H16Z" fill="var(--color-accent)" opacity="0.5" />
-              <path d="M13 6L16 12H10L13 6Z" fill="var(--color-bg)" opacity="0.6"/>
+              <path d="M13 6L16 12H10L13 6Z" fill="var(--color-bg)" opacity="0.6" />
             </svg>
           </div>
         )}
@@ -114,7 +127,12 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
           <Badge category={category} label={CATEGORY_LABELS[category]} />
           <div className="flex items-center gap-1.5">
             {book.bookType === 'ebook' && (
-              <EbookBadge format={book.ebookFormat as import('@/entities/ebook/model/types').EbookFormat ?? undefined} />
+              <EbookBadge
+                format={
+                  (book.ebookFormat as import('@/entities/ebook/model/types').EbookFormat) ??
+                  undefined
+                }
+              />
             )}
             {book.bookType !== 'ebook' && <AvailabilityBadge book={book} />}
           </div>

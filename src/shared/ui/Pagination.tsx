@@ -1,18 +1,23 @@
 'use client'
 
 import { type FC } from 'react'
-import { useRouter, useSearchParams, usePathname } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+
 import { cn } from '@/shared/lib/cn'
 
 interface PaginationProps {
-  currentPage:  number
-  totalPages:   number
-  className?:   string
+  currentPage: number
+  totalPages: number
+  className?: string
 }
 
-export const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, className }) => {
-  const router      = useRouter()
-  const pathname    = usePathname()
+export const Pagination: FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  className,
+}) => {
+  const router = useRouter()
+  const pathname = usePathname()
   const searchParams = useSearchParams()
 
   if (totalPages <= 1) return null
@@ -37,7 +42,7 @@ export const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, class
     if (currentPage > 3) pages.push('...')
 
     const start = Math.max(2, currentPage - 1)
-    const end   = Math.min(totalPages - 1, currentPage + 1)
+    const end = Math.min(totalPages - 1, currentPage + 1)
 
     for (let i = start; i <= end; i++) pages.push(i)
 
@@ -69,15 +74,26 @@ export const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, class
         )}
         aria-label="Предыдущая страница"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <polyline points="15 18 9 12 15 6"/>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        >
+          <polyline points="15 18 9 12 15 6" />
         </svg>
       </button>
 
       {/* Page numbers */}
       {pages.map((page, i) =>
         page === '...' ? (
-          <span key={`ellipsis-${i}`} className="w-9 h-9 flex items-center justify-center text-dim text-sm">
+          <span
+            key={`ellipsis-${i}`}
+            className="w-9 h-9 flex items-center justify-center text-dim text-sm"
+          >
             …
           </span>
         ) : (
@@ -116,8 +132,16 @@ export const Pagination: FC<PaginationProps> = ({ currentPage, totalPages, class
         )}
         aria-label="Следующая страница"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <polyline points="9 18 15 12 9 6"/>
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+        >
+          <polyline points="9 18 15 12 9 6" />
         </svg>
       </button>
     </nav>

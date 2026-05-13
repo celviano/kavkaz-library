@@ -1,4 +1,5 @@
 import Image from 'next/image'
+
 import { Container } from '@/shared/ui/Container'
 
 import AboutOne from '../../../../public/images/about-mission/photo_2025-11-25_12-16-05.jpg'

@@ -2,18 +2,25 @@
 
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
+
+import type { SignUpValues } from '@/shared/lib/zod/schemas'
+import { signUpSchema } from '@/shared/lib/zod/schemas'
+import { ErrorBanner } from '@/shared/ui/ErrorBanner'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { signUpAction } from '../actions/auth.actions'
+
 import { AuthCard } from './AuthCard'
+import { AuthDivider } from './AuthDivider'
 import { AuthInput } from './AuthInput'
 import { OAuthButton } from './OAuthButton'
-import { AuthDivider } from './AuthDivider'
-import { ErrorBanner } from '@/shared/ui/ErrorBanner'
-import { signUpAction } from '../actions/auth.actions'
-import { signUpSchema } from '@/shared/lib/zod/schemas'
-import type { SignUpValues } from '@/shared/lib/zod/schemas'
 
 export function SignUpForm({ error }: { error?: string }) {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<SignUpValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
   })
 
@@ -65,7 +72,10 @@ export function SignUpForm({ error }: { error?: string }) {
         </form>
         <p className="text-center text-sm text-ash">
           Уже есть аккаунт?{' '}
-          <Link href="/auth/login" className="text-accent hover:text-accent2 font-medium transition-colors">
+          <Link
+            href="/auth/login"
+            className="text-accent hover:text-accent2 font-medium transition-colors"
+          >
             Войти
           </Link>
         </p>

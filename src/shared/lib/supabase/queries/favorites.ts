@@ -1,6 +1,6 @@
-import { createClient } from '@/shared/lib/supabase/client'
+import type { Book, BookRow } from '@/entities/book/model/types'
 import { mapBookRow } from '@/entities/book/model/types'
-import type { BookRow, Book } from '@/entities/book/model/types'
+import { createClient } from '@/shared/lib/supabase/client'
 
 export async function fetchFavoriteIds(userId: string): Promise<string[]> {
   const supabase = createClient()

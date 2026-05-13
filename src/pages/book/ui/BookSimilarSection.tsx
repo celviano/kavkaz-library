@@ -1,6 +1,7 @@
 import Link from 'next/link'
-import { BookGrid } from '@/widgets/book-grid'
+
 import type { Book } from '@/entities/book'
+import { BookGrid } from '@/widgets/book-grid'
 
 interface BookSimilarSectionProps {
   category: string

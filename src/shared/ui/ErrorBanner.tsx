@@ -1,8 +1,9 @@
 import { type FC } from 'react'
+
 import { cn } from '@/shared/lib/cn'
 
 interface ErrorBannerProps {
-  message:    string | null | undefined
+  message: string | null | undefined
   className?: string
 }
 

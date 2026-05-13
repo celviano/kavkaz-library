@@ -46,9 +46,26 @@ export const BookCover = memo<BookCoverProps>(({ title, year, category, coverUrl
               aria-hidden="true"
             >
               <defs>
-                <pattern id="cover-pat" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                  <polygon points="30,4 56,30 30,56 4,30" fill="none" stroke="#2a5c45" strokeWidth="1" />
-                  <polygon points="30,14 46,30 30,46 14,30" fill="none" stroke="#8B6914" strokeWidth="0.7" />
+                <pattern
+                  id="cover-pat"
+                  x="0"
+                  y="0"
+                  width="60"
+                  height="60"
+                  patternUnits="userSpaceOnUse"
+                >
+                  <polygon
+                    points="30,4 56,30 30,56 4,30"
+                    fill="none"
+                    stroke="#2a5c45"
+                    strokeWidth="1"
+                  />
+                  <polygon
+                    points="30,14 46,30 30,46 14,30"
+                    fill="none"
+                    stroke="#8B6914"
+                    strokeWidth="0.7"
+                  />
                   <circle cx="30" cy="30" r="3" fill="#2a5c45" />
                   <circle cx="0" cy="0" r="1.5" fill="#8B6914" />
                   <circle cx="60" cy="0" r="1.5" fill="#8B6914" />
@@ -59,13 +76,21 @@ export const BookCover = memo<BookCoverProps>(({ title, year, category, coverUrl
               <rect width="100%" height="100%" fill="url(#cover-pat)" />
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 z-10">
-              <svg width="52" height="52" viewBox="0 0 52 52" fill="none" className="opacity-[0.18]">
+              <svg
+                width="52"
+                height="52"
+                viewBox="0 0 52 52"
+                fill="none"
+                className="opacity-[0.18]"
+              >
                 <path d="M8 46 L20 10 L32 46 H8Z" fill="#2a5c45" />
                 <path d="M24 46 L34 18 L44 46 H24Z" fill="#2a5c45" opacity="0.55" />
                 <path d="M20 10 L24 20H16L20 10Z" fill="#f2ede6" opacity="0.6" />
                 <path d="M34 18 L37 26H31L34 18Z" fill="#f2ede6" opacity="0.5" />
               </svg>
-              <span className="text-[11px] text-dim uppercase tracking-widest">Обложка</span>
+              <span className="text-[11px] text-dim uppercase tracking-widest">
+                Обложка
+              </span>
             </div>
           </>
         )}

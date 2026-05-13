@@ -1,8 +1,9 @@
 import { memo } from 'react'
 import Link from 'next/link'
-import { Container } from '@/shared/ui/Container'
-import { HeroBackground } from './hero-background'
 
+import { Container } from '@/shared/ui/Container'
+
+import { HeroBackground } from './hero-background'
 
 export const Hero = memo(() => {
   return (
@@ -10,9 +11,8 @@ export const Hero = memo(() => {
       className="relative overflow-hidden min-h-svh md:min-h-0 flex flex-col"
       aria-labelledby="hero-heading"
     >
-      
-    <HeroBackground />
-    
+      <HeroBackground />
+
       {/* Bottom fade */}
       <div
         className="absolute bottom-0 left-0 w-full h-32 pointer-events-none"
@@ -20,9 +20,7 @@ export const Hero = memo(() => {
         aria-hidden="true"
       />
       <Container className="relative flex-1 flex flex-col md:block py-16 md:py-32 xl:py-40">
-
         <div className="relative flex flex-col items-center justify-center text-center flex-1">
-
           {/* Badge — pinned to top on mobile, inline on md+ */}
           <div className="absolute top-10 left-0 right-0 flex justify-center md:static md:mb-8">
             <div className="flex w-fit items-center gap-2 rounded-full border border-accent/20 bg-accent/6 px-4 py-1.5 backdrop-blur-[2px]">

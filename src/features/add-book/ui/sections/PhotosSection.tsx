@@ -1,10 +1,11 @@
-import { FormField } from '@/shared/ui/FormField'
-import { Dropzone, DropzoneEmptyState, DropzoneContent } from '@/shared/ui/Dropzone'
-import { FormSection } from '../FormSection'
 import type { useSupabaseUpload } from '@/shared/hooks/useSupabaseUpload'
+import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/shared/ui/Dropzone'
+import { FormField } from '@/shared/ui/FormField'
+
+import { FormSection } from '../FormSection'
 
 interface PhotosSectionProps {
-  coverUpload:  ReturnType<typeof useSupabaseUpload>
+  coverUpload: ReturnType<typeof useSupabaseUpload>
   imagesUpload: ReturnType<typeof useSupabaseUpload>
 }
 
@@ -18,7 +19,10 @@ export function PhotosSection({ coverUpload, imagesUpload }: PhotosSectionProps)
         </Dropzone>
       </FormField>
 
-      <FormField label="Дополнительные фото" hint="Фото разворотов, состояния переплёта. До 9 файлов">
+      <FormField
+        label="Дополнительные фото"
+        hint="Фото разворотов, состояния переплёта. До 9 файлов"
+      >
         <Dropzone {...imagesUpload}>
           <DropzoneEmptyState />
           <DropzoneContent />

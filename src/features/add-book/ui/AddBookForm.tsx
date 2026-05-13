@@ -3,25 +3,28 @@
 import { memo, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { createClient } from '@/shared/lib/supabase/client'
-import { useAddBookStore } from '@/shared/store'
-import { addBookAction } from '../actions/addBook.action'
+
+import type { BookCategory } from '@/entities/book/model/types'
 import { submitEbookAction } from '@/features/ebooks/actions/submitEbook.action'
-import { addPhysicalBookSchema } from '@/shared/lib/zod/schemas'
 import { useSupabaseUpload } from '@/shared/hooks/useSupabaseUpload'
+import { createClient } from '@/shared/lib/supabase/client'
+import type { AddPhysicalBookValues } from '@/shared/lib/zod/schemas'
+import { addPhysicalBookSchema } from '@/shared/lib/zod/schemas'
+import { useAddBookStore } from '@/shared/store'
 import { Container } from '@/shared/ui/Container'
-import { BookTypeToggle } from './BookTypeToggle'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+import { addBookAction } from '../actions/addBook.action'
+
 import { BasicInfoSection } from './sections/BasicInfoSection'
+import { CopyrightSection } from './sections/CopyrightSection'
+import { EbookCoverSection } from './sections/EbookCoverSection'
+import { EbookUploadSection } from './sections/EbookUploadSection'
+import { PhotosSection } from './sections/PhotosSection'
 import { PublicationSection } from './sections/PublicationSection'
 import { SaleSection } from './sections/SaleSection'
-import { PhotosSection } from './sections/PhotosSection'
-import { EbookUploadSection } from './sections/EbookUploadSection'
-import { EbookCoverSection } from './sections/EbookCoverSection'
-import { CopyrightSection } from './sections/CopyrightSection'
-import type { AddPhysicalBookValues } from '@/shared/lib/zod/schemas'
-import type { BookCategory } from '@/entities/book/model/types'
 import type { BookType } from './BookTypeToggle'
+import { BookTypeToggle } from './BookTypeToggle'
 
 export const AddBookForm = memo<{ initialBookType?: BookType }>(
   ({ initialBookType = 'physical' }) => {
@@ -185,12 +188,12 @@ export const AddBookForm = memo<{ initialBookType?: BookType }>(
             fileType: ebookFile!.type,
             fileSize: ebookFile!.size,
             coverUrl,
-            pages:         data.pages ? parseInt(data.pages, 10) : null,
-            language:      data.language ?? 'Русский',
+            pages: data.pages ? parseInt(data.pages, 10) : null,
+            language: data.language ?? 'Русский',
             publisherName: data.publisherName ?? '',
             publisherCity: data.publisherCity ?? '',
-            edition:       data.edition ?? '',
-            tags:          data.tags ?? '',
+            edition: data.edition ?? '',
+            tags: data.tags ?? '',
           })
         }
 

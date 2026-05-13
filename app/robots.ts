@@ -7,8 +7,15 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: '*',
-        allow:    ['/', '/catalog', '/book/', '/seller/', '/events', '/about'],
-        disallow: ['/dashboard', '/favorites', '/profile', '/add-book', '/organization', '/auth'],
+        allow: ['/', '/catalog', '/book/', '/seller/', '/events', '/about'],
+        disallow: [
+          '/dashboard',
+          '/favorites',
+          '/profile',
+          '/add-book',
+          '/organization',
+          '/auth',
+        ],
       },
     ],
     sitemap: `${BASE_URL}/sitemap.xml`,

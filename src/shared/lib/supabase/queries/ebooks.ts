@@ -1,7 +1,7 @@
-import { createClient } from '@/shared/lib/supabase/client'
-import { mapEbookRow } from '@/entities/ebook/model/types'
-import type { Ebook, EbookRow } from '@/entities/ebook/model/types'
 import type { BookCategory } from '@/entities/book/model/types'
+import type { Ebook, EbookRow } from '@/entities/ebook/model/types'
+import { mapEbookRow } from '@/entities/ebook/model/types'
+import { createClient } from '@/shared/lib/supabase/client'
 
 export interface EbooksQueryParams {
   category?: BookCategory | 'all'

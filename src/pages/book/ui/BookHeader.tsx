@@ -1,9 +1,9 @@
-import { Badge } from '@/shared/ui/Badge'
-import { EbookBadge } from '@/shared/ui/EbookBadge'
-import { FavoriteButton } from '@/features/favorites'
-import { CATEGORY_LABELS } from '@/shared/config/constants'
 import type { Book } from '@/entities/book'
 import type { EbookFormat } from '@/entities/ebook/model/types'
+import { FavoriteButton } from '@/features/favorites'
+import { CATEGORY_LABELS } from '@/shared/config/constants'
+import { Badge } from '@/shared/ui/Badge'
+import { EbookBadge } from '@/shared/ui/EbookBadge'
 
 interface BookHeaderProps {
   book: Book

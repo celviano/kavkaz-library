@@ -1,16 +1,16 @@
 import type { BookCategory } from '@/entities/book'
 
 export const CATEGORY_LABELS: Record<BookCategory, string> = {
-  history:     'История',
-  culture:     'Культура',
-  languages:   'Языки',
-  literature:  'Литература',
-  biography:   'Биографии',
-  geography:   'География',
+  history: 'История',
+  culture: 'Культура',
+  languages: 'Языки',
+  literature: 'Литература',
+  biography: 'Биографии',
+  geography: 'География',
   ethnography: 'Этнография',
-  memoirs:     'Мемуары',
-  atlases:     'Атласы',
-  other:       'Другое',
+  memoirs: 'Мемуары',
+  atlases: 'Атласы',
+  other: 'Другое',
 }
 
 export const CATEGORIES: BookCategory[] = [

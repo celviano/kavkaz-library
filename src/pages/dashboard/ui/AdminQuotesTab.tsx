@@ -1,11 +1,15 @@
 'use client'
 
 import { memo } from 'react'
-import { cn } from '@/shared/lib/cn'
-import { EmptyState } from '@/shared/ui/EmptyState'
-import { QUOTE_STATUS_LABELS, QUOTE_STATUS_COLORS } from '@/shared/lib/supabase/queries/quotes'
+
 import { useAllQuotes, useUpdateQuoteStatus } from '@/features/quotes/model/useQuotes'
+import { cn } from '@/shared/lib/cn'
 import type { Quote } from '@/shared/lib/supabase/queries/quotes'
+import {
+  QUOTE_STATUS_COLORS,
+  QUOTE_STATUS_LABELS,
+} from '@/shared/lib/supabase/queries/quotes'
+import { EmptyState } from '@/shared/ui/EmptyState'
 
 function QuoteCard({ quote }: { quote: Quote }) {
   const { mutate: updateStatus, isPending } = useUpdateQuoteStatus()
@@ -57,10 +61,12 @@ function QuoteCard({ quote }: { quote: Quote }) {
             >
               {isPending ? (
                 <span className="flex items-center gap-1.5">
-                  <span className="w-3 h-3 rounded-full border-2 border-bg/30 border-t-bg animate-spin"/>
+                  <span className="w-3 h-3 rounded-full border-2 border-bg/30 border-t-bg animate-spin" />
                   ...
                 </span>
-              ) : 'Одобрить'}
+              ) : (
+                'Одобрить'
+              )}
             </button>
           </div>
         )}
@@ -71,7 +77,9 @@ function QuoteCard({ quote }: { quote: Quote }) {
             Показ:{' '}
             <span className="font-medium text-ink">
               {new Date(quote.queueDate).toLocaleDateString('ru-RU', {
-                day: 'numeric', month: 'long', year: 'numeric',
+                day: 'numeric',
+                month: 'long',
+                year: 'numeric',
               })}
             </span>
           </p>
@@ -84,15 +92,18 @@ function QuoteCard({ quote }: { quote: Quote }) {
 export const AdminQuotesTab = memo(() => {
   const { data: quotes = [], isLoading } = useAllQuotes()
 
-  const pending  = quotes.filter(q => q.status === 'pending')
-  const approved = quotes.filter(q => q.status === 'approved')
-  const rejected = quotes.filter(q => q.status === 'rejected')
+  const pending = quotes.filter((q) => q.status === 'pending')
+  const approved = quotes.filter((q) => q.status === 'approved')
+  const rejected = quotes.filter((q) => q.status === 'rejected')
 
   if (isLoading) {
     return (
       <div className="flex flex-col gap-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-28 rounded-2xl bg-surface border border-surface2 animate-pulse" />
+          <div
+            key={i}
+            className="h-28 rounded-2xl bg-surface border border-surface2 animate-pulse"
+          />
         ))}
       </div>
     )
@@ -116,7 +127,9 @@ export const AdminQuotesTab = memo(() => {
             На рассмотрении · {pending.length}
           </h3>
           <div className="flex flex-col gap-3">
-            {pending.map(q => <QuoteCard key={q.id} quote={q} />)}
+            {pending.map((q) => (
+              <QuoteCard key={q.id} quote={q} />
+            ))}
           </div>
         </div>
       )}
@@ -128,7 +141,9 @@ export const AdminQuotesTab = memo(() => {
             Одобрены · {approved.length}
           </h3>
           <div className="flex flex-col gap-3">
-            {approved.map(q => <QuoteCard key={q.id} quote={q} />)}
+            {approved.map((q) => (
+              <QuoteCard key={q.id} quote={q} />
+            ))}
           </div>
         </div>
       )}
@@ -140,7 +155,9 @@ export const AdminQuotesTab = memo(() => {
             Отклонены · {rejected.length}
           </h3>
           <div className="flex flex-col gap-3">
-            {rejected.map(q => <QuoteCard key={q.id} quote={q} />)}
+            {rejected.map((q) => (
+              <QuoteCard key={q.id} quote={q} />
+            ))}
           </div>
         </div>
       )}

@@ -2,12 +2,13 @@
 
 import { memo } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+
 import { cn } from '@/shared/lib/cn'
 
 export type BookType = 'physical' | 'ebook'
 
 interface BookTypeToggleProps {
-  value:    BookType
+  value: BookType
   onChange: (value: BookType) => void
 }
 
@@ -39,9 +40,17 @@ export const BookTypeToggle = memo<BookTypeToggleProps>(({ value, onChange }) =>
               : 'text-ash hover:text-ink',
           )}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
-            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          >
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
           </svg>
           Бумажная
         </button>
@@ -50,16 +59,22 @@ export const BookTypeToggle = memo<BookTypeToggleProps>(({ value, onChange }) =>
           onClick={() => handleChange('ebook')}
           className={cn(
             'flex items-center gap-2 h-9 px-5 rounded-lg text-sm font-medium transition-all',
-            value === 'ebook'
-              ? 'bg-bg text-ink shadow-card'
-              : 'text-ash hover:text-ink',
+            value === 'ebook' ? 'bg-bg text-ink shadow-card' : 'text-ash hover:text-ink',
           )}
         >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-            <rect x="5" y="2" width="14" height="20" rx="2"/>
-            <line x1="9" y1="7" x2="15" y2="7"/>
-            <line x1="9" y1="11" x2="15" y2="11"/>
-            <line x1="9" y1="15" x2="12" y2="15"/>
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          >
+            <rect x="5" y="2" width="14" height="20" rx="2" />
+            <line x1="9" y1="7" x2="15" y2="7" />
+            <line x1="9" y1="11" x2="15" y2="11" />
+            <line x1="9" y1="15" x2="12" y2="15" />
           </svg>
           Электронная
         </button>

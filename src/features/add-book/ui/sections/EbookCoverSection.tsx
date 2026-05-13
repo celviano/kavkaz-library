@@ -1,7 +1,8 @@
-import { FormField } from '@/shared/ui/FormField'
-import { Dropzone, DropzoneEmptyState, DropzoneContent } from '@/shared/ui/Dropzone'
-import { FormSection } from '../FormSection'
 import type { useSupabaseUpload } from '@/shared/hooks/useSupabaseUpload'
+import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/shared/ui/Dropzone'
+import { FormField } from '@/shared/ui/FormField'
+
+import { FormSection } from '../FormSection'
 
 interface EbookCoverSectionProps {
   coverUpload: ReturnType<typeof useSupabaseUpload>
@@ -10,7 +11,10 @@ interface EbookCoverSectionProps {
 export function EbookCoverSection({ coverUpload }: EbookCoverSectionProps) {
   return (
     <FormSection title="Обложка">
-      <FormField label="Обложка книги" hint="Главное фото книги. JPEG, PNG или WebP до 5 МБ">
+      <FormField
+        label="Обложка книги"
+        hint="Главное фото книги. JPEG, PNG или WebP до 5 МБ"
+      >
         <Dropzone {...coverUpload}>
           <DropzoneEmptyState />
           <DropzoneContent />

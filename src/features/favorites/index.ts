@@ -1,2 +1,2 @@
+export { useFavoriteBooks, useFavoriteIds, useToggleFavorite } from './model/useFavorites'
 export { FavoriteButton } from './ui/FavoriteButton'
-export { useFavoriteIds, useFavoriteBooks, useToggleFavorite } from './model/useFavorites'

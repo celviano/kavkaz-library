@@ -1,9 +1,10 @@
 'use client'
 
 import { memo } from 'react'
-import { FilterChips } from '@/shared/ui/FilterChips'
-import { CATEGORIES, CATEGORY_LABELS } from '@/shared/config/constants'
+
 import type { BookCategory } from '@/entities/book'
+import { CATEGORIES, CATEGORY_LABELS } from '@/shared/config/constants'
+import { FilterChips } from '@/shared/ui/FilterChips'
 
 interface BookFilterProps {
   selected: BookCategory | 'all'

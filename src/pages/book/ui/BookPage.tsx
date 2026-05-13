@@ -1,16 +1,18 @@
 'use client'
 
 import { memo } from 'react'
-import { Container } from '@/shared/ui/Container'
-import { Breadcrumb } from '@/shared/ui/Breadcrumb'
-import { BookSlider, BookCover } from '@/widgets/book-slider'
-import { BookMetaGrid } from '@/widgets/book-meta'
-import { CATEGORY_LABELS } from '@/shared/config/constants'
+
 import { useBook, useSimilarBooks } from '@/entities/book'
-import { BookPageSkeleton } from './BookPageSkeleton'
-import { BookPageError } from './BookPageError'
-import { BookHeader } from './BookHeader'
+import { CATEGORY_LABELS } from '@/shared/config/constants'
+import { Breadcrumb } from '@/shared/ui/Breadcrumb'
+import { Container } from '@/shared/ui/Container'
+import { BookMetaGrid } from '@/widgets/book-meta'
+import { BookCover, BookSlider } from '@/widgets/book-slider'
+
 import { BookDescription } from './BookDescription'
+import { BookHeader } from './BookHeader'
+import { BookPageError } from './BookPageError'
+import { BookPageSkeleton } from './BookPageSkeleton'
 import { BookSellerSection } from './BookSellerSection'
 import { BookSimilarSection } from './BookSimilarSection'
 

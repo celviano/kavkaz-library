@@ -1,11 +1,12 @@
 'use client'
 
 import { memo, useState } from 'react'
+
+import type { Book } from '@/entities/book'
 import { CONDITION_LABELS } from '@/entities/book/model/types'
 import { RequestModal } from '@/features/book-request'
-import { AuthGateModal } from '@/shared/ui/AuthGateModal'
 import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
-import type { Book } from '@/entities/book'
+import { AuthGateModal } from '@/shared/ui/AuthGateModal'
 
 interface BookPurchaseBlockProps {
   book: Book
@@ -18,19 +19,25 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
   const [authGateOpen, setAuthGateOpen] = useState(false)
 
   function handlePurchaseClick() {
-    if (!user) { setAuthGateOpen(true); return }
+    if (!user) {
+      setAuthGateOpen(true)
+      return
+    }
     setModalOpen(true)
   }
 
   if (book.status !== 'active') {
     return (
       <div className="flex items-center gap-3 bg-surface rounded-2xl border border-surface2 px-5 py-4">
-        <span className="w-2 h-2 rounded-full bg-surface3 flex-shrink-0" aria-hidden="true"/>
+        <span
+          className="w-2 h-2 rounded-full bg-surface3 flex-shrink-0"
+          aria-hidden="true"
+        />
         <p className="text-sm text-ash">
-          {book.status === 'sold'     && 'Эта книга уже продана'}
-          {book.status === 'pending'  && 'Книга на модерации'}
+          {book.status === 'sold' && 'Эта книга уже продана'}
+          {book.status === 'pending' && 'Книга на модерации'}
           {book.status === 'archived' && 'Книга в архиве'}
-          {book.status === 'draft'    && 'Книга не опубликована'}
+          {book.status === 'draft' && 'Книга не опубликована'}
         </p>
       </div>
     )
@@ -43,38 +50,57 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
           <>
             <div className="flex items-center justify-between">
               <div className="flex flex-col gap-0.5">
-                <span className="text-[10px] text-dim uppercase tracking-wider">Цена</span>
+                <span className="text-[10px] text-dim uppercase tracking-wider">
+                  Цена
+                </span>
                 <span
                   className="font-display font-semibold text-ink"
-                  style={{ fontFamily: 'var(--font-display)', fontSize: '1.8rem', lineHeight: 1 }}
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontSize: '1.8rem',
+                    lineHeight: 1,
+                  }}
                 >
-                  {book.priceType === 'negotiable' ? 'Договорная'
-                    : book.priceType === 'exchange' ? 'Обмен'
-                    : new Intl.NumberFormat('ru-RU', {
-                        style: 'currency', currency: book.currency, maximumFractionDigits: 0,
-                      }).format(book.price)}
+                  {book.priceType === 'negotiable'
+                    ? 'Договорная'
+                    : book.priceType === 'exchange'
+                      ? 'Обмен'
+                      : new Intl.NumberFormat('ru-RU', {
+                          style: 'currency',
+                          currency: book.currency,
+                          maximumFractionDigits: 0,
+                        }).format(book.price)}
                 </span>
               </div>
               {book.copiesLeft > 0 && (
                 <div className="flex flex-col items-end gap-0.5">
-                  <span className="text-[10px] text-dim uppercase tracking-wider">В наличии</span>
-                  <span className="text-sm font-medium text-ink">{book.copiesLeft} экз.</span>
+                  <span className="text-[10px] text-dim uppercase tracking-wider">
+                    В наличии
+                  </span>
+                  <span className="text-sm font-medium text-ink">
+                    {book.copiesLeft} экз.
+                  </span>
                 </div>
               )}
             </div>
-            <hr className="border-surface2"/>
+            <hr className="border-surface2" />
           </>
         )}
 
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                inStock
-                  ? 'bg-[#27a560] shadow-[0_0_0_3px_rgba(39,165,96,0.15)]'
-                  : 'bg-surface3'
-              }`} aria-hidden="true"/>
-              <span className="text-sm text-ash">{inStock ? 'В наличии' : 'Нет в наличии'}</span>
+              <span
+                className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                  inStock
+                    ? 'bg-[#27a560] shadow-[0_0_0_3px_rgba(39,165,96,0.15)]'
+                    : 'bg-surface3'
+                }`}
+                aria-hidden="true"
+              />
+              <span className="text-sm text-ash">
+                {inStock ? 'В наличии' : 'Нет в наличии'}
+              </span>
             </div>
             {book.condition && (
               <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-surface2 text-ash border border-surface3">
@@ -94,8 +120,11 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
             Приобрести
           </button>
         ) : (
-          <button type="button" disabled
-            className="w-full h-12 rounded-xl text-base font-medium bg-surface2 text-ash border border-surface2 cursor-not-allowed">
+          <button
+            type="button"
+            disabled
+            className="w-full h-12 rounded-xl text-base font-medium bg-surface2 text-ash border border-surface2 cursor-not-allowed"
+          >
             Нет в наличии
           </button>
         )}
@@ -108,9 +137,7 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
           onClose={() => setModalOpen(false)}
         />
       )}
-      {authGateOpen && (
-        <AuthGateModal onClose={() => setAuthGateOpen(false)} />
-      )}
+      {authGateOpen && <AuthGateModal onClose={() => setAuthGateOpen(false)} />}
     </>
   )
 })

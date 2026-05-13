@@ -1,17 +1,25 @@
 'use client'
 
 import { memo } from 'react'
-import { cn } from '@/shared/lib/cn'
-import { EmptyState } from '@/shared/ui/EmptyState'
-import { QUOTE_STATUS_LABELS, QUOTE_STATUS_COLORS } from '@/shared/lib/supabase/queries/quotes'
+
 import { useMyQuotes } from '@/features/quotes/model/useQuotes'
+import { cn } from '@/shared/lib/cn'
+import {
+  QUOTE_STATUS_COLORS,
+  QUOTE_STATUS_LABELS,
+} from '@/shared/lib/supabase/queries/quotes'
+import { EmptyState } from '@/shared/ui/EmptyState'
 
 interface MyQuotesTabProps {
   userId: string
 }
 
 function formatQueueDate(date: Date): string {
-  return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+  return date.toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
 }
 
 export const MyQuotesTab = memo<MyQuotesTabProps>(({ userId }) => {
@@ -21,7 +29,10 @@ export const MyQuotesTab = memo<MyQuotesTabProps>(({ userId }) => {
     return (
       <div className="flex flex-col gap-3">
         {Array.from({ length: 2 }).map((_, i) => (
-          <div key={i} className="h-28 rounded-2xl bg-surface border border-surface2 animate-pulse" />
+          <div
+            key={i}
+            className="h-28 rounded-2xl bg-surface border border-surface2 animate-pulse"
+          />
         ))}
       </div>
     )
@@ -44,9 +55,7 @@ export const MyQuotesTab = memo<MyQuotesTabProps>(({ userId }) => {
           className="bg-bg border border-surface2 rounded-2xl p-5 flex flex-col gap-3 shadow-card"
         >
           {/* Quote text */}
-          <p className="text-sm text-ink leading-relaxed italic">
-            «{quote.text}»
-          </p>
+          <p className="text-sm text-ink leading-relaxed italic">«{quote.text}»</p>
 
           {/* Author & source */}
           <div className="flex items-center gap-2 text-xs text-ash">
@@ -69,9 +78,11 @@ export const MyQuotesTab = memo<MyQuotesTabProps>(({ userId }) => {
             {/* Если одобрена — показать дату показа */}
             {quote.status === 'approved' && quote.queueDate && (
               <p className="text-[11px] text-ash leading-snug text-right">
-                <span className="text-accent font-medium">Ваша цитата принята.</span>{' '}
-                Вы сможете увидеть её{' '}
-                <span className="font-medium text-ink">{formatQueueDate(quote.queueDate)}</span>
+                <span className="text-accent font-medium">Ваша цитата принята.</span> Вы
+                сможете увидеть её{' '}
+                <span className="font-medium text-ink">
+                  {formatQueueDate(quote.queueDate)}
+                </span>
               </p>
             )}
 

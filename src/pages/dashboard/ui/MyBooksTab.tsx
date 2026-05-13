@@ -1,14 +1,15 @@
 'use client'
 
 import { memo, useState } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
+
+import type { BookStatus } from '@/entities/book/model/types'
+import { STATUS_COLORS, STATUS_LABELS } from '@/entities/book/model/types'
+import { useMyBooks, useUpdateBookStatus } from '@/features/dashboard/model/useDashboard'
 import { cn } from '@/shared/lib/cn'
 import { EmptyState } from '@/shared/ui/EmptyState'
 import { FilterChips } from '@/shared/ui/FilterChips'
-import { STATUS_LABELS, STATUS_COLORS } from '@/entities/book/model/types'
-import { useMyBooks, useUpdateBookStatus } from '@/features/dashboard/model/useDashboard'
-import type { BookStatus } from '@/entities/book/model/types'
 
 const STATUS_FILTERS: { value: BookStatus | 'all'; label: string }[] = [
   { value: 'all', label: 'Все' },

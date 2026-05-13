@@ -2,32 +2,34 @@
 
 import { memo } from 'react'
 import Link from 'next/link'
-import { Plus, Check } from 'lucide-react'
+import { Check, Plus } from 'lucide-react'
 import { Mail } from 'lucide-react'
-import { Container } from '@/shared/ui/Container'
-import { EmptyState } from '@/shared/ui/EmptyState'
-import { BookGrid } from '@/widgets/book-grid'
-import { ProfileInfoRow } from './ProfileInfoRow'
-import { ProfileHeader } from './ProfileHeader'
-import { UserStatsStrip } from './UserStatsStrip'
-import { OrdersPreview } from './OrdersPreview'
-import { SellerBooksPreview } from './SellerBooksPreview'
+
 import {
-  useProfile,
   getFullName,
-  isSeller,
   isAdmin,
-  ROLE_LABELS,
+  isSeller,
   ROLE_BADGE_STYLE,
+  ROLE_LABELS,
+  useProfile,
 } from '@/entities/profile'
-import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
-import { useFavoriteBooks } from '@/features/favorites'
+import { useSellerStats } from '@/entities/profile'
 import {
   useMyBooks,
   useMyOrders,
   useSentOrders,
 } from '@/features/dashboard/model/useDashboard'
-import { useSellerStats } from '@/entities/profile'
+import { useFavoriteBooks } from '@/features/favorites'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
+import { Container } from '@/shared/ui/Container'
+import { EmptyState } from '@/shared/ui/EmptyState'
+import { BookGrid } from '@/widgets/book-grid'
+
+import { OrdersPreview } from './OrdersPreview'
+import { ProfileHeader } from './ProfileHeader'
+import { ProfileInfoRow } from './ProfileInfoRow'
+import { SellerBooksPreview } from './SellerBooksPreview'
+import { UserStatsStrip } from './UserStatsStrip'
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 function ProfileSkeleton() {

@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import Link from 'next/link'
+
 import { Container } from '@/shared/ui/Container'
 
 export const AboutPreview = memo(() => {

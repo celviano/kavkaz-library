@@ -1,4 +1,5 @@
-import { type FC, type ReactNode, type ButtonHTMLAttributes } from 'react'
+import { type ButtonHTMLAttributes, type FC, type ReactNode } from 'react'
+
 import { cn } from '@/shared/lib/cn'
 
 type ButtonVariant = 'primary' | 'outline' | 'ghost'

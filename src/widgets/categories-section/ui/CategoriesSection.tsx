@@ -2,11 +2,12 @@
 
 import { memo } from 'react'
 import Link from 'next/link'
+
+import { useCategoryCounts } from '@/entities/book'
+import { CATEGORIES, CATEGORY_LABELS } from '@/shared/config/constants'
+import { Badge } from '@/shared/ui/Badge'
 import { Container } from '@/shared/ui/Container'
 import { SectionHeading } from '@/shared/ui/SectionHeading'
-import { Badge } from '@/shared/ui/Badge'
-import { CATEGORIES, CATEGORY_LABELS } from '@/shared/config/constants'
-import { useCategoryCounts } from '@/entities/book'
 
 export const CategoriesSection = memo(() => {
   const { data: counts = {} } = useCategoryCounts()
@@ -48,7 +49,6 @@ export const CategoriesSection = memo(() => {
         </div>
         <ul
           className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3"
-          role="list"
           aria-label="Список категорий"
         >
           {CATEGORIES.slice(0, 6).map((cat) => {
@@ -66,11 +66,11 @@ export const CategoriesSection = memo(() => {
                   }
                   aria-label={`${CATEGORY_LABELS[cat]}: ${count} книг`}
                 >
-                  <div className='flex justify-center md:justify-start '><Badge category={cat} label={CATEGORY_LABELS[cat]} /></div>
-                  
-                  <span
-                    className="font-normal text-[12px] md:text-base  text-accent"
-                  >
+                  <div className="flex justify-center md:justify-start ">
+                    <Badge category={cat} label={CATEGORY_LABELS[cat]} />
+                  </div>
+
+                  <span className="font-normal text-[12px] md:text-base  text-accent">
                     {count}
                   </span>
                   <span className="text-[8px] sm:text-[11px] text-ash uppercase tracking-wider">

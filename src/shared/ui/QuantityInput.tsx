@@ -1,9 +1,9 @@
 import { type FC } from 'react'
 
 interface QuantityInputProps {
-  value:    number
-  min?:     number
-  max?:     number
+  value: number
+  min?: number
+  max?: number
   onChange: (value: number) => void
 }
 

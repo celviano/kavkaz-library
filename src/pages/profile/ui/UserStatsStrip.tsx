@@ -11,10 +11,7 @@ interface UserStatsStripProps {
   dark?: boolean
 }
 
-export const UserStatsStrip: FC<UserStatsStripProps> = ({
-  stats,
-  cols = 3,
-}) => (
+export const UserStatsStrip: FC<UserStatsStripProps> = ({ stats, cols = 3 }) => (
   <div
     className={`grid gap-px rounded-2xl overflow-hidden bg-surface2 `}
     style={{ gridTemplateColumns: `repeat(${cols}, 1fr)` }}

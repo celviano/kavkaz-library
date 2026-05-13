@@ -1,7 +1,7 @@
-import { SellerBlock } from '@/widgets/seller-block'
+import type { Book } from '@/entities/book'
 import { BookPurchaseBlock } from '@/widgets/book-purchase'
 import { EbookDownloadBlock } from '@/widgets/ebook-download/ui/EbookDownloadBlock'
-import type { Book } from '@/entities/book'
+import { SellerBlock } from '@/widgets/seller-block'
 
 interface BookSellerSectionProps {
   book: Book

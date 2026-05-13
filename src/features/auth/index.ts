@@ -1,5 +1,5 @@
+export { logoutAction } from './actions/auth.actions'
+export { ForgotPasswordForm } from './ui/ForgotPasswordForm'
 export { LoginForm } from './ui/LoginForm'
 export { SignUpForm } from './ui/SignUpForm'
-export { ForgotPasswordForm } from './ui/ForgotPasswordForm'
 export { UpdatePasswordForm } from './ui/UpdatePasswordForm'
-export { logoutAction } from './actions/auth.actions'

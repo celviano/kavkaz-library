@@ -1,27 +1,28 @@
 import { create } from 'zustand'
-import { persist, createJSONStorage } from 'zustand/middleware'
-import type { AddPhysicalBookValues } from '@/shared/lib/zod/schemas'
-import type { BookType } from '@/features/add-book/ui/BookTypeToggle'
+import { createJSONStorage, persist } from 'zustand/middleware'
+
 import type { CopyrightType } from '@/entities/ebook/model/types'
+import type { BookType } from '@/features/add-book/ui/BookTypeToggle'
+import type { AddPhysicalBookValues } from '@/shared/lib/zod/schemas'
 
 // ─── Add Book Draft Store ─────────────────────────────────────────────────────
 
 interface AddBookDraft {
-  bookType:      BookType
-  values:        Partial<AddPhysicalBookValues>
+  bookType: BookType
+  values: Partial<AddPhysicalBookValues>
   copyrightType: CopyrightType
 }
 
 interface AddBookStore extends AddBookDraft {
-  setBookType:      (type: BookType) => void
-  setValues:        (values: Partial<AddPhysicalBookValues>) => void
+  setBookType: (type: BookType) => void
+  setValues: (values: Partial<AddPhysicalBookValues>) => void
   setCopyrightType: (type: CopyrightType) => void
-  reset:            () => void
+  reset: () => void
 }
 
 const initialDraft: AddBookDraft = {
-  bookType:      'physical',
-  values:        {},
+  bookType: 'physical',
+  values: {},
   copyrightType: 'public_domain',
 }
 
@@ -29,13 +30,13 @@ export const useAddBookStore = create<AddBookStore>()(
   persist(
     (set) => ({
       ...initialDraft,
-      setBookType:      (bookType) => set({ bookType }),
-      setValues:        (values)   => set((s) => ({ values: { ...s.values, ...values } })),
-      setCopyrightType: (type)     => set({ copyrightType: type }),
-      reset:            ()         => set(initialDraft),
+      setBookType: (bookType) => set({ bookType }),
+      setValues: (values) => set((s) => ({ values: { ...s.values, ...values } })),
+      setCopyrightType: (type) => set({ copyrightType: type }),
+      reset: () => set(initialDraft),
     }),
     {
-      name:    'add-book-draft',
+      name: 'add-book-draft',
       storage: createJSONStorage(() => sessionStorage),
     },
   ),
@@ -45,12 +46,12 @@ export const useAddBookStore = create<AddBookStore>()(
 
 interface UIStore {
   requestModalBookId: string | null
-  openRequestModal:   (bookId: string) => void
-  closeRequestModal:  () => void
+  openRequestModal: (bookId: string) => void
+  closeRequestModal: () => void
 }
 
 export const useUIStore = create<UIStore>()((set) => ({
   requestModalBookId: null,
-  openRequestModal:   (bookId) => set({ requestModalBookId: bookId }),
-  closeRequestModal:  ()       => set({ requestModalBookId: null }),
+  openRequestModal: (bookId) => set({ requestModalBookId: bookId }),
+  closeRequestModal: () => set({ requestModalBookId: null }),
 }))

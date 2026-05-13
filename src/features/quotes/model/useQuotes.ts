@@ -1,20 +1,20 @@
 'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  fetchAllQuotes,
   fetchDailyQuote,
   fetchMyQuotes,
-  fetchAllQuotes,
   fetchPendingQuotes,
   submitQuote,
   updateQuoteStatus,
 } from '@/shared/lib/supabase/queries/quotes'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 // Цитата дня для главной страницы
 export function useDailyQuote() {
   return useQuery({
     queryKey: ['quotes', 'daily'],
-    queryFn:  fetchDailyQuote,
+    queryFn: fetchDailyQuote,
     staleTime: 1000 * 60 * 60, // 1 час
   })
 }
@@ -23,8 +23,8 @@ export function useDailyQuote() {
 export function useMyQuotes(userId: string | null) {
   return useQuery({
     queryKey: ['quotes', 'my', userId],
-    queryFn:  () => fetchMyQuotes(userId!),
-    enabled:  Boolean(userId),
+    queryFn: () => fetchMyQuotes(userId!),
+    enabled: Boolean(userId),
   })
 }
 
@@ -32,7 +32,7 @@ export function useMyQuotes(userId: string | null) {
 export function useAllQuotes() {
   return useQuery({
     queryKey: ['quotes', 'all'],
-    queryFn:  fetchAllQuotes,
+    queryFn: fetchAllQuotes,
   })
 }
 
@@ -40,7 +40,7 @@ export function useAllQuotes() {
 export function usePendingQuotes() {
   return useQuery({
     queryKey: ['quotes', 'pending'],
-    queryFn:  fetchPendingQuotes,
+    queryFn: fetchPendingQuotes,
   })
 }
 
@@ -60,8 +60,13 @@ export function useSubmitQuote(userId: string) {
 export function useUpdateQuoteStatus() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ quoteId, status }: { quoteId: string; status: 'approved' | 'rejected' }) =>
-      updateQuoteStatus(quoteId, status),
+    mutationFn: ({
+      quoteId,
+      status,
+    }: {
+      quoteId: string
+      status: 'approved' | 'rejected'
+    }) => updateQuoteStatus(quoteId, status),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['quotes'] })
     },

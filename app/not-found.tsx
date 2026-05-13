@@ -1,6 +1,7 @@
-import Link from 'next/link'
-import { Container } from '@/shared/ui/Container'
 import type { Metadata } from 'next'
+import Link from 'next/link'
+
+import { Container } from '@/shared/ui/Container'
 
 export const metadata: Metadata = {
   title: 'Страница не найдена',

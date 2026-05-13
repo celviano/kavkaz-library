@@ -2,7 +2,8 @@
 
 import { memo } from 'react'
 import Link from 'next/link'
-import { useProfile, useSellerStats, getFullName } from '@/entities/profile'
+
+import { getFullName, useProfile, useSellerStats } from '@/entities/profile'
 import { ProfileAvatar } from '@/entities/profile'
 
 interface SellerBlockProps {
