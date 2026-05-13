@@ -17,6 +17,7 @@ import { PublicationSection } from './sections/PublicationSection'
 import { SaleSection } from './sections/SaleSection'
 import { PhotosSection } from './sections/PhotosSection'
 import { EbookUploadSection } from './sections/EbookUploadSection'
+import { EbookCoverSection } from './sections/EbookCoverSection'
 import { CopyrightSection } from './sections/CopyrightSection'
 import type { AddPhysicalBookValues } from '@/shared/lib/zod/schemas'
 import type { BookCategory } from '@/entities/book/model/types'
@@ -168,6 +169,10 @@ export const AddBookForm = memo<{ initialBookType?: BookType }>(
           if (uploadError)
             throw new Error(`Ошибка загрузки файла: ${uploadError.message}`)
 
+          let coverUrl = ''
+          if (coverUpload.files.some((f) => f.errors.length === 0))
+            coverUrl = (await coverUpload.onUpload())[0] ?? ''
+
           await submitEbookAction({
             title: data.title,
             author: data.author,
@@ -179,6 +184,7 @@ export const AddBookForm = memo<{ initialBookType?: BookType }>(
             fileName: ebookFile!.name,
             fileType: ebookFile!.type,
             fileSize: ebookFile!.size,
+            coverUrl,
           })
         }
 
@@ -227,6 +233,7 @@ export const AddBookForm = memo<{ initialBookType?: BookType }>(
                   <PhotosSection coverUpload={coverUpload} imagesUpload={imagesUpload} />
                 ) : (
                   <>
+                    <EbookCoverSection coverUpload={coverUpload} />
                     <EbookUploadSection
                       file={ebookFile}
                       onFile={(f) => {

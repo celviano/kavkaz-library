@@ -16,6 +16,7 @@ export interface SubmitEbookData {
   fileName:      string
   fileType:      string
   fileSize:      number
+  coverUrl:      string
 }
 
 export async function submitEbookAction(data: SubmitEbookData) {
@@ -49,6 +50,7 @@ export async function submitEbookAction(data: SubmitEbookData) {
       is_featured:    false,
       status,
       owner_id:       user.id,
+      cover_url:      data.coverUrl || null,
       book_type:      'ebook',
       ebook_format:   ext,
       ebook_file_url: data.storagePath,
@@ -82,6 +84,7 @@ export async function submitEbookAction(data: SubmitEbookData) {
       file_name:      data.fileName,
       file_format:    ext,
       file_size:      data.fileSize,
+      cover_url:      data.coverUrl || null,
       user_id:        user.id,
       status,
       copyright_type: data.copyrightType,
