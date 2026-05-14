@@ -6,8 +6,13 @@ import Link from 'next/link'
 
 import type { BookStatus } from '@/entities/book/model/types'
 import { STATUS_COLORS, STATUS_LABELS } from '@/entities/book/model/types'
-import { useMyBooks, useUpdateBookStatus } from '@/features/dashboard/model/useDashboard'
+import {
+  useDeleteBook,
+  useMyBooks,
+  useUpdateBookStatus,
+} from '@/features/dashboard/model/useDashboard'
 import { cn } from '@/shared/lib/cn'
+import { ConfirmDeleteModal } from '@/shared/ui/ConfirmDeleteModal'
 import { EmptyState } from '@/shared/ui/EmptyState'
 import { FilterChips } from '@/shared/ui/FilterChips'
 
@@ -26,10 +31,13 @@ interface MyBooksTabProps {
 
 export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
   const [filter, setFilter] = useState<BookStatus | 'all'>('all')
+  const [deletingBookId, setDeletingBookId] = useState<string | null>(null)
   const { data: books = [], isLoading } = useMyBooks(userId)
   const { mutate: changeStatus, isPending } = useUpdateBookStatus(userId)
+  const { mutate: removeBook, isPending: isDeleting } = useDeleteBook(userId)
 
   const filtered = filter === 'all' ? books : books.filter((b) => b.status === filter)
+  const bookToDelete = books.find((b) => b.id === deletingBookId) ?? null
 
   const filterOptions = STATUS_FILTERS.map(({ value, label }) => ({
     value,
@@ -131,6 +139,13 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                     Просмотр
                   </Link>
 
+                  <Link
+                    href={`/book/${book.id}/edit`}
+                    className="h-8 px-3 rounded-lg text-xs border border-surface2 text-ash hover:text-ink hover:bg-surface2 transition-colors inline-flex items-center"
+                  >
+                    Редактировать
+                  </Link>
+
                   {book.status === 'active' && (
                     <button
                       type="button"
@@ -165,12 +180,40 @@ export const MyBooksTab = memo<MyBooksTabProps>(({ userId }) => {
                       Восстановить
                     </button>
                   )}
+
+                  <button
+                    type="button"
+                    onClick={() => setDeletingBookId(book.id)}
+                    disabled={isPending || isDeleting}
+                    className="h-8 px-3 rounded-lg text-xs border border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300 transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    Удалить
+                  </button>
                 </div>
               </div>
             </li>
           ))}
         </ul>
       )}
+
+      <ConfirmDeleteModal
+        isOpen={Boolean(deletingBookId)}
+        onClose={() => setDeletingBookId(null)}
+        onConfirm={() => {
+          if (!bookToDelete) return
+          removeBook(
+            {
+              bookId: bookToDelete.id,
+              coverUrl: bookToDelete.coverUrl,
+              images: bookToDelete.images,
+            },
+            { onSuccess: () => setDeletingBookId(null) },
+          )
+        }}
+        isPending={isDeleting}
+        title="Удалить книгу?"
+        description="Книга будет полностью удалена из базы данных вместе со всеми файлами. Это действие необратимо."
+      />
     </div>
   )
 })

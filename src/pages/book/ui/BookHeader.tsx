@@ -1,5 +1,6 @@
 import type { Book } from '@/entities/book'
 import type { EbookFormat } from '@/entities/ebook/model/types'
+import { BookAdminMenu } from '@/features/book-admin-actions'
 import { FavoriteButton } from '@/features/favorites'
 import { CATEGORY_LABELS } from '@/shared/config/constants'
 import { Badge } from '@/shared/ui/Badge'
@@ -21,7 +22,10 @@ export function BookHeader({ book }: BookHeaderProps) {
             <EbookBadge format={(book.ebookFormat as EbookFormat) ?? undefined} />
           )}
         </div>
-        <FavoriteButton bookId={book.id} />
+        <div className="flex items-center gap-2">
+          <FavoriteButton bookId={book.id} />
+          <BookAdminMenu book={book} />
+        </div>
       </div>
 
       <h1

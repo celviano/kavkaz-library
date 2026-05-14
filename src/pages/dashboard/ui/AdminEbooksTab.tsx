@@ -9,15 +9,22 @@ import {
   EBOOK_STATUS_LABELS,
   formatFileSize,
 } from '@/entities/ebook/model/types'
-import { useAllEbooks, useUpdateEbookStatus } from '@/features/ebooks/model/useEbooks'
+import {
+  useAllEbooks,
+  useDeleteEbook,
+  useUpdateEbookStatus,
+} from '@/features/ebooks/model/useEbooks'
 import { cn } from '@/shared/lib/cn'
+import { ConfirmDeleteModal } from '@/shared/ui/ConfirmDeleteModal'
 import { EbookBadge } from '@/shared/ui/EbookBadge'
 import { EmptyState } from '@/shared/ui/EmptyState'
 
 function EbookAdminCard({ ebook }: { ebook: Ebook }) {
   const [rejectReason, setRejectReason] = useState('')
   const [showReject, setShowReject] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const { mutate: updateStatus, isPending } = useUpdateEbookStatus()
+  const { mutate: removeEbook, isPending: isDeleting } = useDeleteEbook()
 
   function handleApprove() {
     updateStatus({ ebookId: ebook.id, status: 'approved' })
@@ -30,6 +37,17 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
     }
     updateStatus({ ebookId: ebook.id, status: 'rejected', reason: rejectReason })
     setShowReject(false)
+  }
+
+  function handleArchive() {
+    updateStatus({ ebookId: ebook.id, status: 'rejected' })
+  }
+
+  function handleDeleteConfirm() {
+    removeEbook(
+      { ebookId: ebook.id, fileUrl: ebook.fileUrl, coverUrl: ebook.coverUrl },
+      { onSuccess: () => setShowDeleteModal(false) },
+    )
   }
 
   return (
@@ -45,7 +63,7 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
         </div>
         <span
           className={cn(
-            'inline-flex items-center h-6 px-2.5 rounded-full text-[11px] font-medium border flex-shrink-0',
+            'inline-flex items-center h-6 px-2.5 rounded-full text-[11px] font-medium border shrink-0',
             EBOOK_STATUS_COLORS[ebook.status],
           )}
         >
@@ -73,7 +91,7 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
         />
       )}
 
-      {/* Actions */}
+      {/* Moderation actions (pending only) */}
       {ebook.status === 'pending' && (
         <div className="flex items-center gap-2 pt-1 border-t border-surface2 flex-wrap">
           <button
@@ -107,11 +125,46 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
         </div>
       )}
 
+      {/* Admin actions (always visible) */}
+      <div className="flex items-center gap-2 pt-1 border-t border-surface2 flex-wrap">
+        <button
+          type="button"
+          disabled={isPending || isDeleting}
+          onClick={handleArchive}
+          className="h-8 px-3 rounded-lg text-xs border border-surface2 text-dim hover:text-ash hover:bg-surface2 transition-colors cursor-pointer disabled:opacity-50"
+        >
+          Архивировать
+        </button>
+        <a
+          href={`/book/${ebook.id}/edit`}
+          className="h-8 px-3 rounded-lg text-xs border border-steel2/40 text-steel2 hover:bg-steel/30 hover:border-steel2/60 transition-colors inline-flex items-center"
+        >
+          Изменить
+        </a>
+        <button
+          type="button"
+          disabled={isPending || isDeleting}
+          onClick={() => setShowDeleteModal(true)}
+          className="h-8 px-3 rounded-lg text-xs border border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300 transition-colors cursor-pointer disabled:opacity-50"
+        >
+          Удалить
+        </button>
+      </div>
+
       {ebook.status === 'rejected' && ebook.rejectionReason && (
         <p className="text-xs text-red-500 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
           Причина: {ebook.rejectionReason}
         </p>
       )}
+
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteConfirm}
+        isPending={isDeleting}
+        title="Удалить электронную книгу?"
+        description="Файл книги и все связанные данные будут удалены безвозвратно."
+      />
     </div>
   )
 }

@@ -145,6 +145,35 @@ export async function incrementDownloadCount(ebookId: string): Promise<void> {
   await supabase.from('ebooks').update({ download_count: newCount }).eq('id', ebookId)
 }
 
+function extractStoragePath(url: string, bucket: string): string | null {
+  const marker = `/object/public/${bucket}/`
+  const idx = url.indexOf(marker)
+  if (idx === -1) return null
+  return url.slice(idx + marker.length)
+}
+
+// Hard-delete an ebook and its storage files
+export async function deleteEbook(
+  ebookId: string,
+  opts: { fileUrl: string; coverUrl?: string | null },
+): Promise<void> {
+  const supabase = createClient()
+
+  // fileUrl is a path within the 'ebooks' bucket
+  await supabase.storage.from('ebooks').remove([opts.fileUrl])
+
+  if (opts.coverUrl) {
+    const path = extractStoragePath(opts.coverUrl, 'book-covers')
+    if (path) await supabase.storage.from('book-covers').remove([path])
+  }
+
+  const { error } = await supabase.from('ebooks').delete().eq('id', ebookId)
+  if (error) throw new Error(error.message)
+
+  // Remove mirrored entry from books table (status sync)
+  await supabase.from('books').delete().eq('id', ebookId)
+}
+
 // Получить signed URL для скачивания файла
 export async function getEbookDownloadUrl(fileUrl: string): Promise<string> {
   const supabase = createClient()

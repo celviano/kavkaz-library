@@ -1,7 +1,11 @@
 'use client'
 
 import type { BookStatus } from '@/entities/book/model/types'
-import { fetchMyBooks, updateBookStatus } from '@/shared/lib/supabase/queries/books'
+import {
+  deleteBook,
+  fetchMyBooks,
+  updateBookStatus,
+} from '@/shared/lib/supabase/queries/books'
 import type { OrderStatus } from '@/shared/lib/supabase/queries/orders'
 import {
   fetchMyOrders,
@@ -44,6 +48,28 @@ export function useUpdateOrderStatus(sellerId: string) {
       updateOrderStatus(orderId, status),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['dashboard', 'orders', sellerId] })
+    },
+  })
+}
+
+export function useDeleteBook(ownerId?: string) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      bookId,
+      coverUrl,
+      images,
+      ebookFileUrl,
+    }: {
+      bookId: string
+      coverUrl?: string | null
+      images?: string[] | null
+      ebookFileUrl?: string | null
+    }) => deleteBook(bookId, { coverUrl, images, ebookFileUrl }),
+    onSuccess: (_, { bookId }) => {
+      if (ownerId) qc.invalidateQueries({ queryKey: ['dashboard', 'books', ownerId] })
+      qc.invalidateQueries({ queryKey: ['books'] })
+      qc.removeQueries({ queryKey: ['books', 'detail', bookId] })
     },
   })
 }

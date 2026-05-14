@@ -2,6 +2,7 @@
 
 import type { EbooksQueryParams } from '@/shared/lib/supabase/queries/ebooks'
 import {
+  deleteEbook,
   fetchAllEbooks,
   fetchEbookById,
   fetchEbooks,
@@ -62,6 +63,24 @@ export function useUpdateEbookStatus() {
       status: 'approved' | 'rejected'
       reason?: string
     }) => updateEbookStatus(ebookId, status, reason),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['ebooks'] })
+    },
+  })
+}
+
+export function useDeleteEbook() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      ebookId,
+      fileUrl,
+      coverUrl,
+    }: {
+      ebookId: string
+      fileUrl: string
+      coverUrl?: string | null
+    }) => deleteEbook(ebookId, { fileUrl, coverUrl }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['ebooks'] })
     },

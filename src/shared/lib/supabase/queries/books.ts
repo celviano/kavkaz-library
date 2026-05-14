@@ -151,6 +151,41 @@ export async function updateBookStatus(
   if (error) throw new Error(error.message)
 }
 
+function extractStoragePath(url: string, bucket: string): string | null {
+  const marker = `/object/public/${bucket}/`
+  const idx = url.indexOf(marker)
+  if (idx === -1) return null
+  return url.slice(idx + marker.length)
+}
+
+// Hard-delete a book and its storage files
+export async function deleteBook(
+  bookId: string,
+  opts: { coverUrl?: string | null; images?: string[] | null; ebookFileUrl?: string | null },
+): Promise<void> {
+  const supabase = createClient()
+
+  if (opts.coverUrl) {
+    const path = extractStoragePath(opts.coverUrl, 'book-covers')
+    if (path) await supabase.storage.from('book-covers').remove([path])
+  }
+
+  if (opts.images && opts.images.length > 0) {
+    const paths = opts.images
+      .map((u) => extractStoragePath(u, 'book-images'))
+      .filter(Boolean) as string[]
+    if (paths.length > 0) await supabase.storage.from('book-images').remove(paths)
+  }
+
+  if (opts.ebookFileUrl) {
+    const path = extractStoragePath(opts.ebookFileUrl, 'ebooks')
+    if (path) await supabase.storage.from('ebooks').remove([path])
+  }
+
+  const { error } = await supabase.from('books').delete().eq('id', bookId)
+  if (error) throw new Error(error.message)
+}
+
 // Public seller page — only active books by owner
 export async function fetchSellerBooks(ownerId: string): Promise<Book[]> {
   const supabase = createClient()
