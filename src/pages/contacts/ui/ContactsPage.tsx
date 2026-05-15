@@ -1,5 +1,6 @@
 import { Clock, Mail, MapPin } from 'lucide-react'
 
+import { Accordion } from '@/shared/ui/Accordion'
 import { Container } from '@/shared/ui/Container'
 import { IconMax, IconTelegram, IconVK } from '@/shared/ui/SocialIcons'
 
@@ -269,17 +270,7 @@ export function ContactsPage() {
                 Частые вопросы
               </h2>
             </div>
-            <div className="flex flex-col gap-3">
-              {FAQ.map(({ q, a }) => (
-                <div
-                  key={q}
-                  className="bg-bg border border-surface2 rounded-2xl px-6 py-5"
-                >
-                  <p className="text-sm font-medium text-ink mb-2">{q}</p>
-                  <p className="text-sm text-ash leading-relaxed">{a}</p>
-                </div>
-              ))}
-            </div>
+            <Accordion items={FAQ.map(({ q, a }) => ({ question: q, answer: a }))} />
           </div>
         </Container>
       </section>
