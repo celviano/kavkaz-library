@@ -3,7 +3,11 @@
 import { memo, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { useSubmitQuote } from '@/features/quotes/model/useQuotes'
+import {
+  useSubmitQuote,
+  useUpdateQuoteContent,
+} from '@/features/quotes/model/useQuotes'
+import type { Quote } from '@/shared/lib/supabase/queries/quotes'
 import type { AddQuoteValues } from '@/shared/lib/zod/schemas'
 import { addQuoteSchema } from '@/shared/lib/zod/schemas'
 import { ErrorBanner } from '@/shared/ui/ErrorBanner'
@@ -15,10 +19,29 @@ import { zodResolver } from '@hookform/resolvers/zod'
 interface AddQuoteModalProps {
   userId: string
   onClose: () => void
+  quote?: Quote
 }
 
-export const AddQuoteModal = memo<AddQuoteModalProps>(({ userId, onClose }) => {
-  const { mutate, isPending, isSuccess, error } = useSubmitQuote(userId)
+export const AddQuoteModal = memo<AddQuoteModalProps>(({ userId, onClose, quote }) => {
+  const isEditMode = Boolean(quote)
+
+  const {
+    mutate: submitMutate,
+    isPending: submitPending,
+    isSuccess: submitSuccess,
+    error: submitError,
+  } = useSubmitQuote(userId)
+
+  const {
+    mutate: updateMutate,
+    isPending: updatePending,
+    isSuccess: updateSuccess,
+    error: updateError,
+  } = useUpdateQuoteContent()
+
+  const isPending = isEditMode ? updatePending : submitPending
+  const isSuccess = isEditMode ? updateSuccess : submitSuccess
+  const error = isEditMode ? updateError : submitError
 
   const {
     register,
@@ -27,7 +50,11 @@ export const AddQuoteModal = memo<AddQuoteModalProps>(({ userId, onClose }) => {
     formState: { errors },
   } = useForm<AddQuoteValues>({
     resolver: zodResolver(addQuoteSchema),
-    defaultValues: { text: '', author: '', source: '' },
+    defaultValues: {
+      text: quote?.text ?? '',
+      author: quote?.author ?? '',
+      source: quote?.source ?? '',
+    },
   })
 
   const textLength = watch('text')?.length ?? 0
@@ -45,15 +72,24 @@ export const AddQuoteModal = memo<AddQuoteModalProps>(({ userId, onClose }) => {
   }, [onClose])
 
   function onSubmit(data: AddQuoteValues) {
-    mutate({
-      text: data.text.trim(),
-      author: data.author.trim(),
-      source: data.source.trim(),
-    })
+    if (isEditMode && quote) {
+      updateMutate({
+        quoteId: quote.id,
+        text: data.text.trim(),
+        author: data.author.trim(),
+        source: data.source.trim(),
+      })
+    } else {
+      submitMutate({
+        text: data.text.trim(),
+        author: data.author.trim(),
+        source: data.source.trim(),
+      })
+    }
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
+    <div className="fixed inset-0 z-100 flex items-end sm:items-center justify-center">
       <div
         className="absolute inset-0 bg-ink/50 backdrop-blur-sm"
         onClick={onClose}
@@ -62,11 +98,15 @@ export const AddQuoteModal = memo<AddQuoteModalProps>(({ userId, onClose }) => {
 
       <div className="relative w-full sm:max-w-lg bg-bg rounded-t-3xl sm:rounded-3xl shadow-2xl flex flex-col max-h-[90vh] overflow-hidden m-4">
         {/* Header */}
-        <div className="px-6 py-5 border-b border-surface2 flex items-start justify-between flex-shrink-0">
+        <div className="px-6 py-5 border-b border-surface2 flex items-start justify-between shrink-0">
           <div>
-            <h2 className="text-base font-semibold text-ink">Предложить цитату</h2>
+            <h2 className="text-base font-semibold text-ink">
+              {isEditMode ? 'Редактировать цитату' : 'Предложить цитату'}
+            </h2>
             <p className="text-xs text-ash mt-0.5">
-              После проверки цитата появится на главной странице
+              {isEditMode
+                ? 'Измените текст, автора или источник'
+                : 'После проверки цитата появится на главной странице'}
             </p>
           </div>
           <button
@@ -106,10 +146,13 @@ export const AddQuoteModal = memo<AddQuoteModalProps>(({ userId, onClose }) => {
               </svg>
             </div>
             <div>
-              <p className="text-base font-semibold text-ink mb-1">Цитата отправлена!</p>
+              <p className="text-base font-semibold text-ink mb-1">
+                {isEditMode ? 'Цитата обновлена!' : 'Цитата отправлена!'}
+              </p>
               <p className="text-sm text-ash leading-relaxed max-w-xs">
-                Мы рассмотрим её в ближайшее время. Статус можно отследить в личном
-                кабинете.
+                {isEditMode
+                  ? 'Изменения сохранены.'
+                  : 'Мы рассмотрим её в ближайшее время. Статус можно отследить в личном кабинете.'}
               </p>
             </div>
             <button
@@ -155,7 +198,7 @@ export const AddQuoteModal = memo<AddQuoteModalProps>(({ userId, onClose }) => {
               <ErrorBanner message={error instanceof Error ? error.message : null} />
             </div>
 
-            <div className="px-6 py-4 border-t border-surface2 flex-shrink-0 bg-bg rounded-b-3xl">
+            <div className="px-6 py-4 border-t border-surface2 shrink-0 bg-bg rounded-b-3xl">
               <button
                 type="submit"
                 disabled={isPending}
@@ -164,15 +207,19 @@ export const AddQuoteModal = memo<AddQuoteModalProps>(({ userId, onClose }) => {
                 {isPending ? (
                   <span className="flex items-center justify-center gap-2">
                     <span className="w-4 h-4 rounded-full border-2 border-bg/30 border-t-bg animate-spin" />
-                    Отправляем...
+                    {isEditMode ? 'Сохраняем...' : 'Отправляем...'}
                   </span>
+                ) : isEditMode ? (
+                  'Сохранить изменения'
                 ) : (
                   'Предложить цитату'
                 )}
               </button>
-              <p className="text-[11px] text-dim text-center mt-2">
-                Цитата будет проверена модератором перед публикацией
-              </p>
+              {!isEditMode && (
+                <p className="text-[11px] text-dim text-center mt-2">
+                  Цитата будет проверена модератором перед публикацией
+                </p>
+              )}
             </div>
           </form>
         )}

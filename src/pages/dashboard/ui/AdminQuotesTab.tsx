@@ -1,8 +1,11 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useState } from 'react'
 
+import { AddQuoteModal } from '@/features/quotes/ui/AddQuoteModal'
+import { QuoteAdminMenu } from '@/features/quotes/ui/QuoteAdminMenu'
 import { useAllQuotes, useUpdateQuoteStatus } from '@/features/quotes/model/useQuotes'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 import { cn } from '@/shared/lib/cn'
 import type { Quote } from '@/shared/lib/supabase/queries/quotes'
 import {
@@ -11,13 +14,24 @@ import {
 } from '@/shared/lib/supabase/queries/quotes'
 import { EmptyState } from '@/shared/ui/EmptyState'
 
-function QuoteCard({ quote }: { quote: Quote }) {
+function QuoteCard({
+  quote,
+  onEdit,
+}: {
+  quote: Quote
+  onEdit: (q: Quote) => void
+}) {
   const { mutate: updateStatus, isPending } = useUpdateQuoteStatus()
 
   return (
-    <div className="bg-bg border border-surface2 rounded-2xl p-5 flex flex-col gap-3 shadow-card">
+    <div className="relative bg-bg border border-surface2 rounded-2xl p-5 flex flex-col gap-3 shadow-card">
+      {/* Kebab menu — top-right corner */}
+      <div className="absolute top-3 right-3">
+        <QuoteAdminMenu quote={quote} onEdit={() => onEdit(quote)} />
+      </div>
+
       {/* Quote text */}
-      <p className="text-sm text-ink leading-relaxed italic">«{quote.text}»</p>
+      <p className="text-sm text-ink leading-relaxed italic pr-10">«{quote.text}»</p>
 
       {/* Author & source */}
       <div className="flex items-center gap-2 text-xs text-ash">
@@ -91,10 +105,13 @@ function QuoteCard({ quote }: { quote: Quote }) {
 
 export const AdminQuotesTab = memo(() => {
   const { data: quotes = [], isLoading } = useAllQuotes()
+  const { user } = useCurrentUser()
+  const [editingQuote, setEditingQuote] = useState<Quote | null>(null)
 
   const pending = quotes.filter((q) => q.status === 'pending')
   const approved = quotes.filter((q) => q.status === 'approved')
   const rejected = quotes.filter((q) => q.status === 'rejected')
+  const archived = quotes.filter((q) => q.status === 'archived')
 
   if (isLoading) {
     return (
@@ -119,49 +136,73 @@ export const AdminQuotesTab = memo(() => {
   }
 
   return (
-    <div className="flex flex-col gap-8">
-      {/* На рассмотрении */}
-      {pending.length > 0 && (
-        <div>
-          <h3 className="text-[11px] font-medium tracking-[2px] uppercase text-gold mb-3">
-            На рассмотрении · {pending.length}
-          </h3>
-          <div className="flex flex-col gap-3">
-            {pending.map((q) => (
-              <QuoteCard key={q.id} quote={q} />
-            ))}
+    <>
+      <div className="flex flex-col gap-8">
+        {/* На рассмотрении */}
+        {pending.length > 0 && (
+          <div>
+            <h3 className="text-[11px] font-medium tracking-[2px] uppercase text-gold mb-3">
+              На рассмотрении · {pending.length}
+            </h3>
+            <div className="flex flex-col gap-3">
+              {pending.map((q) => (
+                <QuoteCard key={q.id} quote={q} onEdit={setEditingQuote} />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Одобренные */}
-      {approved.length > 0 && (
-        <div>
-          <h3 className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">
-            Одобрены · {approved.length}
-          </h3>
-          <div className="flex flex-col gap-3">
-            {approved.map((q) => (
-              <QuoteCard key={q.id} quote={q} />
-            ))}
+        {/* Одобренные */}
+        {approved.length > 0 && (
+          <div>
+            <h3 className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-3">
+              Одобрены · {approved.length}
+            </h3>
+            <div className="flex flex-col gap-3">
+              {approved.map((q) => (
+                <QuoteCard key={q.id} quote={q} onEdit={setEditingQuote} />
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Отклонённые */}
-      {rejected.length > 0 && (
-        <div>
-          <h3 className="text-[11px] font-medium tracking-[2px] uppercase text-dim mb-3">
-            Отклонены · {rejected.length}
-          </h3>
-          <div className="flex flex-col gap-3">
-            {rejected.map((q) => (
-              <QuoteCard key={q.id} quote={q} />
-            ))}
+        {/* Отклонённые */}
+        {rejected.length > 0 && (
+          <div>
+            <h3 className="text-[11px] font-medium tracking-[2px] uppercase text-dim mb-3">
+              Отклонены · {rejected.length}
+            </h3>
+            <div className="flex flex-col gap-3">
+              {rejected.map((q) => (
+                <QuoteCard key={q.id} quote={q} onEdit={setEditingQuote} />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Архивированные */}
+        {archived.length > 0 && (
+          <div>
+            <h3 className="text-[11px] font-medium tracking-[2px] uppercase text-ash mb-3">
+              Архив · {archived.length}
+            </h3>
+            <div className="flex flex-col gap-3">
+              {archived.map((q) => (
+                <QuoteCard key={q.id} quote={q} onEdit={setEditingQuote} />
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {editingQuote && user && (
+        <AddQuoteModal
+          userId={user.id}
+          quote={editingQuote}
+          onClose={() => setEditingQuote(null)}
+        />
       )}
-    </div>
+    </>
   )
 })
 
