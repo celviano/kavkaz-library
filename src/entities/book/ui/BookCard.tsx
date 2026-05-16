@@ -18,18 +18,9 @@ interface BookCardProps {
 }
 
 function AvailabilityBadge({ book }: { book: Book }) {
-  if (book.status === 'sold' || (!book.available && book.status !== 'active')) {
-    return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface2 text-dim border border-surface3">
-        <span
-          className="w-1.5 h-1.5 rounded-full bg-surface3 shrink-0"
-          aria-hidden="true"
-        />
-        Распродана
-      </span>
-    )
-  }
-  if (book.available && book.copiesLeft > 0) {
+  const inStock = book.available && book.copiesLeft > 0 && Boolean(book.ownerId)
+
+  if (inStock) {
     return (
       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-accent/10 text-accent border border-accent/20">
         <span
@@ -40,16 +31,17 @@ function AvailabilityBadge({ book }: { book: Book }) {
       </span>
     )
   }
+
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-gold/10 text-gold border border-gold/20">
-      <span className="w-1.5 h-1.5 rounded-full bg-gold shrink-0" aria-hidden="true" />
-      Предзаказ
+    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface2 text-dim border border-surface3">
+      <span className="w-1.5 h-1.5 rounded-full bg-surface3 shrink-0" aria-hidden="true" />
+      Нет в наличии
     </span>
   )
 }
 
 export const BookCard = memo<BookCardProps>(({ book, className }) => {
-  const { id, title, author, year, category, coverUrl, pages, language, available } = book
+  const { id, title, author, year, category, coverUrl, pages, language } = book
   const [imgError, setImgError] = useState(false)
   const showImage = Boolean(coverUrl) && !imgError
 
@@ -113,13 +105,7 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
           <FavoriteButton bookId={id} />
         </div>
 
-        {!available && (
-          <div className="absolute inset-0 bg-bg/65 flex items-center justify-center backdrop-blur-[1px] z-30">
-            <span className="text-[10px] text-ash font-medium tracking-[2px] uppercase border border-ash/30 rounded-full px-3 py-1">
-              Недоступна
-            </span>
-          </div>
-        )}
+
       </div>
 
       <div className="flex flex-col gap-2.5 p-4 flex-1">

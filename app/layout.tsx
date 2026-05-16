@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Open_Sans } from 'next/font/google'
 
 import { AuthProvider } from '@/app/providers/AuthProvider'
+import { NavigationProgress } from '@/app/providers/NavigationProgress'
 import { QueryProvider } from '@/app/providers/QueryProvider'
 import { JsonLd } from '@/shared/ui/JsonLd'
 import { Footer } from '@/widgets/footer'
@@ -90,6 +91,7 @@ export default function RootLayout({
             sameAs: [],
           }}
         />
+        <NavigationProgress />
         <QueryProvider>
           <AuthProvider>
             <Header />

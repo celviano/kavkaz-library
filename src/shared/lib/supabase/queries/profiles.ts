@@ -2,6 +2,15 @@ import type { Profile, ProfileRow } from '@/entities/profile/model/types'
 import { mapProfileRow } from '@/entities/profile/model/types'
 import { createClient } from '@/shared/lib/supabase/client'
 
+export async function fetchUserCount(): Promise<number> {
+  const supabase = createClient()
+  const { count, error } = await supabase
+    .from('profiles')
+    .select('*', { count: 'exact', head: true })
+  if (error) throw new Error(error.message)
+  return count ?? 0
+}
+
 export async function fetchProfile(userId: string): Promise<Profile | null> {
   const supabase = createClient()
   const { data, error } = await supabase

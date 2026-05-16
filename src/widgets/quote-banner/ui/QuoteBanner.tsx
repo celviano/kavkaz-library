@@ -82,43 +82,6 @@ export const QuoteBanner = memo(() => {
           aria-hidden="true"
         />
 
-        {/* Layer 3: carpet pattern */}
-        <svg
-          className="absolute inset-0 w-full h-full opacity-[0.025]"
-          preserveAspectRatio="xMidYMid slice"
-          aria-hidden="true"
-        >
-          <defs>
-            <pattern
-              id="quote-carpet"
-              x="0"
-              y="0"
-              width="80"
-              height="80"
-              patternUnits="userSpaceOnUse"
-            >
-              <polygon
-                points="40,6 74,40 40,74 6,40"
-                fill="none"
-                stroke="#2a5c45"
-                strokeWidth="1.5"
-              />
-              <polygon
-                points="40,18 62,40 40,62 18,40"
-                fill="none"
-                stroke="#8B6914"
-                strokeWidth="1"
-              />
-              <polygon points="40,28 52,40 40,52 28,40" fill="#2a5c45" opacity="0.4" />
-              <circle cx="0" cy="0" r="2" fill="#8B6914" />
-              <circle cx="80" cy="0" r="2" fill="#8B6914" />
-              <circle cx="0" cy="80" r="2" fill="#8B6914" />
-              <circle cx="80" cy="80" r="2" fill="#8B6914" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#quote-carpet)" />
-        </svg>
-
         <Container>
           <div className="relative max-w-3xl mx-auto text-center">
             {/* Large decorative quote mark */}

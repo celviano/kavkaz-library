@@ -13,7 +13,7 @@ interface BookPurchaseBlockProps {
 }
 
 export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
-  const inStock = book.available && book.copiesLeft > 0
+  const inStock = book.available && book.copiesLeft > 0 && Boolean(book.ownerId)
   const { user } = useCurrentUser()
   const [modalOpen, setModalOpen] = useState(false)
   const [authGateOpen, setAuthGateOpen] = useState(false)
@@ -30,7 +30,7 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
     return (
       <div className="flex items-center gap-3 bg-surface rounded-2xl border border-surface2 px-5 py-4">
         <span
-          className="w-2 h-2 rounded-full bg-surface3 flex-shrink-0"
+          className="w-2 h-2 rounded-full bg-surface3 shrink-0"
           aria-hidden="true"
         />
         <p className="text-sm text-ash">
@@ -91,7 +91,7 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
               <span
-                className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                className={`w-2 h-2 rounded-full shrink-0 ${
                   inStock
                     ? 'bg-[#27a560] shadow-[0_0_0_3px_rgba(39,165,96,0.15)]'
                     : 'bg-surface3'
