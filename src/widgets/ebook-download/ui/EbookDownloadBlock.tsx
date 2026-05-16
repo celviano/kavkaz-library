@@ -1,10 +1,11 @@
 'use client'
 
 import { memo } from 'react'
-import { EBOOK_FORMAT_LABELS, formatFileSize } from '@/entities/ebook/model/types'
-import { useDownloadEbook } from '@/features/ebooks/model/useEbooks'
+
 import type { Book } from '@/entities/book'
 import type { EbookFormat } from '@/entities/ebook/model/types'
+import { EBOOK_FORMAT_LABELS, formatFileSize } from '@/entities/ebook/model/types'
+import { useDownloadEbook } from '@/features/ebooks/model/useEbooks'
 
 interface EbookDownloadBlockProps {
   book: Book
@@ -14,13 +15,13 @@ export const EbookDownloadBlock = memo<EbookDownloadBlockProps>(({ book }) => {
   const { mutate: download, isPending } = useDownloadEbook()
 
   const format = book.ebookFormat as EbookFormat | null
-  const size   = book.ebookSize
+  const size = book.ebookSize
 
   function handleDownload() {
     if (!book.ebookFileUrl) return
     download({
-      ebookId:  book.id,
-      fileUrl:  book.ebookFileUrl,
+      ebookId: book.id,
+      fileUrl: book.ebookFileUrl,
       fileName: `${book.title}${format ? '.' + format : ''}`,
     })
   }
@@ -46,10 +47,18 @@ export const EbookDownloadBlock = memo<EbookDownloadBlockProps>(({ book }) => {
 
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-1.5 text-xs text-dim">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-            <polyline points="7 10 12 15 17 10"/>
-            <line x1="12" y1="15" x2="12" y2="3"/>
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
           </svg>
           Бесплатно
         </div>
@@ -67,10 +76,18 @@ export const EbookDownloadBlock = memo<EbookDownloadBlockProps>(({ book }) => {
             </>
           ) : (
             <>
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7 10 12 15 17 10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+              >
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
               </svg>
               Скачать {format ? EBOOK_FORMAT_LABELS[format] : ''}
             </>

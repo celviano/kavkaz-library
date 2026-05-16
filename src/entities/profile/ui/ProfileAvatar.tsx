@@ -1,10 +1,11 @@
 import { type FC } from 'react'
+
 import { cn } from '@/shared/lib/cn'
 
 interface ProfileAvatarProps {
   avatarUrl?: string | null
-  name?:      string | null
-  size?:      'sm' | 'md' | 'lg' | 'xl'
+  name?: string | null
+  size?: 'sm' | 'md' | 'lg' | 'xl'
   className?: string
 }
 
@@ -39,7 +40,11 @@ export const ProfileAvatar: FC<ProfileAvatarProps> = ({
       <img
         src={avatarUrl}
         alt={name ?? 'Аватар пользователя'}
-        className={cn('rounded-full object-cover border-2 border-surface2', SIZES[size], className)}
+        className={cn(
+          'rounded-full object-cover border-2 border-surface2',
+          SIZES[size],
+          className,
+        )}
       />
     )
   }

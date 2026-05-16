@@ -1,8 +1,12 @@
-import Link from 'next/link'
-import { Container } from '@/shared/ui/Container'
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
-export const metadata: Metadata = { title: 'Ошибка авторизации', robots: { index: false } }
+import { Container } from '@/shared/ui/Container'
+
+export const metadata: Metadata = {
+  title: 'Ошибка авторизации',
+  robots: { index: false },
+}
 
 interface Props {
   searchParams: Promise<{ error?: string }>
@@ -17,8 +21,13 @@ export default async function AuthErrorPage({ searchParams }: Props) {
         <div className="max-w-md mx-auto text-center flex flex-col items-center gap-6">
           <div className="w-14 h-14 rounded-2xl bg-surface border border-surface2 flex items-center justify-center">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="#7D7060" strokeWidth="1.5"/>
-              <path d="M12 8v4M12 16h.01" stroke="#7D7060" strokeWidth="1.5" strokeLinecap="round"/>
+              <circle cx="12" cy="12" r="10" stroke="#7D7060" strokeWidth="1.5" />
+              <path
+                d="M12 8v4M12 16h.01"
+                stroke="#7D7060"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+              />
             </svg>
           </div>
           <div>

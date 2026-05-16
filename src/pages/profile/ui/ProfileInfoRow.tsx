@@ -1,10 +1,10 @@
 import { type FC, type ReactNode } from 'react'
 
 interface ProfileInfoRowProps {
-  icon:     ReactNode
-  label:    string
-  value:    string | null | undefined
-  href?:    string
+  icon: ReactNode
+  label: string
+  value: string | null | undefined
+  href?: string
 }
 
 export const ProfileInfoRow: FC<ProfileInfoRowProps> = ({ icon, label, value, href }) => {

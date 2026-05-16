@@ -1,7 +1,7 @@
-import { createClient } from '@/shared/lib/supabase/client'
-import { mapEbookRow } from '@/entities/ebook/model/types'
-import type { Ebook, EbookRow } from '@/entities/ebook/model/types'
 import type { BookCategory } from '@/entities/book/model/types'
+import type { Ebook, EbookRow } from '@/entities/ebook/model/types'
+import { mapEbookRow } from '@/entities/ebook/model/types'
+import { createClient } from '@/shared/lib/supabase/client'
 
 export interface EbooksQueryParams {
   category?: BookCategory | 'all'
@@ -105,12 +105,11 @@ export async function fetchAllEbooks(): Promise<Ebook[]> {
 // Обновить статус ebook (апрув/отклонение)
 export async function updateEbookStatus(
   ebookId: string,
-
   status: 'approved' | 'rejected',
-
   rejectionReason?: string,
 ): Promise<void> {
   const supabase = createClient()
+
   const { error } = await supabase
     .from('ebooks')
     .update({
@@ -121,6 +120,15 @@ export async function updateEbookStatus(
     .eq('id', ebookId)
 
   if (error) throw new Error(error.message)
+
+  // Синхронизируем статус в таблице books (каталог читает оттуда)
+  const bookStatus = status === 'approved' ? 'active' : 'archived'
+  const { error: bookError } = await supabase
+    .from('books')
+    .update({ status: bookStatus })
+    .eq('id', ebookId)
+
+  if (bookError) throw new Error(bookError.message)
 }
 
 // Увеличить счётчик загрузок
@@ -135,6 +143,35 @@ export async function incrementDownloadCount(ebookId: string): Promise<void> {
   const newCount = (current?.download_count ?? 0) + 1
 
   await supabase.from('ebooks').update({ download_count: newCount }).eq('id', ebookId)
+}
+
+function extractStoragePath(url: string, bucket: string): string | null {
+  const marker = `/object/public/${bucket}/`
+  const idx = url.indexOf(marker)
+  if (idx === -1) return null
+  return url.slice(idx + marker.length)
+}
+
+// Hard-delete an ebook and its storage files
+export async function deleteEbook(
+  ebookId: string,
+  opts: { fileUrl: string; coverUrl?: string | null },
+): Promise<void> {
+  const supabase = createClient()
+
+  // fileUrl is a path within the 'ebooks' bucket
+  await supabase.storage.from('ebooks').remove([opts.fileUrl])
+
+  if (opts.coverUrl) {
+    const path = extractStoragePath(opts.coverUrl, 'book-covers')
+    if (path) await supabase.storage.from('book-covers').remove([path])
+  }
+
+  const { error } = await supabase.from('ebooks').delete().eq('id', ebookId)
+  if (error) throw new Error(error.message)
+
+  // Remove mirrored entry from books table (status sync)
+  await supabase.from('books').delete().eq('id', ebookId)
 }
 
 // Получить signed URL для скачивания файла

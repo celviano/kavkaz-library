@@ -1,49 +1,51 @@
 import { createClient } from '@/shared/lib/supabase/client'
 
-export type QuoteStatus = 'pending' | 'approved' | 'rejected'
+export type QuoteStatus = 'pending' | 'approved' | 'rejected' | 'archived'
 
 export const QUOTE_STATUS_LABELS: Record<QuoteStatus, string> = {
-  pending:  'На рассмотрении',
+  pending: 'На рассмотрении',
   approved: 'Принята',
   rejected: 'Отклонена',
+  archived: 'Архивирована',
 }
 
 export const QUOTE_STATUS_COLORS: Record<QuoteStatus, string> = {
-  pending:  'bg-gold/10 text-gold border-gold/20',
+  pending: 'bg-gold/10 text-gold border-gold/20',
   approved: 'bg-accent/10 text-accent border-accent/20',
   rejected: 'bg-red-50 text-red-500 border-red-200',
+  archived: 'bg-surface2 text-ash border-surface3',
 }
 
 export interface QuoteRow {
-  id:         string
-  text:       string
-  author:     string
-  source:     string
-  user_id:    string
-  status:     QuoteStatus
+  id: string
+  text: string
+  author: string
+  source: string
+  user_id: string
+  status: QuoteStatus
   queue_date: string | null
   created_at: string
 }
 
 export interface Quote {
-  id:        string
-  text:      string
-  author:    string
-  source:    string
-  userId:    string
-  status:    QuoteStatus
+  id: string
+  text: string
+  author: string
+  source: string
+  userId: string
+  status: QuoteStatus
   queueDate: Date | null
   createdAt: Date
 }
 
 export function mapQuoteRow(row: QuoteRow): Quote {
   return {
-    id:        row.id,
-    text:      row.text,
-    author:    row.author,
-    source:    row.source,
-    userId:    row.user_id,
-    status:    row.status,
+    id: row.id,
+    text: row.text,
+    author: row.author,
+    source: row.source,
+    userId: row.user_id,
+    status: row.status,
     queueDate: row.queue_date ? new Date(row.queue_date) : null,
     createdAt: new Date(row.created_at),
   }
@@ -70,7 +72,7 @@ export async function fetchDailyQuote(): Promise<Quote | null> {
 
 // Добавить цитату (пользователь)
 export async function submitQuote(params: {
-  text:   string
+  text: string
   author: string
   source: string
   userId: string
@@ -79,9 +81,9 @@ export async function submitQuote(params: {
   const { data, error } = await supabase
     .from('quotes')
     .insert({
-      text:    params.text,
-      author:  params.author,
-      source:  params.source,
+      text: params.text,
+      author: params.author,
+      source: params.source,
       user_id: params.userId,
     })
     .select()
@@ -129,18 +131,38 @@ export async function fetchAllQuotes(): Promise<Quote[]> {
   return (data as QuoteRow[]).map(mapQuoteRow)
 }
 
-// Апрув/отклонение цитаты (для админа)
+// Удалить цитату
+export async function deleteQuote(quoteId: string): Promise<void> {
+  const supabase = createClient()
+  const { error } = await supabase.from('quotes').delete().eq('id', quoteId)
+  if (error) throw new Error(error.message)
+}
+
+// Обновить текст/автора/источник цитаты (для редактирования)
+export async function updateQuoteContent(
+  quoteId: string,
+  data: { text: string; author: string; source: string },
+): Promise<void> {
+  const supabase = createClient()
+  const { error } = await supabase
+    .from('quotes')
+    .update({ text: data.text, author: data.author, source: data.source })
+    .eq('id', quoteId)
+  if (error) throw new Error(error.message)
+}
+
+// Апрув/отклонение/архивирование цитаты (для админа)
 // При апруве вычисляем следующую свободную дату в очереди
 export async function updateQuoteStatus(
   quoteId: string,
-  status:  'approved' | 'rejected',
+  status: 'approved' | 'rejected' | 'archived',
 ): Promise<void> {
   const supabase = createClient()
 
-  if (status === 'rejected') {
+  if (status === 'rejected' || status === 'archived') {
     const { error } = await supabase
       .from('quotes')
-      .update({ status: 'rejected', queue_date: null })
+      .update({ status, queue_date: null })
       .eq('id', quoteId)
     if (error) throw new Error(error.message)
     return

@@ -1,5 +1,6 @@
-import { AlertCircle } from 'lucide-react'
 import { type FC, type ReactNode } from 'react'
+import { AlertCircle } from 'lucide-react'
+
 import { cn } from '@/shared/lib/cn'
 
 export interface FormFieldProps {

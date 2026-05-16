@@ -2,18 +2,25 @@
 
 import Link from 'next/link'
 import { useForm } from 'react-hook-form'
+
+import type { LoginValues } from '@/shared/lib/zod/schemas'
+import { loginSchema } from '@/shared/lib/zod/schemas'
+import { ErrorBanner } from '@/shared/ui/ErrorBanner'
 import { zodResolver } from '@hookform/resolvers/zod'
+
+import { loginAction } from '../actions/auth.actions'
+
 import { AuthCard } from './AuthCard'
+import { AuthDivider } from './AuthDivider'
 import { AuthInput } from './AuthInput'
 import { OAuthButton } from './OAuthButton'
-import { AuthDivider } from './AuthDivider'
-import { ErrorBanner } from '@/shared/ui/ErrorBanner'
-import { loginAction } from '../actions/auth.actions'
-import { loginSchema } from '@/shared/lib/zod/schemas'
-import type { LoginValues } from '@/shared/lib/zod/schemas'
 
 export function LoginForm({ error }: { error?: string }) {
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
   })
 
@@ -48,7 +55,10 @@ export function LoginForm({ error }: { error?: string }) {
           {error && <ErrorBanner message={decodeURIComponent(error)} />}
 
           <div className="flex justify-end -mt-1">
-            <Link href="/auth/forgot-password" className="text-xs text-ash hover:text-accent transition-colors">
+            <Link
+              href="/auth/forgot-password"
+              className="text-xs text-ash hover:text-accent transition-colors"
+            >
               Забыли пароль?
             </Link>
           </div>
@@ -63,7 +73,10 @@ export function LoginForm({ error }: { error?: string }) {
         </form>
         <p className="text-center text-sm text-ash">
           Нет аккаунта?{' '}
-          <Link href="/auth/sign-up" className="text-accent hover:text-accent2 font-medium transition-colors">
+          <Link
+            href="/auth/sign-up"
+            className="text-accent hover:text-accent2 font-medium transition-colors"
+          >
             Зарегистрироваться
           </Link>
         </p>

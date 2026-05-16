@@ -2,11 +2,13 @@
 
 import { type FC, type ReactNode } from 'react'
 import Link from 'next/link'
-import { MapPin, Calendar, Link2, Pencil } from 'lucide-react'
+import { Calendar, Link2, MapPin, Pencil } from 'lucide-react'
+
+import type { Profile } from '@/entities/profile'
 import { ProfileAvatar } from '@/entities/profile'
+
 import { ProfileBanner } from './ProfileBanner'
 import { ProfileInfoRow } from './ProfileInfoRow'
-import type { Profile } from '@/entities/profile'
 
 interface ProfileHeaderProps {
   name: string

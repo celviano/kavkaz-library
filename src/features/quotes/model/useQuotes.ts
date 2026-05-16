@@ -1,20 +1,22 @@
 'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  deleteQuote,
+  fetchAllQuotes,
   fetchDailyQuote,
   fetchMyQuotes,
-  fetchAllQuotes,
   fetchPendingQuotes,
   submitQuote,
+  updateQuoteContent,
   updateQuoteStatus,
 } from '@/shared/lib/supabase/queries/quotes'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 // Цитата дня для главной страницы
 export function useDailyQuote() {
   return useQuery({
     queryKey: ['quotes', 'daily'],
-    queryFn:  fetchDailyQuote,
+    queryFn: fetchDailyQuote,
     staleTime: 1000 * 60 * 60, // 1 час
   })
 }
@@ -23,8 +25,8 @@ export function useDailyQuote() {
 export function useMyQuotes(userId: string | null) {
   return useQuery({
     queryKey: ['quotes', 'my', userId],
-    queryFn:  () => fetchMyQuotes(userId!),
-    enabled:  Boolean(userId),
+    queryFn: () => fetchMyQuotes(userId!),
+    enabled: Boolean(userId),
   })
 }
 
@@ -32,7 +34,7 @@ export function useMyQuotes(userId: string | null) {
 export function useAllQuotes() {
   return useQuery({
     queryKey: ['quotes', 'all'],
-    queryFn:  fetchAllQuotes,
+    queryFn: fetchAllQuotes,
   })
 }
 
@@ -40,7 +42,7 @@ export function useAllQuotes() {
 export function usePendingQuotes() {
   return useQuery({
     queryKey: ['quotes', 'pending'],
-    queryFn:  fetchPendingQuotes,
+    queryFn: fetchPendingQuotes,
   })
 }
 
@@ -56,12 +58,49 @@ export function useSubmitQuote(userId: string) {
   })
 }
 
-// Изменить статус цитаты (апрув / отклонение)
+// Изменить статус цитаты (апрув / отклонение / архивирование)
 export function useUpdateQuoteStatus() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ quoteId, status }: { quoteId: string; status: 'approved' | 'rejected' }) =>
-      updateQuoteStatus(quoteId, status),
+    mutationFn: ({
+      quoteId,
+      status,
+    }: {
+      quoteId: string
+      status: 'approved' | 'rejected' | 'archived'
+    }) => updateQuoteStatus(quoteId, status),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['quotes'] })
+    },
+  })
+}
+
+// Удалить цитату
+export function useDeleteQuote() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (quoteId: string) => deleteQuote(quoteId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['quotes'] })
+    },
+  })
+}
+
+// Редактировать содержимое цитаты
+export function useUpdateQuoteContent() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({
+      quoteId,
+      text,
+      author,
+      source,
+    }: {
+      quoteId: string
+      text: string
+      author: string
+      source: string
+    }) => updateQuoteContent(quoteId, { text, author, source }),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['quotes'] })
     },

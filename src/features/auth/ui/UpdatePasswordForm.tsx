@@ -1,6 +1,7 @@
+import { updatePasswordAction } from '../actions/auth.actions'
+
 import { AuthCard } from './AuthCard'
 import { AuthInput } from './AuthInput'
-import { updatePasswordAction } from '../actions/auth.actions'
 
 interface UpdatePasswordFormProps {
   error?: string
@@ -8,10 +9,7 @@ interface UpdatePasswordFormProps {
 
 export function UpdatePasswordForm({ error }: UpdatePasswordFormProps) {
   return (
-    <AuthCard
-      title="Новый пароль"
-      subtitle="Придумайте надёжный пароль"
-    >
+    <AuthCard title="Новый пароль" subtitle="Придумайте надёжный пароль">
       <form action={updatePasswordAction} className="flex flex-col gap-4">
         <AuthInput
           label="Новый пароль"

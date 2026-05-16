@@ -2,17 +2,18 @@
 
 import { memo } from 'react'
 import Image from 'next/image'
-import { cn } from '@/shared/lib/cn'
-import { EmptyState } from '@/shared/ui/EmptyState'
-import {
-  ORDER_STATUS_LABELS,
-  ORDER_STATUS_COLORS,
-  DELIVERY_LABELS,
-} from '@/shared/lib/supabase/queries/orders'
+
 import {
   useMyOrders,
   useUpdateOrderStatus,
 } from '@/features/dashboard/model/useDashboard'
+import { cn } from '@/shared/lib/cn'
+import {
+  DELIVERY_LABELS,
+  ORDER_STATUS_COLORS,
+  ORDER_STATUS_LABELS,
+} from '@/shared/lib/supabase/queries/orders'
+import { EmptyState } from '@/shared/ui/EmptyState'
 interface MyOrdersTabProps {
   userId: string
 }

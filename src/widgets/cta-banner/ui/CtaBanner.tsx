@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import Link from 'next/link'
+
 import { Container } from '@/shared/ui/Container'
 
 export const CtaBanner = memo(() => (
@@ -160,7 +161,11 @@ export const CtaBanner = memo(() => (
           <h2
             id="cta-heading"
             className="font-normal text-bg"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem, 5vw, 2.25rem)', lineHeight: 1.15 }}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.75rem, 5vw, 2.25rem)',
+              lineHeight: 1.15,
+            }}
           >
             Изучайте историю <em className="text-accent3 not-italic">Кавказа</em>
           </h2>

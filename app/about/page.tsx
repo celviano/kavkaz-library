@@ -1,5 +1,6 @@
 // app/about/page.tsx
 import type { Metadata } from 'next'
+
 import { AboutPage } from '@/pages/about'
 
 export const metadata: Metadata = {

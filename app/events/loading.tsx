@@ -12,7 +12,10 @@ export default function Loading() {
           <div className="h-32 bg-surface border border-surface2 rounded-2xl animate-pulse" />
           <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-2xl bg-surface border border-surface2 overflow-hidden animate-pulse">
+              <div
+                key={i}
+                className="rounded-2xl bg-surface border border-surface2 overflow-hidden animate-pulse"
+              >
                 <div className="h-44 bg-surface2" />
                 <div className="p-5 flex flex-col gap-3">
                   <div className="h-3 w-24 bg-surface2 rounded-full" />

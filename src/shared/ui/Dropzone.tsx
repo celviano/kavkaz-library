@@ -1,8 +1,9 @@
 'use client'
 
-import { createContext, useCallback, useContext, type PropsWithChildren } from 'react'
-import { cn } from '@/shared/lib/cn'
+import { createContext, type PropsWithChildren, useCallback, useContext } from 'react'
+
 import type { UseSupabaseUploadReturn } from '@/shared/hooks/useSupabaseUpload'
+import { cn } from '@/shared/lib/cn'
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -179,6 +180,7 @@ export function DropzoneContent({ className }: { className?: string }) {
               {/* Preview / icon */}
               <div className="w-10 h-10 rounded-lg border border-surface2 overflow-hidden flex-shrink-0 bg-surface flex items-center justify-center">
                 {isImg && file.preview ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={file.preview}
                     alt={file.name}

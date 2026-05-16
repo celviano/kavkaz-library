@@ -27,13 +27,12 @@ export function FilterChips<T extends string>({
         'flex gap-2 overflow-x-auto pb-1 md:flex-wrap md:overflow-x-visible md:pb-0 no-scrollbar',
         className,
       )}
-      role="list"
+      role="group"
     >
       {options.map(({ value, label, count }) => (
         <button
           key={value}
           type="button"
-          role="listitem"
           onClick={() => onChange(value)}
           aria-pressed={selected === value}
           className={cn(
@@ -45,9 +44,7 @@ export function FilterChips<T extends string>({
           )}
         >
           {label}
-          {count != null && (
-            <span className="ml-1.5 opacity-60">{count}</span>
-          )}
+          {count != null && <span className="ml-1.5 opacity-60">{count}</span>}
         </button>
       ))}
     </div>

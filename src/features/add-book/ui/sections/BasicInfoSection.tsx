@@ -1,19 +1,25 @@
+import type { UseFormReturn } from 'react-hook-form'
 import { Controller } from 'react-hook-form'
+
+import type { AddPhysicalBookValues } from '@/shared/lib/zod/schemas'
 import { FormField } from '@/shared/ui/FormField'
 import { Input } from '@/shared/ui/Input'
-import { Textarea } from '@/shared/ui/Textarea'
 import { Select } from '@/shared/ui/Select'
-import { FormSection } from '../FormSection'
+import { Textarea } from '@/shared/ui/Textarea'
+
 import { CATEGORY_OPTIONS, LANGUAGE_OPTIONS } from '../../model/options'
-import type { UseFormReturn } from 'react-hook-form'
-import type { AddPhysicalBookValues } from '@/shared/lib/zod/schemas'
+import { FormSection } from '../FormSection'
 
 interface BasicInfoSectionProps {
   form: UseFormReturn<AddPhysicalBookValues>
 }
 
 export function BasicInfoSection({ form }: BasicInfoSectionProps) {
-  const { register, control, formState: { errors } } = form
+  const {
+    register,
+    control,
+    formState: { errors },
+  } = form
 
   return (
     <FormSection title="Основная информация">
@@ -38,7 +44,9 @@ export function BasicInfoSection({ form }: BasicInfoSectionProps) {
       <div className="grid grid-cols-2 gap-4">
         <FormField label="Год издания" required error={errors.year?.message}>
           <Input
-            type="number" min={1400} max={new Date().getFullYear()}
+            type="number"
+            min={1400}
+            max={new Date().getFullYear()}
             placeholder="1871"
             error={errors.year?.message}
             {...register('year')}
@@ -47,7 +55,9 @@ export function BasicInfoSection({ form }: BasicInfoSectionProps) {
 
         <FormField label="Страниц" error={errors.pages?.message}>
           <Input
-            type="number" min={1} max={9999}
+            type="number"
+            min={1}
+            max={9999}
             placeholder="488"
             {...register('pages')}
           />
@@ -87,20 +97,21 @@ export function BasicInfoSection({ form }: BasicInfoSectionProps) {
         </FormField>
       </div>
 
-      <FormField label="Описание" hint="Расскажите о содержании, истории и ценности книги" error={errors.description?.message}>
+      <FormField
+        label="Описание"
+        hint="Расскажите о содержании, истории и ценности книги"
+        error={errors.description?.message}
+      >
         <Textarea
-          rows={4} maxLength={2000}
+          rows={4}
+          maxLength={2000}
           placeholder="Краткое описание книги..."
           {...register('description')}
         />
       </FormField>
 
       <FormField label="Теги" hint="Через запятую: Кавказ, XIX век, этнография">
-        <Input
-          placeholder="Тег 1, Тег 2, Тег 3"
-          maxLength={500}
-          {...register('tags')}
-        />
+        <Input placeholder="Тег 1, Тег 2, Тег 3" maxLength={500} {...register('tags')} />
       </FormField>
     </FormSection>
   )

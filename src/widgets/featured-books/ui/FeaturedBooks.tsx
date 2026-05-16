@@ -2,11 +2,12 @@
 
 import { memo } from 'react'
 import Link from 'next/link'
+
+import { useFeaturedBooks } from '@/entities/book'
 import { Container } from '@/shared/ui/Container'
 import { SectionHeading } from '@/shared/ui/SectionHeading'
 import { BookCardSkeleton } from '@/shared/ui/Skeleton'
 import { BookGrid } from '@/widgets/book-grid'
-import { useFeaturedBooks } from '@/entities/book'
 
 export const FeaturedBooks = memo(() => {
   const { data: books = [], isLoading } = useFeaturedBooks()

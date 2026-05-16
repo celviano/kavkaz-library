@@ -1,5 +1,6 @@
 // src/pages/about/ui/AboutCta.tsx
 import Link from 'next/link'
+
 import { Container } from '@/shared/ui/Container'
 
 const STATS = [
@@ -44,7 +45,10 @@ export function AboutCta() {
                 <div key={item.label} className="flex flex-col items-center gap-1">
                   <dd
                     className="font-display font-semibold text-accent3 leading-none"
-                    style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.4rem, 4vw, 2rem)' }}
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontSize: 'clamp(1.4rem, 4vw, 2rem)',
+                    }}
                   >
                     {item.value}
                   </dd>

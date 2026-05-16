@@ -1,6 +1,7 @@
 'use client'
 
-import { memo, useState, useRef, useEffect, useId } from 'react'
+import { memo, useEffect, useId, useRef, useState } from 'react'
+
 import { cn } from '@/shared/lib/cn'
 
 export interface SelectOption {

@@ -1,5 +1,5 @@
-import { BookCardSkeleton } from './Skeleton'
 import { Container } from './Container'
+import { BookCardSkeleton } from './Skeleton'
 
 export function PageLoader() {
   return (

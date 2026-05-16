@@ -1,13 +1,14 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-import { queryKeys } from '@/shared/lib/supabase/queries/queryKeys'
 import {
+  fetchBookById,
   fetchBooks,
   fetchFeaturedBooks,
-  fetchBookById,
   fetchSimilarBooks,
 } from '@/shared/lib/supabase/queries/books'
+import { queryKeys } from '@/shared/lib/supabase/queries/queryKeys'
+import { useQuery } from '@tanstack/react-query'
+
 import type { BookCategory } from './types'
 
 export function useBooks(

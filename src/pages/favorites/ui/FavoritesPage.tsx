@@ -2,10 +2,11 @@
 
 import { memo } from 'react'
 import Link from 'next/link'
+
+import { useFavoriteBooks } from '@/features/favorites'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 import { Container } from '@/shared/ui/Container'
 import { BookGrid } from '@/widgets/book-grid'
-import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
-import { useFavoriteBooks } from '@/features/favorites'
 
 export const FavoritesPage = memo(() => {
   const { user, loading: userLoading } = useCurrentUser()

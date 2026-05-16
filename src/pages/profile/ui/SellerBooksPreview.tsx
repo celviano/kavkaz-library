@@ -1,11 +1,12 @@
 'use client'
 
-import { BookOpen } from 'lucide-react'
 import { type FC } from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
-import { EmptyState } from '@/shared/ui/EmptyState'
+import Link from 'next/link'
+import { BookOpen } from 'lucide-react'
+
 import type { Book } from '@/entities/book'
+import { EmptyState } from '@/shared/ui/EmptyState'
 
 interface SellerBooksPreviewProps {
   books: Book[]
@@ -18,11 +19,16 @@ export const SellerBooksPreview: FC<SellerBooksPreviewProps> = ({ books }) => {
     <section aria-labelledby="seller-books-heading">
       <div className="flex items-end justify-between mb-4">
         <div>
-          <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-1">Витрина</p>
+          <p className="text-[11px] font-medium tracking-[2px] uppercase text-accent mb-1">
+            Витрина
+          </p>
           <h2
             id="seller-books-heading"
             className="font-display font-semibold text-ink"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.2rem, 2vw, 1.5rem)' }}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.2rem, 2vw, 1.5rem)',
+            }}
           >
             Книги в продаже
           </h2>
@@ -32,7 +38,12 @@ export const SellerBooksPreview: FC<SellerBooksPreviewProps> = ({ books }) => {
           className="text-sm text-ash hover:text-ink transition-colors inline-flex items-center gap-1 group"
         >
           Кабинет
-          <span className="group-hover:translate-x-0.5 transition-transform" aria-hidden="true">→</span>
+          <span
+            className="group-hover:translate-x-0.5 transition-transform"
+            aria-hidden="true"
+          >
+            →
+          </span>
         </Link>
       </div>
 
@@ -59,15 +70,21 @@ export const SellerBooksPreview: FC<SellerBooksPreviewProps> = ({ books }) => {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <BookOpen size={24} strokeWidth={1.5} className="text-dim"/>
+                      <BookOpen size={24} strokeWidth={1.5} className="text-dim" />
                     </div>
                   )}
                 </div>
                 <div className="px-3 py-2.5">
-                  <p className="text-xs font-medium text-ink line-clamp-2 leading-snug mb-1">{book.title}</p>
+                  <p className="text-xs font-medium text-ink line-clamp-2 leading-snug mb-1">
+                    {book.title}
+                  </p>
                   {book.price != null && (
                     <p className="text-xs font-semibold text-accent">
-                      {new Intl.NumberFormat('ru-RU', { style: 'currency', currency: book.currency, maximumFractionDigits: 0 }).format(book.price)}
+                      {new Intl.NumberFormat('ru-RU', {
+                        style: 'currency',
+                        currency: book.currency,
+                        maximumFractionDigits: 0,
+                      }).format(book.price)}
                     </p>
                   )}
                 </div>

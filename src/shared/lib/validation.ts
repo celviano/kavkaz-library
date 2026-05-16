@@ -10,33 +10,48 @@ export type FieldErrors<T> = {
 }
 
 export const rules = {
-  required: (message = 'Обязательное поле'): ValidationRule<string> =>
-    (v) => (!v || v.trim().length === 0 ? message : null),
+  required:
+    (message = 'Обязательное поле'): ValidationRule<string> =>
+    (v) =>
+      !v || v.trim().length === 0 ? message : null,
 
-  minLength: (min: number, message?: string): ValidationRule<string> =>
-    (v) => (v && v.length < min ? message ?? `Минимум ${min} символов` : null),
+  minLength:
+    (min: number, message?: string): ValidationRule<string> =>
+    (v) =>
+      v && v.length < min ? (message ?? `Минимум ${min} символов`) : null,
 
-  maxLength: (max: number, message?: string): ValidationRule<string> =>
-    (v) => (v && v.length > max ? message ?? `Максимум ${max} символов` : null),
+  maxLength:
+    (max: number, message?: string): ValidationRule<string> =>
+    (v) =>
+      v && v.length > max ? (message ?? `Максимум ${max} символов`) : null,
 
-  email: (message = 'Некорректный email'): ValidationRule<string> =>
-    (v) => (v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? message : null),
+  email:
+    (message = 'Некорректный email'): ValidationRule<string> =>
+    (v) =>
+      v && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? message : null,
 
-  url: (message = 'Некорректный URL'): ValidationRule<string> =>
+  url:
+    (message = 'Некорректный URL'): ValidationRule<string> =>
     (v) => {
       if (!v) return null
-      try { new URL(v); return null }
-      catch { return message }
+      try {
+        new URL(v)
+        return null
+      } catch {
+        return message
+      }
     },
 
-  year: (message = 'Некорректный год'): ValidationRule<string> =>
+  year:
+    (message = 'Некорректный год'): ValidationRule<string> =>
     (v) => {
       if (!v) return null
       const n = parseInt(v, 10)
-      return (isNaN(n) || n < 1400 || n > new Date().getFullYear()) ? message : null
+      return isNaN(n) || n < 1400 || n > new Date().getFullYear() ? message : null
     },
 
-  number: (min?: number, max?: number, message?: string): ValidationRule<string> =>
+  number:
+    (min?: number, max?: number, message?: string): ValidationRule<string> =>
     (v) => {
       if (!v) return null
       const n = parseFloat(v)
@@ -53,13 +68,19 @@ export function validate<T extends object>(
 ): FieldErrors<T> {
   const errors: FieldErrors<T> = {}
   const v = values as Record<string, unknown>
-  const r = fieldRules as Record<string, Array<(value: unknown) => string | null> | undefined>
+  const r = fieldRules as Record<
+    string,
+    Array<(value: unknown) => string | null> | undefined
+  >
   for (const field in r) {
     const fieldRuleList = r[field]
     if (!fieldRuleList) continue
     for (const rule of fieldRuleList) {
       const error = rule(v[field])
-      if (error) { (errors as Record<string, string>)[field] = error; break }
+      if (error) {
+        ;(errors as Record<string, string>)[field] = error
+        break
+      }
     }
   }
   return errors

@@ -1,3 +1,3 @@
 export { cn } from './cn'
-export { validate, hasErrors, rules } from './validation'
-export type { ValidationRule, FieldRules, FieldErrors } from './validation'
+export type { FieldErrors, FieldRules, ValidationRule } from './validation'
+export { hasErrors, rules, validate } from './validation'

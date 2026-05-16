@@ -1,6 +1,8 @@
 // src/pages/about/ui/AboutHero.tsx
 import Image from 'next/image'
+
 import { Container } from '@/shared/ui/Container'
+
 import aboutPainting from '../../../../public/images/about-hero-painting.jpg'
 
 export function AboutHero() {
@@ -46,13 +48,30 @@ export function AboutHero() {
         aria-hidden="true"
       >
         <defs>
-          <pattern id="about-carpet" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-            <polygon points="40,6 74,40 40,74 6,40"   fill="none" stroke="#2a5c45" strokeWidth="1.5" />
-            <polygon points="40,18 62,40 40,62 18,40" fill="none" stroke="#8B6914" strokeWidth="1" />
+          <pattern
+            id="about-carpet"
+            x="0"
+            y="0"
+            width="80"
+            height="80"
+            patternUnits="userSpaceOnUse"
+          >
+            <polygon
+              points="40,6 74,40 40,74 6,40"
+              fill="none"
+              stroke="#2a5c45"
+              strokeWidth="1.5"
+            />
+            <polygon
+              points="40,18 62,40 40,62 18,40"
+              fill="none"
+              stroke="#8B6914"
+              strokeWidth="1"
+            />
             <polygon points="40,28 52,40 40,52 28,40" fill="#2a5c45" opacity="0.4" />
-            <circle cx="0"  cy="0"  r="2" fill="#8B6914" />
-            <circle cx="80" cy="0"  r="2" fill="#8B6914" />
-            <circle cx="0"  cy="80" r="2" fill="#8B6914" />
+            <circle cx="0" cy="0" r="2" fill="#8B6914" />
+            <circle cx="80" cy="0" r="2" fill="#8B6914" />
+            <circle cx="0" cy="80" r="2" fill="#8B6914" />
             <circle cx="80" cy="80" r="2" fill="#8B6914" />
           </pattern>
         </defs>
@@ -77,7 +96,10 @@ export function AboutHero() {
           <h1
             id="about-heading"
             className="font-normal text-ink leading-[1.08]"
-            style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(1.75rem, 5vw, 3rem)' }}
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.75rem, 5vw, 3rem)',
+            }}
           >
             Кавказ - это не просто <em className="text-accent not-italic">география</em>
           </h1>

@@ -1,7 +1,9 @@
-import { cn } from '@/shared/lib/cn'
-import { EVENT_TYPE_LABELS } from '../model/types'
-import type { Event, EventType } from '../model/types'
 import { type FC } from 'react'
+
+import { cn } from '@/shared/lib/cn'
+
+import type { Event, EventType } from '../model/types'
+import { EVENT_TYPE_LABELS } from '../model/types'
 
 const TYPE_COLORS: Record<EventType, string> = {
   lecture: 'bg-accent/10 text-accent border-accent/20',

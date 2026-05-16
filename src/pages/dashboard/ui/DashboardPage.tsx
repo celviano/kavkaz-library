@@ -1,29 +1,44 @@
 'use client'
 
-import { memo, useState } from 'react'
+import { memo } from 'react'
 import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
+
+import { isAdmin, useProfile } from '@/entities/profile'
+import { useMyBooks, useMyOrders } from '@/features/dashboard/model/useDashboard'
+import { useAllEbooks, useMyEbooks } from '@/features/ebooks/model/useEbooks'
+import { useAllQuotes, useMyQuotes } from '@/features/quotes/model/useQuotes'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 import { cn } from '@/shared/lib/cn'
 import { Container } from '@/shared/ui/Container'
-import { PageHeading } from '@/shared/ui/PageHeading'
 import { EmptyState } from '@/shared/ui/EmptyState'
-import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
-import { useProfile, isAdmin } from '@/entities/profile'
-import { useMyBooks, useMyOrders } from '@/features/dashboard/model/useDashboard'
-import { useMyQuotes, useAllQuotes } from '@/features/quotes/model/useQuotes'
-import { useMyEbooks, useAllEbooks } from '@/features/ebooks/model/useEbooks'
+import { PageHeading } from '@/shared/ui/PageHeading'
+
+import { AdminEbooksTab } from './AdminEbooksTab'
+import { AdminQuotesTab } from './AdminQuotesTab'
 import { MyBooksTab } from './MyBooksTab'
+import { MyEbooksTab } from './MyEbooksTab'
 import { MyOrdersTab } from './MyOrdersTab'
 import { MyQuotesTab } from './MyQuotesTab'
-import { AdminQuotesTab } from './AdminQuotesTab'
-import { MyEbooksTab } from './MyEbooksTab'
-import { AdminEbooksTab } from './AdminEbooksTab'
 
 type Tab = 'books' | 'orders' | 'quotes' | 'admin-quotes' | 'ebooks' | 'admin-ebooks'
+
+const VALID_TABS: Tab[] = ['books', 'orders', 'quotes', 'admin-quotes', 'ebooks', 'admin-ebooks']
 
 export const DashboardPage = memo(() => {
   const { user, loading: userLoading } = useCurrentUser()
   const { data: profile } = useProfile(user?.id ?? null)
-  const [activeTab, setActiveTab] = useState<Tab>('books')
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const tabParam = searchParams?.get('tab') as Tab | null
+  const activeTab: Tab = tabParam && VALID_TABS.includes(tabParam) ? tabParam : 'books'
+
+  function handleTabChange(tab: Tab) {
+    const params = new URLSearchParams(searchParams?.toString() ?? '')
+    params.set('tab', tab)
+    router.replace(`?${params.toString()}`, { scroll: false })
+  }
 
   const { data: books = [] } = useMyBooks(user?.id ?? null)
   const { data: orders = [] } = useMyOrders(user?.id ?? null)
@@ -147,7 +162,7 @@ export const DashboardPage = memo(() => {
                   <button
                     key={id}
                     type="button"
-                    onClick={() => setActiveTab(id)}
+                    onClick={() => handleTabChange(id)}
                     className={cn(
                       'flex-1 flex items-center justify-center gap-2 h-9 px-3 rounded-lg text-sm font-medium transition-all cursor-pointer whitespace-nowrap',
                       activeTab === id

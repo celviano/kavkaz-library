@@ -1,29 +1,31 @@
-import { createClient } from '@/shared/lib/supabase/client'
+import type { Book, BookCategory, BookRow, BookStatus } from '@/entities/book/model/types'
 import { mapBookRow } from '@/entities/book/model/types'
-import type { BookRow, Book, BookCategory, BookStatus } from '@/entities/book/model/types'
+import { createClient } from '@/shared/lib/supabase/client'
 
 export interface BooksQueryParams {
   category?: BookCategory | 'all'
-  search?:   string
-  page?:     number
+  search?: string
+  page?: number
   pageSize?: number
   bookType?: 'physical' | 'ebook'
 }
 
 export interface BooksQueryResult {
-  books:      Book[]
-  total:      number
-  page:       number
-  pageSize:   number
+  books: Book[]
+  total: number
+  page: number
+  pageSize: number
   totalPages: number
 }
 
 // Public catalog — only active books
-export async function fetchBooks(params: BooksQueryParams = {}): Promise<BooksQueryResult> {
+export async function fetchBooks(
+  params: BooksQueryParams = {},
+): Promise<BooksQueryResult> {
   const supabase = createClient()
   const { category, search, page = 1, pageSize = 12, bookType } = params
   const from = (page - 1) * pageSize
-  const to   = from + pageSize - 1
+  const to = from + pageSize - 1
 
   let query = supabase
     .from('books')
@@ -60,11 +62,7 @@ export async function fetchBooks(params: BooksQueryParams = {}): Promise<BooksQu
 
 export async function fetchBookById(id: string): Promise<Book | null> {
   const supabase = createClient()
-  const { data, error } = await supabase
-    .from('books')
-    .select('*')
-    .eq('id', id)
-    .single()
+  const { data, error } = await supabase.from('books').select('*').eq('id', id).single()
 
   if (error) return null
   return mapBookRow(data as BookRow)
@@ -84,7 +82,10 @@ export async function fetchFeaturedBooks(): Promise<Book[]> {
   return (data as BookRow[]).map(mapBookRow)
 }
 
-export async function fetchSimilarBooks(bookId: string, category: BookCategory): Promise<Book[]> {
+export async function fetchSimilarBooks(
+  bookId: string,
+  category: BookCategory,
+): Promise<Book[]> {
   const supabase = createClient()
   const { data, error } = await supabase
     .from('books')
@@ -140,13 +141,48 @@ export async function fetchPendingBooks(): Promise<Book[]> {
 }
 
 // Change book status (owner or admin)
-export async function updateBookStatus(bookId: string, status: BookStatus): Promise<void> {
+export async function updateBookStatus(
+  bookId: string,
+  status: BookStatus,
+): Promise<void> {
   const supabase = createClient()
-  const { error } = await supabase
-    .from('books')
-    .update({ status })
-    .eq('id', bookId)
+  const { error } = await supabase.from('books').update({ status }).eq('id', bookId)
 
+  if (error) throw new Error(error.message)
+}
+
+function extractStoragePath(url: string, bucket: string): string | null {
+  const marker = `/object/public/${bucket}/`
+  const idx = url.indexOf(marker)
+  if (idx === -1) return null
+  return url.slice(idx + marker.length)
+}
+
+// Hard-delete a book and its storage files
+export async function deleteBook(
+  bookId: string,
+  opts: { coverUrl?: string | null; images?: string[] | null; ebookFileUrl?: string | null },
+): Promise<void> {
+  const supabase = createClient()
+
+  if (opts.coverUrl) {
+    const path = extractStoragePath(opts.coverUrl, 'book-covers')
+    if (path) await supabase.storage.from('book-covers').remove([path])
+  }
+
+  if (opts.images && opts.images.length > 0) {
+    const paths = opts.images
+      .map((u) => extractStoragePath(u, 'book-images'))
+      .filter(Boolean) as string[]
+    if (paths.length > 0) await supabase.storage.from('book-images').remove(paths)
+  }
+
+  if (opts.ebookFileUrl) {
+    const path = extractStoragePath(opts.ebookFileUrl, 'ebooks')
+    if (path) await supabase.storage.from('ebooks').remove([path])
+  }
+
+  const { error } = await supabase.from('books').delete().eq('id', bookId)
   if (error) throw new Error(error.message)
 }
 

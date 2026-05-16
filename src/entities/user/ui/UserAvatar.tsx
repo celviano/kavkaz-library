@@ -1,16 +1,17 @@
 'use client'
 
-import { memo, useState, useRef, useEffect } from 'react'
+import { memo, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { cn } from '@/shared/lib/cn'
-import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
+
 import {
-  useProfile,
-  ProfileAvatar,
   getFullName,
-  ROLE_LABELS,
+  ProfileAvatar,
   ROLE_BADGE_STYLE,
+  ROLE_LABELS,
+  useProfile,
 } from '@/entities/profile'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
+import { cn } from '@/shared/lib/cn'
 
 export const UserAvatar = memo(() => {
   const { user, loading } = useCurrentUser()

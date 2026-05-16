@@ -1,16 +1,18 @@
 'use client'
 
 import { memo } from 'react'
-import { Container } from '@/shared/ui/Container'
-import { Breadcrumb } from '@/shared/ui/Breadcrumb'
-import { BookSlider } from '@/widgets/book-slider'
-import { BookMetaGrid } from '@/widgets/book-meta'
-import { CATEGORY_LABELS } from '@/shared/config/constants'
+
 import { useBook, useSimilarBooks } from '@/entities/book'
-import { BookPageSkeleton } from './BookPageSkeleton'
-import { BookPageError } from './BookPageError'
-import { BookHeader } from './BookHeader'
+import { CATEGORY_LABELS } from '@/shared/config/constants'
+import { Breadcrumb } from '@/shared/ui/Breadcrumb'
+import { Container } from '@/shared/ui/Container'
+import { BookMetaGrid } from '@/widgets/book-meta'
+import { BookCover, BookSlider } from '@/widgets/book-slider'
+
 import { BookDescription } from './BookDescription'
+import { BookHeader } from './BookHeader'
+import { BookPageError } from './BookPageError'
+import { BookPageSkeleton } from './BookPageSkeleton'
 import { BookSellerSection } from './BookSellerSection'
 import { BookSimilarSection } from './BookSimilarSection'
 
@@ -42,13 +44,22 @@ export const BookPage = memo<BookPageProps>(({ bookId }) => {
 
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-12 xl:gap-20 mb-16">
             <div className="min-w-0 w-full">
-              <BookSlider
-                title={book.title}
-                year={book.year}
-                category={categoryLabel}
-                coverUrl={book.coverUrl}
-                images={book.images}
-              />
+              {book.bookType === 'ebook' ? (
+                <BookCover
+                  title={book.title}
+                  year={book.year}
+                  category={categoryLabel}
+                  coverUrl={book.coverUrl}
+                />
+              ) : (
+                <BookSlider
+                  title={book.title}
+                  year={book.year}
+                  category={categoryLabel}
+                  coverUrl={book.coverUrl}
+                  images={book.images}
+                />
+              )}
             </div>
 
             <div className="flex flex-col gap-7">

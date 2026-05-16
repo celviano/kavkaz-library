@@ -1,9 +1,10 @@
 'use client'
 
 import { memo } from 'react'
-import { cn } from '@/shared/lib/cn'
-import { EVENT_TYPE_LABELS } from '@/entities/event'
+
 import type { EventType } from '@/entities/event'
+import { EVENT_TYPE_LABELS } from '@/entities/event'
+import { cn } from '@/shared/lib/cn'
 
 type FilterValue = EventType | 'all' | 'upcoming' | 'online'
 
@@ -14,18 +15,18 @@ interface EventFilterProps {
 }
 
 const FILTERS: { value: FilterValue; label: string }[] = [
-  { value: 'all',       label: 'Все' },
-  { value: 'upcoming',  label: 'Предстоящие' },
-  { value: 'online',    label: 'Онлайн' },
-  { value: 'lecture',   label: EVENT_TYPE_LABELS.lecture },
-  { value: 'meeting',   label: EVENT_TYPE_LABELS.meeting },
-  { value: 'exhibition',label: EVENT_TYPE_LABELS.exhibition },
-  { value: 'tour',      label: EVENT_TYPE_LABELS.tour },
+  { value: 'all', label: 'Все' },
+  { value: 'upcoming', label: 'Предстоящие' },
+  { value: 'online', label: 'Онлайн' },
+  { value: 'lecture', label: EVENT_TYPE_LABELS.lecture },
+  { value: 'meeting', label: EVENT_TYPE_LABELS.meeting },
+  { value: 'exhibition', label: EVENT_TYPE_LABELS.exhibition },
+  { value: 'tour', label: EVENT_TYPE_LABELS.tour },
 ]
 
 export const EventFilter = memo<EventFilterProps>(({ selected, onChange, className }) => (
   <nav aria-label="Фильтр событий" className={className}>
-    <ul className="flex flex-wrap gap-2" role="list">
+    <ul className="flex flex-wrap gap-2">
       {FILTERS.map(({ value, label }) => {
         const isActive = selected === value
         return (

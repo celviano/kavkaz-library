@@ -1,5 +1,6 @@
 import { forwardRef } from 'react'
 import type { InputHTMLAttributes } from 'react'
+
 import { FormField } from '@/shared/ui/FormField'
 import { Input } from '@/shared/ui/Input'
 
@@ -13,7 +14,7 @@ export const AuthInput = forwardRef<HTMLInputElement, AuthInputProps>(
     <FormField label={label} error={error}>
       <Input id={`field-${name}`} name={name} error={error} ref={ref} {...rest} />
     </FormField>
-  )
+  ),
 )
 
 AuthInput.displayName = 'AuthInput'

@@ -1,28 +1,23 @@
 'use client'
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from 'react'
+import { createContext, type ReactNode, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+
 import { createClient } from '@/shared/lib/supabase/client'
 import type { User } from '@supabase/supabase-js'
 
 interface AuthContextValue {
-  user:    User | null
+  user: User | null
   loading: boolean
 }
 
 const AuthContext = createContext<AuthContextValue>({
-  user:    null,
+  user: null,
   loading: true,
 })
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user,    setUser]    = useState<User | null>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
@@ -36,27 +31,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
 
     // Subscribe to auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null)
-        setLoading(false)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null)
+      setLoading(false)
 
-        // After sign in or sign out — refresh server components
-        // so middleware re-runs and cookies are synced
-        if (event === 'SIGNED_IN' || event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
-          router.refresh()
-        }
-      },
-    )
+      // After sign in or sign out — refresh server components
+      // so middleware re-runs and cookies are synced
+      if (
+        event === 'SIGNED_IN' ||
+        event === 'SIGNED_OUT' ||
+        event === 'TOKEN_REFRESHED'
+      ) {
+        router.refresh()
+      }
+    })
 
     return () => subscription.unsubscribe()
   }, [router])
 
-  return (
-    <AuthContext.Provider value={{ user, loading }}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={{ user, loading }}>{children}</AuthContext.Provider>
 }
 
 export function useAuthContext(): AuthContextValue {

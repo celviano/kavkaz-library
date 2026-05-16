@@ -102,7 +102,9 @@ export function AboutForWhom() {
               className="flex flex-col  items-start gap-5 bg-surface rounded-2xl border border-surface2 p-6 shadow-card"
             >
               <div className="flex w-full flex-row justify-start items-center ">
-                <span className="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center flex-shrink-0">{icon}</span>
+                <span className="w-11 h-11 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center flex-shrink-0">
+                  {icon}
+                </span>
                 <h3 className="text-ink font-medium text-base ml-6">{title}</h3>
               </div>
               <div className="flex flex-col gap-1.5">

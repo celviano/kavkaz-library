@@ -1,26 +1,26 @@
 'use client'
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import type { CreateOrganizationData } from '@/shared/lib/supabase/queries/organizations'
 import {
+  createOrganization,
   fetchMyOrganization,
   fetchOrganizationById,
-  createOrganization,
 } from '@/shared/lib/supabase/queries/organizations'
-import type { CreateOrganizationData } from '@/shared/lib/supabase/queries/organizations'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 export function useMyOrganization(ownerId: string | null) {
   return useQuery({
     queryKey: ['organization', 'my', ownerId],
-    queryFn:  () => fetchMyOrganization(ownerId!),
-    enabled:  Boolean(ownerId),
+    queryFn: () => fetchMyOrganization(ownerId!),
+    enabled: Boolean(ownerId),
   })
 }
 
 export function useOrganization(id: string | null) {
   return useQuery({
     queryKey: ['organization', id],
-    queryFn:  () => fetchOrganizationById(id!),
-    enabled:  Boolean(id),
+    queryFn: () => fetchOrganizationById(id!),
+    enabled: Boolean(id),
   })
 }
 

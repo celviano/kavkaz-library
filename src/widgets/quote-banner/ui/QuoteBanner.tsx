@@ -3,10 +3,12 @@
 import { memo, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Container } from '@/shared/ui/Container'
+
 import { useDailyQuote } from '@/features/quotes/model/useQuotes'
-import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 import { AddQuoteModal } from '@/features/quotes/ui/AddQuoteModal'
+import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
+import { Container } from '@/shared/ui/Container'
+
 import quotePainting from '../../../../public/images/quote-banner-painting.jpg'
 
 // Fallback цитата если в БД ничего нет

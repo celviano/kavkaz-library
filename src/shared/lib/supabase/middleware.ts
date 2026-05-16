@@ -1,5 +1,6 @@
+import { type NextRequest, NextResponse } from 'next/server'
+
 import { createServerClient } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
 
 const PROTECTED_ROUTES = [
   '/profile',
@@ -9,11 +10,7 @@ const PROTECTED_ROUTES = [
   '/organization',
 ]
 
-const GUEST_ONLY_ROUTES = [
-  '/auth/login',
-  '/auth/sign-up',
-  '/auth/forgot-password',
-]
+const GUEST_ONLY_ROUTES = ['/auth/login', '/auth/sign-up', '/auth/forgot-password']
 
 function isProtected(pathname: string): boolean {
   return PROTECTED_ROUTES.some((r) => pathname === r || pathname.startsWith(r + '/'))
@@ -31,7 +28,9 @@ export async function updateSession(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() { return request.cookies.getAll() },
+        getAll() {
+          return request.cookies.getAll()
+        },
         setAll(cookiesToSet: { name: string; value: string; options?: object }[]) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({ request })
@@ -44,7 +43,9 @@ export async function updateSession(request: NextRequest) {
     },
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
   const { pathname } = request.nextUrl
 
   if (!user && isProtected(pathname)) {
@@ -56,9 +57,9 @@ export async function updateSession(request: NextRequest) {
 
   if (user && isGuestOnly(pathname)) {
     const next = request.nextUrl.searchParams.get('next') ?? '/'
-    const url  = request.nextUrl.clone()
+    const url = request.nextUrl.clone()
     url.pathname = next.startsWith('/') ? next : '/'
-    url.search   = ''
+    url.search = ''
     return NextResponse.redirect(url)
   }
 

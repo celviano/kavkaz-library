@@ -13,9 +13,9 @@ export const AuthCard: FC<AuthCardProps> = ({ title, subtitle, children }) => {
       <div className="flex justify-center mb-8">
         <div className="flex items-center gap-2.5">
           <svg width="28" height="22" viewBox="0 0 28 22" fill="none" aria-hidden="true">
-            <path d="M10 20L18 5L26 20H10Z" fill="#1B2212" opacity="0.2"/>
-            <path d="M2 20L11 4L20 20H2Z" fill="#2a5c45"/>
-            <path d="M11 4L14 9.5H8L11 4Z" fill="#f2ede6" opacity="0.7"/>
+            <path d="M10 20L18 5L26 20H10Z" fill="#1B2212" opacity="0.2" />
+            <path d="M2 20L11 4L20 20H2Z" fill="#2a5c45" />
+            <path d="M11 4L14 9.5H8L11 4Z" fill="#f2ede6" opacity="0.7" />
           </svg>
           <span
             className="font-display text-xl font-semibold text-ink"

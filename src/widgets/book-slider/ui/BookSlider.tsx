@@ -1,7 +1,8 @@
 'use client'
 
-import { memo, useState, useCallback, useEffect } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState } from 'react'
 import Image from 'next/image'
+
 import { cn } from '@/shared/lib/cn'
 
 interface BookSliderProps {
@@ -14,19 +15,19 @@ interface BookSliderProps {
 
 export const BookSlider = memo<BookSliderProps>(
   ({ title, year, category, coverUrl, images = [] }) => {
-    const allSlides: { url: string | null; label: string }[] = [
-      { url: coverUrl ?? null, label: 'Обложка' },
-      ...images.map((url, i) => ({ url, label: `Фото ${i + 1}` })),
-    ]
-
-    const PLACEHOLDER_LABELS = ['Титульный лист', 'Карта региона', 'Оглавление']
-    const slides =
-      allSlides.length < 2
+    const slides = useMemo(() => {
+      const allSlides: { url: string | null; label: string }[] = [
+        { url: coverUrl ?? null, label: 'Обложка' },
+        ...images.map((url, i) => ({ url, label: `Фото ${i + 1}` })),
+      ]
+      const PLACEHOLDER_LABELS = ['Титульный лист', 'Карта региона', 'Оглавление']
+      return allSlides.length < 2
         ? [
             ...allSlides,
             ...PLACEHOLDER_LABELS.slice(0, 3).map((label) => ({ url: null, label })),
           ]
         : allSlides
+    }, [coverUrl, images])
 
     const [current, setCurrent] = useState(0)
     const [imgErrors, setImgErrors] = useState<Record<number, boolean>>({})
@@ -226,9 +227,8 @@ export const BookSlider = memo<BookSliderProps>(
           </div>
 
           {/* Thumbnails — horizontal scroll */}
-          <div
+          <ul
             className="flex gap-2 overflow-x-auto pb-1"
-            role="list"
             aria-label="Миниатюры"
             style={{ scrollbarWidth: 'none' }}
           >
@@ -236,57 +236,57 @@ export const BookSlider = memo<BookSliderProps>(
               const thumbHasImage = Boolean(slide.url) && !imgErrors[i]
               const isActive = current === i
               return (
-                <button
-                  key={i}
-                  onClick={() => goTo(i)}
-                  role="listitem"
-                  aria-label={slide.label}
-                  aria-pressed={isActive}
-                  className={cn(
-                    'relative flex-shrink-0 w-16 aspect-[3/4] rounded-xl border overflow-hidden',
-                    'transition-all duration-200 cursor-pointer',
-                    'focus-visible:outline-2 focus-visible:outline-accent',
-                    isActive
-                      ? 'border-accent ring-1 ring-accent/30 scale-[1.04]'
-                      : 'border-surface2 hover:border-surface3 opacity-70 hover:opacity-100',
-                  )}
-                >
-                  {thumbHasImage ? (
-                    <Image
-                      src={slide.url!}
-                      alt={slide.label}
-                      fill
-                      sizes="64px"
-                      className="object-cover"
-                      onError={() => setImgErrors((prev) => ({ ...prev, [i]: true }))}
-                    />
-                  ) : (
-                    <div
-                      className={cn(
-                        'w-full h-full flex items-center justify-center',
-                        isActive ? 'bg-accent/8' : 'bg-surface',
-                      )}
-                    >
-                      <svg
-                        width="14"
-                        height="18"
-                        viewBox="0 0 16 20"
-                        fill="none"
-                        className="opacity-30"
+                <li key={i}>
+                  <button
+                    onClick={() => goTo(i)}
+                    aria-label={slide.label}
+                    aria-pressed={isActive}
+                    className={cn(
+                      'relative shrink-0 w-16 aspect-3/4 rounded-xl border overflow-hidden',
+                      'transition-all duration-200 cursor-pointer',
+                      'focus-visible:outline-2 focus-visible:outline-accent',
+                      isActive
+                        ? 'border-accent ring-1 ring-accent/30 scale-[1.04]'
+                        : 'border-surface2 hover:border-surface3 opacity-70 hover:opacity-100',
+                    )}
+                  >
+                    {thumbHasImage ? (
+                      <Image
+                        src={slide.url!}
+                        alt={slide.label}
+                        fill
+                        sizes="64px"
+                        className="object-cover"
+                        onError={() => setImgErrors((prev) => ({ ...prev, [i]: true }))}
+                      />
+                    ) : (
+                      <div
+                        className={cn(
+                          'w-full h-full flex items-center justify-center',
+                          isActive ? 'bg-accent/8' : 'bg-surface',
+                        )}
                       >
-                        <path d="M2 18 L6 4 L10 18H2Z" fill="currentColor" />
-                        <path
-                          d="M8 18 L11 8 L14 18H8Z"
-                          fill="currentColor"
-                          opacity="0.6"
-                        />
-                      </svg>
-                    </div>
-                  )}
-                </button>
+                        <svg
+                          width="14"
+                          height="18"
+                          viewBox="0 0 16 20"
+                          fill="none"
+                          className="opacity-30"
+                        >
+                          <path d="M2 18 L6 4 L10 18H2Z" fill="currentColor" />
+                          <path
+                            d="M8 18 L11 8 L14 18H8Z"
+                            fill="currentColor"
+                            opacity="0.6"
+                          />
+                        </svg>
+                      </div>
+                    )}
+                  </button>
+                </li>
               )
             })}
-          </div>
+          </ul>
         </div>
 
         {/* Modal lightbox */}

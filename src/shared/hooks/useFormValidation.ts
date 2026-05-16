@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { validate, hasErrors } from '@/shared/lib/validation'
-import type { FieldRules, FieldErrors } from '@/shared/lib/validation'
+import { useCallback, useState } from 'react'
+
+import type { FieldErrors, FieldRules } from '@/shared/lib/validation'
+import { hasErrors, validate } from '@/shared/lib/validation'
 
 interface UseFormValidationOptions<T extends object> {
   rules: FieldRules<T>

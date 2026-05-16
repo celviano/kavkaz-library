@@ -1,30 +1,53 @@
 'use client'
 
 import { memo, useState } from 'react'
-import { cn } from '@/shared/lib/cn'
-import { EmptyState } from '@/shared/ui/EmptyState'
+
+import type { EbookFormat } from '@/entities/ebook/model/types'
+import type { Ebook } from '@/entities/ebook/model/types'
 import {
-  EBOOK_STATUS_LABELS,
   EBOOK_STATUS_COLORS,
-  EBOOK_FORMAT_LABELS,
+  EBOOK_STATUS_LABELS,
   formatFileSize,
 } from '@/entities/ebook/model/types'
-import { useAllEbooks, useUpdateEbookStatus } from '@/features/ebooks/model/useEbooks'
-import type { Ebook } from '@/entities/ebook/model/types'
+import {
+  useAllEbooks,
+  useDeleteEbook,
+  useUpdateEbookStatus,
+} from '@/features/ebooks/model/useEbooks'
+import { cn } from '@/shared/lib/cn'
+import { ConfirmDeleteModal } from '@/shared/ui/ConfirmDeleteModal'
+import { EbookBadge } from '@/shared/ui/EbookBadge'
+import { EmptyState } from '@/shared/ui/EmptyState'
 
 function EbookAdminCard({ ebook }: { ebook: Ebook }) {
   const [rejectReason, setRejectReason] = useState('')
-  const [showReject,   setShowReject]   = useState(false)
+  const [showReject, setShowReject] = useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const { mutate: updateStatus, isPending } = useUpdateEbookStatus()
+  const { mutate: removeEbook, isPending: isDeleting } = useDeleteEbook()
 
   function handleApprove() {
     updateStatus({ ebookId: ebook.id, status: 'approved' })
   }
 
   function handleReject() {
-    if (!showReject) { setShowReject(true); return }
+    if (!showReject) {
+      setShowReject(true)
+      return
+    }
     updateStatus({ ebookId: ebook.id, status: 'rejected', reason: rejectReason })
     setShowReject(false)
+  }
+
+  function handleArchive() {
+    updateStatus({ ebookId: ebook.id, status: 'rejected' })
+  }
+
+  function handleDeleteConfirm() {
+    removeEbook(
+      { ebookId: ebook.id, fileUrl: ebook.fileUrl, coverUrl: ebook.coverUrl },
+      { onSuccess: () => setShowDeleteModal(false) },
+    )
   }
 
   return (
@@ -33,25 +56,28 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
       <div className="flex items-start gap-3">
         <div className="flex-1 min-w-0">
           <p className="text-sm font-medium text-ink">{ebook.title}</p>
-          <p className="text-xs text-ash mt-0.5">{ebook.author}{ebook.year ? `, ${ebook.year}` : ''}</p>
+          <p className="text-xs text-ash mt-0.5">
+            {ebook.author}
+            {ebook.year ? `, ${ebook.year}` : ''}
+          </p>
         </div>
-        <span className={cn(
-          'inline-flex items-center h-6 px-2.5 rounded-full text-[11px] font-medium border flex-shrink-0',
-          EBOOK_STATUS_COLORS[ebook.status],
-        )}>
+        <span
+          className={cn(
+            'inline-flex items-center h-6 px-2.5 rounded-full text-[11px] font-medium border shrink-0',
+            EBOOK_STATUS_COLORS[ebook.status],
+          )}
+        >
           {EBOOK_STATUS_LABELS[ebook.status]}
         </span>
       </div>
 
       {/* Meta */}
       <div className="flex items-center gap-3 flex-wrap">
-        {ebook.fileFormat && (
-          <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-200">
-            {EBOOK_FORMAT_LABELS[ebook.fileFormat]}
-          </span>
-        )}
+        {ebook.fileFormat && <EbookBadge format={ebook.fileFormat as EbookFormat} />}
         <span className="text-xs text-dim">{formatFileSize(ebook.fileSize)}</span>
-        <span className="text-xs text-dim">{ebook.createdAt.toLocaleDateString('ru-RU')}</span>
+        <span className="text-xs text-dim">
+          {ebook.createdAt.toLocaleDateString('ru-RU')}
+        </span>
       </div>
 
       {/* Reject reason input */}
@@ -65,13 +91,16 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
         />
       )}
 
-      {/* Actions */}
+      {/* Moderation actions (pending only) */}
       {ebook.status === 'pending' && (
         <div className="flex items-center gap-2 pt-1 border-t border-surface2 flex-wrap">
           <button
             type="button"
             disabled={isPending}
-            onClick={() => { setShowReject(false); handleApprove() }}
+            onClick={() => {
+              setShowReject(false)
+              handleApprove()
+            }}
             className="h-8 px-4 rounded-lg text-xs font-medium bg-accent text-bg border border-accent hover:bg-accent2 transition-all disabled:opacity-50"
           >
             Одобрить
@@ -96,11 +125,46 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
         </div>
       )}
 
+      {/* Admin actions (always visible) */}
+      <div className="flex items-center gap-2 pt-1 border-t border-surface2 flex-wrap">
+        <button
+          type="button"
+          disabled={isPending || isDeleting}
+          onClick={handleArchive}
+          className="h-8 px-3 rounded-lg text-xs border border-surface2 text-dim hover:text-ash hover:bg-surface2 transition-colors cursor-pointer disabled:opacity-50"
+        >
+          Архивировать
+        </button>
+        <a
+          href={`/book/${ebook.id}/edit`}
+          className="h-8 px-3 rounded-lg text-xs border border-steel2/40 text-steel2 hover:bg-steel/30 hover:border-steel2/60 transition-colors inline-flex items-center"
+        >
+          Изменить
+        </a>
+        <button
+          type="button"
+          disabled={isPending || isDeleting}
+          onClick={() => setShowDeleteModal(true)}
+          className="h-8 px-3 rounded-lg text-xs border border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300 transition-colors cursor-pointer disabled:opacity-50"
+        >
+          Удалить
+        </button>
+      </div>
+
       {ebook.status === 'rejected' && ebook.rejectionReason && (
         <p className="text-xs text-red-500 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
           Причина: {ebook.rejectionReason}
         </p>
       )}
+
+      <ConfirmDeleteModal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={handleDeleteConfirm}
+        isPending={isDeleting}
+        title="Удалить электронную книгу?"
+        description="Файл книги и все связанные данные будут удалены безвозвратно."
+      />
     </div>
   )
 }
@@ -108,15 +172,18 @@ function EbookAdminCard({ ebook }: { ebook: Ebook }) {
 export const AdminEbooksTab = memo(() => {
   const { data: ebooks = [], isLoading } = useAllEbooks()
 
-  const pending  = ebooks.filter(e => e.status === 'pending')
-  const approved = ebooks.filter(e => e.status === 'approved')
-  const rejected = ebooks.filter(e => e.status === 'rejected')
+  const pending = ebooks.filter((e) => e.status === 'pending')
+  const approved = ebooks.filter((e) => e.status === 'approved')
+  const rejected = ebooks.filter((e) => e.status === 'rejected')
 
   if (isLoading) {
     return (
       <div className="flex flex-col gap-3">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-28 rounded-2xl bg-surface border border-surface2 animate-pulse" />
+          <div
+            key={i}
+            className="h-28 rounded-2xl bg-surface border border-surface2 animate-pulse"
+          />
         ))}
       </div>
     )
@@ -139,7 +206,9 @@ export const AdminEbooksTab = memo(() => {
             На рассмотрении · {pending.length}
           </h3>
           <div className="flex flex-col gap-3">
-            {pending.map(e => <EbookAdminCard key={e.id} ebook={e} />)}
+            {pending.map((e) => (
+              <EbookAdminCard key={e.id} ebook={e} />
+            ))}
           </div>
         </div>
       )}
@@ -149,7 +218,9 @@ export const AdminEbooksTab = memo(() => {
             Одобрены · {approved.length}
           </h3>
           <div className="flex flex-col gap-3">
-            {approved.map(e => <EbookAdminCard key={e.id} ebook={e} />)}
+            {approved.map((e) => (
+              <EbookAdminCard key={e.id} ebook={e} />
+            ))}
           </div>
         </div>
       )}
@@ -159,7 +230,9 @@ export const AdminEbooksTab = memo(() => {
             Отклонены · {rejected.length}
           </h3>
           <div className="flex flex-col gap-3">
-            {rejected.map(e => <EbookAdminCard key={e.id} ebook={e} />)}
+            {rejected.map((e) => (
+              <EbookAdminCard key={e.id} ebook={e} />
+            ))}
           </div>
         </div>
       )}

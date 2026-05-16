@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
+
+import { getFullName } from '@/entities/profile/model/types'
 import { SellerPage } from '@/pages/seller'
 import { fetchProfile } from '@/shared/lib/supabase/queries/profiles'
-import { getFullName } from '@/entities/profile/model/types'
 
 interface Props {
   params: Promise<{ id: string }>
@@ -13,7 +14,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!profile) return { title: 'Продавец не найден' }
   const name = getFullName(profile) ?? 'Продавец'
   return {
-    title:       name,
+    title: name,
     description: `Книги продавца ${name} на CaucasusLibrary — исторические книги о Кавказе и Закавказье.`,
   }
 }

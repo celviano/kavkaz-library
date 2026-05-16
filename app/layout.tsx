@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { Open_Sans } from 'next/font/google'
-import { Header } from '@/widgets/header'
-import { Footer } from '@/widgets/footer'
-import { QueryProvider } from '@/app/providers/QueryProvider'
+
 import { AuthProvider } from '@/app/providers/AuthProvider'
+import { QueryProvider } from '@/app/providers/QueryProvider'
 import { JsonLd } from '@/shared/ui/JsonLd'
+import { Footer } from '@/widgets/footer'
+import { Header } from '@/widgets/header'
 
 import '@/app/styles/globals.css'
 

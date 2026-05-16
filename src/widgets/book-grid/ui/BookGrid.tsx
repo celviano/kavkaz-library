@@ -1,6 +1,7 @@
 import { memo } from 'react'
-import { BookCard } from '@/entities/book'
+
 import type { Book } from '@/entities/book'
+import { BookCard } from '@/entities/book'
 
 interface BookGridProps {
   books: Book[]
@@ -15,12 +16,20 @@ export const BookGrid = memo<BookGridProps>(({ books, className }) => {
         aria-live="polite"
         className="flex flex-col items-center justify-center py-28 text-center gap-4"
       >
-        <svg width="48" height="38" viewBox="0 0 48 38" fill="none" className="opacity-20">
+        <svg
+          width="48"
+          height="38"
+          viewBox="0 0 48 38"
+          fill="none"
+          className="opacity-20"
+        >
           <path d="M6 34L20 6L34 34H6Z" fill="var(--color-accent)" />
           <path d="M24 34L35 12L46 34H24Z" fill="var(--color-accent)" opacity="0.5" />
         </svg>
         <p className="text-ash font-medium">Книги не найдены</p>
-        <p className="text-dim text-sm">Попробуйте изменить фильтры или поисковый запрос</p>
+        <p className="text-dim text-sm">
+          Попробуйте изменить фильтры или поисковый запрос
+        </p>
       </div>
     )
   }
