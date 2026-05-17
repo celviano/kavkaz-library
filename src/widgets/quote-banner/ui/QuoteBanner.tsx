@@ -67,7 +67,7 @@ export const QuoteBanner = memo(() => {
 
         {/* Layer 1: gradient overlay — плотный сверху и снизу, прозрачный в середине */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none opacity-70"
           style={{
             background:
               'linear-gradient(to bottom, rgba(242,237,230,0.92) 0%, rgba(242,237,230,0.72) 30%, rgba(242,237,230,0.72) 70%, rgba(242,237,230,0.92) 100%)',
