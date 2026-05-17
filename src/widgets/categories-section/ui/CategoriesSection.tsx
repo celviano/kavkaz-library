@@ -1,6 +1,7 @@
 'use client'
 
 import { memo } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 import { useCategoryCounts } from '@/entities/book'
@@ -9,41 +10,36 @@ import { Badge } from '@/shared/ui/Badge'
 import { Container } from '@/shared/ui/Container'
 import { SectionHeading } from '@/shared/ui/SectionHeading'
 
+import categoriesPainting from '../../../../public/images/categories-painting.jpg'
+
 export const CategoriesSection = memo(() => {
   const { data: counts = {} } = useCategoryCounts()
 
   return (
     <section
       aria-labelledby="categories-heading"
-      className="py-20 border-t border-surface2 bg-surface/40 relative overflow-hidden"
+      className="py-20 border-t border-surface2 relative overflow-hidden"
     >
-      {/* Mountain silhouette background — second layer, offset from QuoteBanner */}
-      <svg
-        className="pointer-events-none absolute inset-0 w-full h-full"
-        preserveAspectRatio="xMidYMid slice"
-        viewBox="0 0 1440 320"
+      <div className="absolute inset-0" aria-hidden="true">
+        <Image
+          src={categoriesPainting}
+          alt=""
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+          quality={85}
+        />
+      </div>
+      <div
+        className="absolute opacity-60 inset-0 pointer-events-none"
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(242,237,230,0.93) 0%, rgba(242,237,230,0.82) 50%, rgba(242,237,230,0.93) 100%)',
+        }}
         aria-hidden="true"
-      >
-        {/* Far peaks — different profile from QuoteBanner */}
-        <path
-          d="M-20,320 L80,160 L150,195 L230,115 L310,165 L400,85 L490,140 L570,60 L660,120 L750,50 L840,110 L930,80 L1020,135 L1110,70 L1200,120 L1290,88 L1380,140 L1460,320Z"
-          fill="#2a5c45"
-          opacity="0.05"
-        />
-        {/* Mid range */}
-        <path
-          d="M-20,320 L50,240 L130,252 L210,225 L290,242 L370,212 L450,230 L540,205 L620,225 L710,198 L790,218 L880,205 L960,228 L1050,210 L1130,232 L1210,215 L1310,235 L1460,320Z"
-          fill="#8B6914"
-          opacity="0.045"
-        />
-        {/* Snow caps */}
-        <path d="M570,60  L588,88  L552,85Z" fill="#e8e0d4" opacity="0.45" />
-        <path d="M750,50  L766,78  L734,75Z" fill="#e8e0d4" opacity="0.45" />
-        <path d="M930,80  L944,104 L916,101Z" fill="#e8e0d4" opacity="0.4" />
-        <path d="M1110,70 L1124,96 L1096,93Z" fill="#e8e0d4" opacity="0.4" />
-      </svg>
+      />
 
-      <Container>
+      <Container className="relative z-10">
         <div className="mb-10">
           <SectionHeading eyebrow="Разделы" title="Категории" id="categories-heading" />
         </div>

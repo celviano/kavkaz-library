@@ -67,7 +67,7 @@ export const QuoteBanner = memo(() => {
 
         {/* Layer 1: gradient overlay — плотный сверху и снизу, прозрачный в середине */}
         <div
-          className="absolute inset-0 pointer-events-none"
+          className="absolute inset-0 pointer-events-none opacity-70"
           style={{
             background:
               'linear-gradient(to bottom, rgba(242,237,230,0.92) 0%, rgba(242,237,230,0.72) 30%, rgba(242,237,230,0.72) 70%, rgba(242,237,230,0.92) 100%)',
@@ -81,43 +81,6 @@ export const QuoteBanner = memo(() => {
           style={{ background: 'rgba(242,237,230,0.15)' }}
           aria-hidden="true"
         />
-
-        {/* Layer 3: carpet pattern */}
-        <svg
-          className="absolute inset-0 w-full h-full opacity-[0.025]"
-          preserveAspectRatio="xMidYMid slice"
-          aria-hidden="true"
-        >
-          <defs>
-            <pattern
-              id="quote-carpet"
-              x="0"
-              y="0"
-              width="80"
-              height="80"
-              patternUnits="userSpaceOnUse"
-            >
-              <polygon
-                points="40,6 74,40 40,74 6,40"
-                fill="none"
-                stroke="#2a5c45"
-                strokeWidth="1.5"
-              />
-              <polygon
-                points="40,18 62,40 40,62 18,40"
-                fill="none"
-                stroke="#8B6914"
-                strokeWidth="1"
-              />
-              <polygon points="40,28 52,40 40,52 28,40" fill="#2a5c45" opacity="0.4" />
-              <circle cx="0" cy="0" r="2" fill="#8B6914" />
-              <circle cx="80" cy="0" r="2" fill="#8B6914" />
-              <circle cx="0" cy="80" r="2" fill="#8B6914" />
-              <circle cx="80" cy="80" r="2" fill="#8B6914" />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#quote-carpet)" />
-        </svg>
 
         <Container>
           <div className="relative max-w-3xl mx-auto text-center">

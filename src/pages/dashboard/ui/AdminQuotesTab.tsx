@@ -2,9 +2,9 @@
 
 import { memo, useState } from 'react'
 
+import { useAllQuotes, useUpdateQuoteStatus } from '@/features/quotes/model/useQuotes'
 import { AddQuoteModal } from '@/features/quotes/ui/AddQuoteModal'
 import { QuoteAdminMenu } from '@/features/quotes/ui/QuoteAdminMenu'
-import { useAllQuotes, useUpdateQuoteStatus } from '@/features/quotes/model/useQuotes'
 import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
 import { cn } from '@/shared/lib/cn'
 import type { Quote } from '@/shared/lib/supabase/queries/quotes'
@@ -14,13 +14,7 @@ import {
 } from '@/shared/lib/supabase/queries/quotes'
 import { EmptyState } from '@/shared/ui/EmptyState'
 
-function QuoteCard({
-  quote,
-  onEdit,
-}: {
-  quote: Quote
-  onEdit: (q: Quote) => void
-}) {
+function QuoteCard({ quote, onEdit }: { quote: Quote; onEdit: (q: Quote) => void }) {
   const { mutate: updateStatus, isPending } = useUpdateQuoteStatus()
 
   return (

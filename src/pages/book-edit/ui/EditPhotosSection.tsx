@@ -3,12 +3,11 @@
 import { memo } from 'react'
 import Image from 'next/image'
 
+import { FormSection } from '@/features/add-book/ui/FormSection'
 import type { useSupabaseUpload } from '@/shared/hooks/useSupabaseUpload'
 import { cn } from '@/shared/lib/cn'
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/shared/ui/Dropzone'
 import { FormField } from '@/shared/ui/FormField'
-
-import { FormSection } from '@/features/add-book/ui/FormSection'
 
 interface EditPhotosSectionProps {
   existingCoverUrl: string | null
@@ -52,7 +51,8 @@ export const EditPhotosSection = memo<EditPhotosSectionProps>(
     const visibleImages = existingImages.filter((url) => !deletedImageUrls.has(url))
     const remainingSlots = 9 - visibleImages.length
 
-    const showCoverUpload = coverDeleted || !existingCoverUrl || coverUpload.files.length > 0
+    const showCoverUpload =
+      coverDeleted || !existingCoverUrl || coverUpload.files.length > 0
 
     return (
       <FormSection title="Фотографии">
@@ -121,10 +121,7 @@ export const EditPhotosSection = memo<EditPhotosSectionProps>(
             )}
 
             {remainingSlots > 0 && (
-              <Dropzone
-                {...imagesUpload}
-                key={`images-${remainingSlots}`}
-              >
+              <Dropzone {...imagesUpload} key={`images-${remainingSlots}`}>
                 <DropzoneEmptyState />
                 <DropzoneContent />
               </Dropzone>
@@ -132,7 +129,8 @@ export const EditPhotosSection = memo<EditPhotosSectionProps>(
 
             {remainingSlots === 0 && (
               <p className="text-xs text-dim">
-                Достигнуто максимальное количество фото (9). Удалите одно, чтобы добавить новое.
+                Достигнуто максимальное количество фото (9). Удалите одно, чтобы добавить
+                новое.
               </p>
             )}
           </div>

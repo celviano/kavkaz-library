@@ -7,8 +7,8 @@ import { useForm } from 'react-hook-form'
 import type { Book, BookCategory } from '@/entities/book/model/types'
 import type { Ebook } from '@/entities/ebook/model/types'
 import type { CopyrightType } from '@/entities/ebook/model/types'
-import { updateEbookAction } from '@/features/add-book/actions/updateEbook.action'
 import { updateBookAction } from '@/features/add-book/actions/updateBook.action'
+import { updateEbookAction } from '@/features/add-book/actions/updateEbook.action'
 import { BasicInfoSection } from '@/features/add-book/ui/sections/BasicInfoSection'
 import { PublicationSection } from '@/features/add-book/ui/sections/PublicationSection'
 import { SaleSection } from '@/features/add-book/ui/sections/SaleSection'
@@ -20,9 +20,9 @@ import { Container } from '@/shared/ui/Container'
 import { ErrorBanner } from '@/shared/ui/ErrorBanner'
 import { zodResolver } from '@hookform/resolvers/zod'
 
+import { EditCopyrightSection } from './EditCopyrightSection'
 import { EditEbookFilesSection } from './EditEbookFilesSection'
 import { EditPhotosSection } from './EditPhotosSection'
-import { EditCopyrightSection } from './EditCopyrightSection'
 
 interface EditBookFormProps {
   book: Book
@@ -180,7 +180,10 @@ export const EditBookForm = memo<EditBookFormProps>(({ book, ebook }) => {
 
       const { error: uploadError } = await supabase.storage
         .from('ebooks')
-        .upload(storagePath, newEbookFile, { contentType: newEbookFile.type, upsert: false })
+        .upload(storagePath, newEbookFile, {
+          contentType: newEbookFile.type,
+          upsert: false,
+        })
 
       if (uploadError) throw new Error(`Ошибка загрузки файла: ${uploadError.message}`)
 

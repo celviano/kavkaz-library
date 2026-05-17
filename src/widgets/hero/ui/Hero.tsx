@@ -1,11 +1,16 @@
+'use client'
+
 import { memo } from 'react'
 import Link from 'next/link'
 
 import { Container } from '@/shared/ui/Container'
 
+import { useHeroStats } from '../model/useHeroStats'
+
 import { HeroBackground } from './hero-background'
 
 export const Hero = memo(() => {
+  const { bookCount, categoryCount, userCount } = useHeroStats()
   return (
     <section
       className="relative overflow-hidden min-h-svh md:min-h-0 flex flex-col"
@@ -14,11 +19,11 @@ export const Hero = memo(() => {
       <HeroBackground />
 
       {/* Bottom fade */}
-      <div
+      {/* <div
         className="absolute bottom-0 left-0 w-full h-32 pointer-events-none"
         style={{ background: 'linear-gradient(to bottom, transparent, var(--color-bg))' }}
         aria-hidden="true"
-      />
+      /> */}
       <Container className="relative flex-1 flex flex-col md:block py-16 md:py-32 xl:py-40">
         <div className="relative flex flex-col items-center justify-center text-center flex-1">
           {/* Badge — pinned to top on mobile, inline on md+ */}
@@ -75,9 +80,12 @@ export const Hero = memo(() => {
           {/* Stats — pinned to bottom on mobile, inline on md+ */}
           <dl className="absolute bottom-10 left-0 right-0 flex flex-wrap justify-center gap-8 pt-8 border-t border-surface2/70 md:static md:mt-16 md:gap-12 md:max-w-lg md:mx-auto md:w-full">
             {[
-              { value: '200+', label: 'изданий' },
-              { value: '7', label: 'разделов' },
-              { value: '14', label: 'народов' },
+              { value: bookCount !== null ? String(bookCount) : '…', label: 'книг' },
+              { value: String(categoryCount), label: 'категорий' },
+              {
+                value: userCount !== null ? String(userCount) : '…',
+                label: 'пользователей',
+              },
             ].map((item) => (
               <div key={item.label} className="flex flex-col items-center gap-1">
                 <dd

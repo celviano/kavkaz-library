@@ -18,6 +18,16 @@ export interface BooksQueryResult {
   totalPages: number
 }
 
+export async function fetchBooksCount(): Promise<number> {
+  const supabase = createClient()
+  const { count, error } = await supabase
+    .from('books')
+    .select('*', { count: 'exact', head: true })
+    .eq('status', 'active')
+  if (error) throw new Error(error.message)
+  return count ?? 0
+}
+
 // Public catalog — only active books
 export async function fetchBooks(
   params: BooksQueryParams = {},
@@ -161,7 +171,11 @@ function extractStoragePath(url: string, bucket: string): string | null {
 // Hard-delete a book and its storage files
 export async function deleteBook(
   bookId: string,
-  opts: { coverUrl?: string | null; images?: string[] | null; ebookFileUrl?: string | null },
+  opts: {
+    coverUrl?: string | null
+    images?: string[] | null
+    ebookFileUrl?: string | null
+  },
 ): Promise<void> {
   const supabase = createClient()
 
