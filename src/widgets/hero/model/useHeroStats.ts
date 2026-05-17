@@ -1,10 +1,9 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-
 import { CATEGORIES } from '@/shared/config/constants'
 import { fetchBooksCount } from '@/shared/lib/supabase/queries/books'
 import { fetchUserCount } from '@/shared/lib/supabase/queries/profiles'
+import { useQuery } from '@tanstack/react-query'
 
 export function useHeroStats() {
   const { data: bookCount } = useQuery({

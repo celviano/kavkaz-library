@@ -7,7 +7,6 @@ export const CtaBanner = memo(() => (
   <section aria-labelledby="cta-heading" className="py-20 border-t border-surface2">
     <Container>
       <div className="relative overflow-hidden rounded-3xl bg-dark px-5 md:px-16 py-10 md:py-16 text-center">
-
         {/* Glow blobs */}
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
           <div className="absolute left-0 top-0 w-96 h-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/20 blur-[80px]" />

@@ -13,12 +13,11 @@ import {
   getFormatFromFile,
   MAX_EBOOK_SIZE,
 } from '@/entities/ebook/model/types'
+import { FormSection } from '@/features/add-book/ui/FormSection'
 import type { useSupabaseUpload } from '@/shared/hooks/useSupabaseUpload'
 import { cn } from '@/shared/lib/cn'
 import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/shared/ui/Dropzone'
 import { FormField } from '@/shared/ui/FormField'
-
-import { FormSection } from '@/features/add-book/ui/FormSection'
 
 const ACCEPT = {
   'application/pdf': ['.pdf'],
@@ -153,12 +152,16 @@ export const EditEbookFilesSection = memo<EditEbookFilesSectionProps>(
                     {FORMAT_ICONS[currentFormat] ?? '📄'}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-ink truncate">{ebook.fileName}</p>
+                    <p className="text-sm font-medium text-ink truncate">
+                      {ebook.fileName}
+                    </p>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20">
                         {EBOOK_FORMAT_LABELS[currentFormat]}
                       </span>
-                      <span className="text-xs text-ash">{formatFileSize(ebook.fileSize)}</span>
+                      <span className="text-xs text-ash">
+                        {formatFileSize(ebook.fileSize)}
+                      </span>
                     </div>
                   </div>
                   <button
@@ -210,9 +213,9 @@ export const EditEbookFilesSection = memo<EditEbookFilesSectionProps>(
                               : 'Перетащите файл или нажмите для выбора'}
                           </p>
                           <p className="text-xs text-ash">
-                            {ALLOWED_EBOOK_FORMATS.map((f) => EBOOK_FORMAT_LABELS[f]).join(
-                              ', ',
-                            )}{' '}
+                            {ALLOWED_EBOOK_FORMATS.map(
+                              (f) => EBOOK_FORMAT_LABELS[f],
+                            ).join(', ')}{' '}
                             · до {formatFileSize(MAX_EBOOK_SIZE)}
                           </p>
                         </div>
@@ -227,14 +230,18 @@ export const EditEbookFilesSection = memo<EditEbookFilesSectionProps>(
                         {newFormat ? FORMAT_ICONS[newFormat] : '📄'}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-ink truncate">{newFile.name}</p>
+                        <p className="text-sm font-medium text-ink truncate">
+                          {newFile.name}
+                        </p>
                         <div className="flex items-center gap-2 mt-0.5">
                           {newFormat && (
                             <span className="text-[10px] font-medium px-2 py-0.5 rounded-full bg-accent/10 text-accent border border-accent/20">
                               {EBOOK_FORMAT_LABELS[newFormat]}
                             </span>
                           )}
-                          <span className="text-xs text-ash">{formatFileSize(newFile.size)}</span>
+                          <span className="text-xs text-ash">
+                            {formatFileSize(newFile.size)}
+                          </span>
                         </div>
                       </div>
                       <button

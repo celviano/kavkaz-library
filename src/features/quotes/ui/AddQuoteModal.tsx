@@ -3,10 +3,7 @@
 import { memo, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
-import {
-  useSubmitQuote,
-  useUpdateQuoteContent,
-} from '@/features/quotes/model/useQuotes'
+import { useSubmitQuote, useUpdateQuoteContent } from '@/features/quotes/model/useQuotes'
 import type { Quote } from '@/shared/lib/supabase/queries/quotes'
 import type { AddQuoteValues } from '@/shared/lib/zod/schemas'
 import { addQuoteSchema } from '@/shared/lib/zod/schemas'

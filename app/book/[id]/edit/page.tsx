@@ -1,12 +1,15 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 
+import { EditBookForm } from '@/pages/book-edit'
 import { fetchBookById } from '@/shared/lib/supabase/queries/books'
 import { fetchEbookById } from '@/shared/lib/supabase/queries/ebooks'
 import { createClient } from '@/shared/lib/supabase/server'
-import { EditBookForm } from '@/pages/book-edit'
 
-export const metadata: Metadata = { title: 'Редактирование книги', robots: { index: false } }
+export const metadata: Metadata = {
+  title: 'Редактирование книги',
+  robots: { index: false },
+}
 
 interface PageProps {
   params: Promise<{ id: string }>

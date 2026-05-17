@@ -171,7 +171,11 @@ function extractStoragePath(url: string, bucket: string): string | null {
 // Hard-delete a book and its storage files
 export async function deleteBook(
   bookId: string,
-  opts: { coverUrl?: string | null; images?: string[] | null; ebookFileUrl?: string | null },
+  opts: {
+    coverUrl?: string | null
+    images?: string[] | null
+    ebookFileUrl?: string | null
+  },
 ): Promise<void> {
   const supabase = createClient()
 

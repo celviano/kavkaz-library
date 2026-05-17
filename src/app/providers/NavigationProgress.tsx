@@ -1,7 +1,7 @@
 'use client'
 
-import { usePathname, useSearchParams } from 'next/navigation'
 import { memo, Suspense, useCallback, useEffect, useRef, useState } from 'react'
+import { usePathname, useSearchParams } from 'next/navigation'
 
 import { TopProgressBar } from '@/shared/ui/TopProgressBar'
 
@@ -69,7 +69,7 @@ function NavigationProgressInner() {
       if (href.includes('#')) return
 
       const currentFull =
-        pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '')
+        pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : '')
 
       if (href !== currentFull) {
         startProgress()

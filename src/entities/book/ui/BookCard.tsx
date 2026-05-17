@@ -34,7 +34,10 @@ function AvailabilityBadge({ book }: { book: Book }) {
 
   return (
     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-surface2 text-dim border border-surface3">
-      <span className="w-1.5 h-1.5 rounded-full bg-surface3 shrink-0" aria-hidden="true" />
+      <span
+        className="w-1.5 h-1.5 rounded-full bg-surface3 shrink-0"
+        aria-hidden="true"
+      />
       Нет в наличии
     </span>
   )
@@ -104,8 +107,6 @@ export const BookCard = memo<BookCardProps>(({ book, className }) => {
         <div className="absolute top-2.5 right-2.5 z-20">
           <FavoriteButton bookId={id} />
         </div>
-
-
       </div>
 
       <div className="flex flex-col gap-2.5 p-4 flex-1">

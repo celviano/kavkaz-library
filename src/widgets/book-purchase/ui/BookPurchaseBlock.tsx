@@ -29,10 +29,7 @@ export const BookPurchaseBlock = memo<BookPurchaseBlockProps>(({ book }) => {
   if (book.status !== 'active') {
     return (
       <div className="flex items-center gap-3 bg-surface rounded-2xl border border-surface2 px-5 py-4">
-        <span
-          className="w-2 h-2 rounded-full bg-surface3 shrink-0"
-          aria-hidden="true"
-        />
+        <span className="w-2 h-2 rounded-full bg-surface3 shrink-0" aria-hidden="true" />
         <p className="text-sm text-ash">
           {book.status === 'sold' && 'Эта книга уже продана'}
           {book.status === 'pending' && 'Книга на модерации'}

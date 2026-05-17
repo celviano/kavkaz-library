@@ -4,6 +4,7 @@ import { memo } from 'react'
 import Link from 'next/link'
 
 import { Container } from '@/shared/ui/Container'
+
 import { useHeroStats } from '../model/useHeroStats'
 
 import { HeroBackground } from './hero-background'
@@ -81,7 +82,10 @@ export const Hero = memo(() => {
             {[
               { value: bookCount !== null ? String(bookCount) : '…', label: 'книг' },
               { value: String(categoryCount), label: 'категорий' },
-              { value: userCount !== null ? String(userCount) : '…', label: 'пользователей' },
+              {
+                value: userCount !== null ? String(userCount) : '…',
+                label: 'пользователей',
+              },
             ].map((item) => (
               <div key={item.label} className="flex flex-col items-center gap-1">
                 <dd
