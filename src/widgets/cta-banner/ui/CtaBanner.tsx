@@ -26,8 +26,8 @@ export const CtaBanner = memo(() => (
             Изучайте историю <em className="text-accent3 not-italic">Кавказа</em>
           </h2>
           <p className="text-bg/55 text-sm md:text-base leading-relaxed max-w-lg">
-            История, культура, языки, литература и биографии — всё о народах Кавказа
-            великой эпохи Кавказской войны и освоения региона.
+            История, культура, языки, литература и биографии — всё о народах Кавказа от
+            античной древности до современности.
           </p>
           <Link
             href="/catalog"

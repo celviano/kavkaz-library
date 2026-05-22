@@ -302,25 +302,25 @@ export const BookSlider = memo<BookSliderProps>(
               onClick={() => setModalOpen(false)}
             />
 
-            <div className="relative z-10 flex flex-col items-center gap-4 w-full max-w-4xl px-4">
+            <div className="relative z-10 h-screen flex flex-col justify-center items-center gap-4 w-full max-w-4xl px-4">
               <button
                 onClick={() => setModalOpen(false)}
-                className="absolute -top-2 right-4 w-9 h-9 rounded-full bg-bg/10 border border-bg/20 flex items-center justify-center text-bg/80 hover:text-bg hover:bg-bg/20 transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-bg"
+                className="absolute z-10 top-4 right-4 w-9 h-9 rounded-full bg-bg/10 border border-bg/20 flex items-center justify-center text-bg/80 hover:text-bg hover:bg-bg/20 transition-all cursor-pointer focus-visible:outline-2 focus-visible:outline-bg"
                 aria-label="Закрыть"
               >
                 ✕
               </button>
 
               <div
-                className="relative flex items-center justify-center"
-                style={{ maxHeight: '80vh' }}
+                className="relative flex justify-center items-center"
+                style={{ maxHeight: '100vh' }}
               >
                 {showImage ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={currentSlide.url!}
                     alt={`${title} — ${currentSlide.label}`}
-                    className="max-w-full max-h-[80vh] w-auto h-auto object-contain rounded-xl shadow-2xl"
+                    className="max-w-full max-h-[70vh] w-auto h-auto object-contain rounded-xl shadow-2xl"
                   />
                 ) : (
                   <div className="flex items-center justify-center h-64 text-bg/40 text-sm">
@@ -350,7 +350,7 @@ export const BookSlider = memo<BookSliderProps>(
               </div>
 
               <div
-                className="flex gap-2 overflow-x-auto pb-1"
+                className="hidden md:flex gap-2 overflow-x-auto pb-1"
                 style={{ scrollbarWidth: 'none' }}
               >
                 {slides.map((slide, i) => {

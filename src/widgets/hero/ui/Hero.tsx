@@ -65,13 +65,13 @@ export const Hero = memo(() => {
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
             <Link
               href="/catalog"
-              className="inline-flex items-center justify-center h-11 md:h-12 px-7 md:px-8 w-full sm:w-auto rounded-xl text-sm md:text-base font-medium bg-accent text-bg border border-accent hover:bg-accent2 hover:border-accent2 shadow-accent-sm hover:shadow-accent transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="inline-flex items-center justify-center h-10 md:h-12 px-5 md:px-8 w-full sm:w-auto rounded-xl text-sm md:text-base font-medium bg-accent text-bg border border-accent hover:bg-accent2 hover:border-accent2 shadow-accent-sm hover:shadow-accent transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
-              Открыть каталог
+              Каталог
             </Link>
             <Link
               href="/about"
-              className="inline-flex items-center justify-center h-11 md:h-12 px-7 md:px-8 w-full sm:w-auto rounded-xl text-sm md:text-base font-medium bg-bg/60 backdrop-blur-sm text-accent border border-accent/40 hover:bg-accent/8 hover:border-accent/70 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+              className="inline-flex items-center justify-center h-10 md:h-12 px-5 md:px-8 w-full sm:w-auto rounded-xl text-sm md:text-base font-medium bg-bg/60 backdrop-blur-sm text-accent border border-accent/40 hover:bg-accent/8 hover:border-accent/70 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
             >
               О проекте
             </Link>

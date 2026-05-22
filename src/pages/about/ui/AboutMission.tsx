@@ -25,7 +25,7 @@ export function AboutMission() {
                   fontSize: 'clamp(1.7rem, 3vw, 2.4rem)',
                 }}
               >
-                Кавказ заслуживает того, чтобы его понимали
+                Кавказ невозможно уместить в одну версию
               </h2>
             </div>
 
