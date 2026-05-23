@@ -133,6 +133,31 @@ export async function createOrder(data: CreateOrderData): Promise<Order> {
   } = await supabase.auth.getUser()
   if (!user) throw new Error('Необходима авторизация')
 
+  // Серверная валидация copies_left
+  const { data: book, error: bookError } = await supabase
+    .from('books')
+    .select('copies_left')
+    .eq('id', data.bookId)
+    .single()
+  if (bookError) throw new Error(bookError.message)
+  if (book.copies_left !== null && data.quantity > book.copies_left) {
+    throw new Error(
+      `Недостаточно экземпляров. Доступно: ${book.copies_left}`,
+    )
+  }
+
+  // Блокировка дублирующих заказов
+  const { data: existing } = await supabase
+    .from('orders')
+    .select('id')
+    .eq('buyer_id', user.id)
+    .eq('book_id', data.bookId)
+    .in('status', ['pending', 'confirmed'])
+    .maybeSingle()
+  if (existing) {
+    throw new Error('Вы уже оформили заказ на эту книгу')
+  }
+
   const { data: order, error } = await supabase
     .from('orders')
     .insert({
@@ -184,12 +209,56 @@ export async function fetchSentOrders(buyerId: string): Promise<Order[]> {
   return (data as OrderRow[]).map(mapOrderRow)
 }
 
+export async function cancelBuyerOrder(orderId: string): Promise<void> {
+  const supabase = createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  if (!user) throw new Error('Необходима авторизация')
+
+  const { error } = await supabase
+    .from('orders')
+    .update({ status: 'cancelled' })
+    .eq('id', orderId)
+    .eq('buyer_id', user.id)
+    .eq('status', 'pending')
+
+  if (error) throw new Error(error.message)
+}
+
 export async function updateOrderStatus(
   orderId: string,
   status: OrderStatus,
 ): Promise<void> {
   const supabase = createClient()
   const { error } = await supabase.from('orders').update({ status }).eq('id', orderId)
-
   if (error) throw new Error(error.message)
+
+  // При подтверждении заказа — декремент copies_left и авто-перевод в sold
+  if (status === 'confirmed') {
+    const { data: order } = await supabase
+      .from('orders')
+      .select('book_id, quantity')
+      .eq('id', orderId)
+      .single()
+
+    if (order) {
+      const { data: book } = await supabase
+        .from('books')
+        .select('copies_left')
+        .eq('id', order.book_id)
+        .single()
+
+      if (book) {
+        const newCopiesLeft = Math.max(0, (book.copies_left ?? 0) - order.quantity)
+        await supabase
+          .from('books')
+          .update({
+            copies_left: newCopiesLeft,
+            ...(newCopiesLeft === 0 ? { status: 'sold', available: false } : {}),
+          })
+          .eq('id', order.book_id)
+      }
+    }
+  }
 }

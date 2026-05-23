@@ -5,7 +5,11 @@ import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { isAdmin, useProfile } from '@/entities/profile'
-import { useMyBooks, useMyOrders } from '@/features/dashboard/model/useDashboard'
+import {
+  useMyBooks,
+  useMyOrders,
+  useSentOrders,
+} from '@/features/dashboard/model/useDashboard'
 import { useAllEbooks, useMyEbooks } from '@/features/ebooks/model/useEbooks'
 import { useAllQuotes, useMyQuotes } from '@/features/quotes/model/useQuotes'
 import { useCurrentUser } from '@/shared/hooks/useCurrentUser'
@@ -16,16 +20,25 @@ import { PageHeading } from '@/shared/ui/PageHeading'
 
 import { AdminEbooksTab } from './AdminEbooksTab'
 import { AdminQuotesTab } from './AdminQuotesTab'
+import { BuyerOrdersTab } from './BuyerOrdersTab'
 import { MyBooksTab } from './MyBooksTab'
 import { MyEbooksTab } from './MyEbooksTab'
 import { MyOrdersTab } from './MyOrdersTab'
 import { MyQuotesTab } from './MyQuotesTab'
 
-type Tab = 'books' | 'orders' | 'quotes' | 'admin-quotes' | 'ebooks' | 'admin-ebooks'
+type Tab =
+  | 'books'
+  | 'orders'
+  | 'my-orders'
+  | 'quotes'
+  | 'admin-quotes'
+  | 'ebooks'
+  | 'admin-ebooks'
 
 const VALID_TABS: Tab[] = [
   'books',
   'orders',
+  'my-orders',
   'quotes',
   'admin-quotes',
   'ebooks',
@@ -49,6 +62,7 @@ export const DashboardPage = memo(() => {
 
   const { data: books = [] } = useMyBooks(user?.id ?? null)
   const { data: orders = [] } = useMyOrders(user?.id ?? null)
+  const { data: sentOrders = [] } = useSentOrders(user?.id ?? null)
   const { data: myQuotes = [] } = useMyQuotes(user?.id ?? null)
   const { data: allQuotes = [] } = useAllQuotes()
   const { data: myEbooks = [] } = useMyEbooks(user?.id ?? null)
@@ -80,9 +94,18 @@ export const DashboardPage = memo(() => {
     )
   }
 
+  const activeSentOrders = sentOrders.filter(
+    (o) => o.status === 'pending' || o.status === 'confirmed',
+  ).length
+
   const tabs: { id: Tab; label: string; shortLabel?: string; count?: number }[] = [
     { id: 'books', label: 'Мои книги', count: books.length },
     { id: 'orders', label: 'Запросы', count: orders.length },
+    {
+      id: 'my-orders',
+      label: 'Мои заказы',
+      count: activeSentOrders || undefined,
+    },
     {
       id: admin ? 'admin-ebooks' : 'ebooks',
       label: admin ? 'Эл. книги (модерация)' : 'Эл. книги',
@@ -201,6 +224,7 @@ export const DashboardPage = memo(() => {
             {/* Tab content */}
             {user && activeTab === 'books' && <MyBooksTab userId={user.id} />}
             {user && activeTab === 'orders' && <MyOrdersTab userId={user.id} />}
+            {user && activeTab === 'my-orders' && <BuyerOrdersTab userId={user.id} />}
             {user && activeTab === 'quotes' && <MyQuotesTab userId={user.id} />}
             {user && activeTab === 'admin-quotes' && <AdminQuotesTab />}
             {user && activeTab === 'ebooks' && <MyEbooksTab userId={user.id} />}

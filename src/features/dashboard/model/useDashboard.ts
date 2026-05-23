@@ -8,6 +8,7 @@ import {
 } from '@/shared/lib/supabase/queries/books'
 import type { OrderStatus } from '@/shared/lib/supabase/queries/orders'
 import {
+  cancelBuyerOrder,
   fetchMyOrders,
   fetchSentOrders,
   updateOrderStatus,
@@ -79,5 +80,15 @@ export function useSentOrders(buyerId: string | null) {
     queryKey: ['sent-orders', buyerId],
     queryFn: () => fetchSentOrders(buyerId!),
     enabled: Boolean(buyerId),
+  })
+}
+
+export function useCancelMyOrder(buyerId: string | null) {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (orderId: string) => cancelBuyerOrder(orderId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['sent-orders', buyerId] })
+    },
   })
 }
