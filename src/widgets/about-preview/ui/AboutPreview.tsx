@@ -21,7 +21,7 @@ export const AboutPreview = memo(() => {
           fontFamily="Georgia, serif"
           fontSize={96}
           fill="#2a5c45"
-          opacity={0.045}
+          opacity={0.075}
           transform="rotate(-8)"
           style={{ userSelect: 'none' }}
         >
@@ -33,7 +33,7 @@ export const AboutPreview = memo(() => {
           fontFamily="Georgia, serif"
           fontSize={72}
           fill="#2a5c45"
-          opacity={0.038}
+          opacity={0.068}
           transform="rotate(6)"
           style={{ userSelect: 'none' }}
         >
@@ -45,7 +45,7 @@ export const AboutPreview = memo(() => {
           fontFamily="Georgia, serif"
           fontSize={110}
           fill="#8B6914"
-          opacity={0.032}
+          opacity={0.062}
           transform="rotate(-4)"
           style={{ userSelect: 'none' }}
         >
@@ -57,7 +57,7 @@ export const AboutPreview = memo(() => {
           fontFamily="Georgia, serif"
           fontSize={88}
           fill="#2a5c45"
-          opacity={0.035}
+          opacity={0.065}
           transform="rotate(-6)"
           style={{ userSelect: 'none' }}
         >
@@ -69,7 +69,7 @@ export const AboutPreview = memo(() => {
           fontFamily="Georgia, serif"
           fontSize={78}
           fill="#8B6914"
-          opacity={0.042}
+          opacity={0.082}
           transform="rotate(-10)"
           style={{ userSelect: 'none' }}
         >
@@ -81,7 +81,7 @@ export const AboutPreview = memo(() => {
           fontFamily="Georgia, serif"
           fontSize={92}
           fill="#2a5c45"
-          opacity={0.036}
+          opacity={0.076}
           transform="rotate(7)"
           style={{ userSelect: 'none' }}
         >
@@ -93,7 +93,7 @@ export const AboutPreview = memo(() => {
           fontFamily="Georgia, serif"
           fontSize={68}
           fill="#8B6914"
-          opacity={0.04}
+          opacity={0.064}
           transform="rotate(-5)"
           style={{ userSelect: 'none' }}
         >
@@ -105,7 +105,7 @@ export const AboutPreview = memo(() => {
           fontFamily="Georgia, serif"
           fontSize={86}
           fill="#2a5c45"
-          opacity={0.033}
+          opacity={0.063}
           transform="rotate(8)"
           style={{ userSelect: 'none' }}
         >
@@ -117,7 +117,7 @@ export const AboutPreview = memo(() => {
           fontFamily="Georgia, serif"
           fontSize={74}
           fill="#8B6914"
-          opacity={0.038}
+          opacity={0.068}
           transform="rotate(-12)"
           style={{ userSelect: 'none' }}
         >
@@ -129,7 +129,7 @@ export const AboutPreview = memo(() => {
           fontFamily="Georgia, serif"
           fontSize={82}
           fill="#2a5c45"
-          opacity={0.035}
+          opacity={0.065}
           transform="rotate(-7)"
           style={{ userSelect: 'none' }}
         >
