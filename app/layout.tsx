@@ -18,7 +18,7 @@ const openSans = Open_Sans({
   display: 'swap',
 })
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://caucasuslibrary.ru'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://caucasus-library.ru'
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

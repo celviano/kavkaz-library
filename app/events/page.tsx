@@ -3,7 +3,7 @@ import type { Metadata } from 'next'
 import { EventsPage } from '@/pages/events'
 import { JsonLd } from '@/shared/ui/JsonLd'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://caucasuslibrary.ru'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://caucasus-library.ru'
 
 export const metadata: Metadata = {
   title: 'События',
