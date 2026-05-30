@@ -65,6 +65,11 @@ export const metadata: Metadata = {
       'Собрание редких исторических книг, атласов, мемуаров и этнографических трудов о народах Кавказского региона.',
     images: ['/og-image.png'],
   },
+  verification: {
+    other: {
+      'yandex-verification': '6903cd19a626381f',
+    },
+  },
 }
 
 export default function RootLayout({
