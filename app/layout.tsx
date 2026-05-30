@@ -66,6 +66,7 @@ export const metadata: Metadata = {
     images: ['/og-image.png'],
   },
   verification: {
+    google: 'PkQu6QlQ6_Q_bKcNjpPaxtEWna1_FsoA5XFLunMwXX4',
     other: {
       'yandex-verification': '6903cd19a626381f',
     },
