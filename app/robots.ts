@@ -1,13 +1,13 @@
 import type { MetadataRoute } from 'next'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://caucasuslibrary.ru'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://caucasus-library.ru'
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
         userAgent: '*',
-        allow: ['/', '/catalog', '/book/', '/seller/', '/events', '/about'],
+        allow: ['/', '/catalog', '/book/', '/seller/', '/events', '/about', '/contacts'],
         disallow: [
           '/dashboard',
           '/favorites',

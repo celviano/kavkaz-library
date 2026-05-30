@@ -4,7 +4,7 @@ import { BookPage } from '@/pages/book'
 import { fetchBookById } from '@/shared/lib/supabase/queries/books'
 import { JsonLd } from '@/shared/ui/JsonLd'
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://caucasuslibrary.ru'
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://caucasus-library.ru'
 
 interface Props {
   params: Promise<{ id: string }>
