@@ -1,3 +1,4 @@
+export { AvatarCropModal } from './AvatarCropModal'
 export { Badge } from './Badge'
 export type { BreadcrumbItem } from './Breadcrumb'
 export { Breadcrumb } from './Breadcrumb'

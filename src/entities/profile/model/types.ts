@@ -21,6 +21,7 @@ export interface ProfileRow {
   city: string | null
   country: string | null
   avatar_url: string | null
+  banner_url: string | null
   website: string | null
   born_year: number | null
   role: UserRole
@@ -38,6 +39,7 @@ export interface Profile {
   city: string | null
   country: string | null
   avatarUrl: string | null
+  bannerUrl: string | null
   website: string | null
   bornYear: number | null
   role: UserRole
@@ -56,6 +58,7 @@ export function mapProfileRow(row: ProfileRow): Profile {
     city: row.city,
     country: row.country,
     avatarUrl: row.avatar_url,
+    bannerUrl: row.banner_url,
     website: row.website,
     bornYear: row.born_year,
     role: row.role ?? 'user',
