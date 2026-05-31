@@ -68,6 +68,7 @@ export interface UpdateProfileData {
   country: string
   website: string
   avatarUrl: string
+  bannerUrl: string
 }
 
 export async function updateProfileAction(data: UpdateProfileData): Promise<void> {
@@ -89,6 +90,7 @@ export async function updateProfileAction(data: UpdateProfileData): Promise<void
     country: data.country || null,
     website: data.website || null,
     avatar_url: data.avatarUrl || null,
+    banner_url: data.bannerUrl || null,
     updated_at: new Date().toISOString(),
   })
 

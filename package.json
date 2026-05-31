@@ -24,6 +24,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-dropzone": "^14.3.5",
+    "react-easy-crop": "^5.5.7",
     "react-hook-form": "^7.56.0",
     "tailwind-merge": "^2.5.4",
     "yet-another-react-lightbox": "^3.32.0",

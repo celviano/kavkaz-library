@@ -36,7 +36,10 @@ export const ProfileHeader: FC<ProfileHeaderProps> = ({
 
   return (
     <div className="bg-surface border border-surface2 rounded-3xl overflow-hidden">
-      <ProfileBanner variant={isSeller ? 'seller' : 'default'} />
+      <ProfileBanner
+        bannerUrl={profile?.bannerUrl}
+        variant={isSeller ? 'seller' : 'default'}
+      />
 
       <div className="px-6 pb-6">
         {/* Avatar row — avatar overlaps banner, edit button top right */}

@@ -39,7 +39,7 @@ function ProfileSkeleton() {
         <Container>
           <div className="max-w-4xl mx-auto flex flex-col gap-8">
             <div className="bg-surface border border-surface2 rounded-3xl overflow-hidden animate-pulse">
-              <div className="h-28 bg-surface2" />
+              <div className="bg-surface2" style={{ height: 212 }} />
               <div className="px-6 pb-6">
                 <div className="flex items-end justify-between -mt-12 mb-4">
                   <div className="w-24 h-24 rounded-full bg-surface2 ring-4 ring-surface" />

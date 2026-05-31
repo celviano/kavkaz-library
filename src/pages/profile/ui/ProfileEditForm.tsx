@@ -1,17 +1,18 @@
 'use client'
 
-import { memo } from 'react'
+import { memo, useCallback, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 
 import type { Profile } from '@/entities/profile'
 import { ProfileAvatar, useUpdateProfile } from '@/entities/profile'
 import { FormSection } from '@/features/add-book/ui/FormSection'
-import { useSupabaseUpload } from '@/shared/hooks/useSupabaseUpload'
+import { createClient } from '@/shared/lib/supabase/client'
 import type { ProfileEditValues } from '@/shared/lib/zod/schemas'
 import { profileEditSchema } from '@/shared/lib/zod/schemas'
+import { AvatarCropModal } from '@/shared/ui/AvatarCropModal'
+import { Button } from '@/shared/ui/Button'
 import { Container } from '@/shared/ui/Container'
-import { Dropzone, DropzoneContent, DropzoneEmptyState } from '@/shared/ui/Dropzone'
 import { ErrorBanner } from '@/shared/ui/ErrorBanner'
 import { FormActions } from '@/shared/ui/FormActions'
 import { FormField } from '@/shared/ui/FormField'
@@ -29,6 +30,22 @@ interface ProfileEditFormProps {
 export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) => {
   const router = useRouter()
   const { mutate: update, isPending, error } = useUpdateProfile(user.id)
+
+  // ── Avatar state ────────────────────────────────────────────────────────────
+  const avatarInputRef = useRef<HTMLInputElement>(null)
+  const [avatarRawSrc, setAvatarRawSrc] = useState<string | null>(null)
+  const [avatarModalOpen, setAvatarModalOpen] = useState(false)
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const [avatarBlob, setAvatarBlob] = useState<Blob | null>(null)
+
+  // ── Banner state ─────────────────────────────────────────────────────────────
+  const bannerInputRef = useRef<HTMLInputElement>(null)
+  const [bannerRawSrc, setBannerRawSrc] = useState<string | null>(null)
+  const [bannerModalOpen, setBannerModalOpen] = useState(false)
+  const [bannerPreview, setBannerPreview] = useState<string | null>(null)
+  const [bannerBlob, setBannerBlob] = useState<Blob | null>(null)
+
+  const [uploadError, setUploadError] = useState<string | null>(null)
 
   const {
     register,
@@ -48,25 +65,101 @@ export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) =>
     },
   })
 
-  const avatarUpload = useSupabaseUpload({
-    bucketName: 'avatars',
-    path: user.id,
-    allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
-    maxFiles: 1,
-    maxFileSize: 3 * 1024 * 1024,
-  })
-
   const displayName =
     [profile?.firstName, profile?.lastName].filter(Boolean).join(' ') ||
     profile?.displayName ||
     user.email?.split('@')[0] ||
     'Пользователь'
 
+  // ── File select handlers ────────────────────────────────────────────────────
+  const handleAvatarFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setAvatarRawSrc(URL.createObjectURL(file))
+    setAvatarModalOpen(true)
+    e.target.value = ''
+  }, [])
+
+  const handleBannerFileSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setBannerRawSrc(URL.createObjectURL(file))
+    setBannerModalOpen(true)
+    e.target.value = ''
+  }, [])
+
+  // ── Crop apply handlers ─────────────────────────────────────────────────────
+  const handleAvatarApply = useCallback(
+    (blob: Blob) => {
+      if (avatarPreview) URL.revokeObjectURL(avatarPreview)
+      setAvatarPreview(URL.createObjectURL(blob))
+      setAvatarBlob(blob)
+      setUploadError(null)
+    },
+    [avatarPreview],
+  )
+
+  const handleBannerApply = useCallback(
+    (blob: Blob) => {
+      if (bannerPreview) URL.revokeObjectURL(bannerPreview)
+      setBannerPreview(URL.createObjectURL(blob))
+      setBannerBlob(blob)
+      setUploadError(null)
+    },
+    [bannerPreview],
+  )
+
+  // ── Modal close handlers ────────────────────────────────────────────────────
+  const handleAvatarModalClose = useCallback(() => {
+    setAvatarModalOpen(false)
+    if (avatarRawSrc) URL.revokeObjectURL(avatarRawSrc)
+    setAvatarRawSrc(null)
+  }, [avatarRawSrc])
+
+  const handleBannerModalClose = useCallback(() => {
+    setBannerModalOpen(false)
+    if (bannerRawSrc) URL.revokeObjectURL(bannerRawSrc)
+    setBannerRawSrc(null)
+  }, [bannerRawSrc])
+
+  // ── Remove handlers ─────────────────────────────────────────────────────────
+  const handleRemoveAvatar = useCallback(() => {
+    if (avatarPreview) URL.revokeObjectURL(avatarPreview)
+    setAvatarPreview(null)
+    setAvatarBlob(null)
+  }, [avatarPreview])
+
+  const handleRemoveBanner = useCallback(() => {
+    if (bannerPreview) URL.revokeObjectURL(bannerPreview)
+    setBannerPreview(null)
+    setBannerBlob(null)
+  }, [bannerPreview])
+
+  // ── Upload helper ───────────────────────────────────────────────────────────
+  async function uploadBlob(blob: Blob, bucket: string): Promise<string> {
+    const supabase = createClient()
+    const filePath = `${user.id}/${Date.now()}.webp`
+    const { error: err } = await supabase.storage.from(bucket).upload(filePath, blob, {
+      upsert: true,
+      cacheControl: '3600',
+      contentType: 'image/webp',
+    })
+    if (err) throw err
+    return supabase.storage.from(bucket).getPublicUrl(filePath).data.publicUrl
+  }
+
+  // ── Submit ──────────────────────────────────────────────────────────────────
   async function onSubmit(data: ProfileEditValues) {
+    setUploadError(null)
     let avatarUrl = profile?.avatarUrl ?? ''
-    if (avatarUpload.files.filter((f) => f.errors.length === 0).length > 0) {
-      const urls = await avatarUpload.onUpload()
-      if (urls[0]) avatarUrl = urls[0]
+    let bannerUrl = profile?.bannerUrl ?? ''
+
+    try {
+      if (avatarBlob) avatarUrl = await uploadBlob(avatarBlob, 'avatars')
+      if (bannerBlob) bannerUrl = await uploadBlob(bannerBlob, 'banners')
+    } catch (err) {
+      setUploadError(err instanceof Error ? err.message : 'Ошибка загрузки изображения')
+      return
     }
 
     update({
@@ -79,8 +172,28 @@ export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) =>
       country: data.country ?? '',
       website: data.website ?? '',
       avatarUrl,
+      bannerUrl,
     })
   }
+
+  const shownAvatarUrl = avatarPreview ?? profile?.avatarUrl ?? null
+  const shownBannerUrl = bannerPreview ?? profile?.bannerUrl ?? null
+
+  const PencilIcon = (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 20 20"
+      fill="none"
+      stroke="white"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M2 15.5V17h1.5l8.8-8.8-1.5-1.5L2 15.5z" />
+      <path d="M16.7 4.3a1 1 0 0 0 0-1.4l-1.6-1.6a1 1 0 0 0-1.4 0l-1.4 1.4 3 3 1.4-1.4z" />
+    </svg>
+  )
 
   return (
     <main id="main-content">
@@ -96,22 +209,164 @@ export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) =>
               noValidate
               className="flex flex-col gap-8"
             >
-              <FormSection title="Фото профиля">
-                <div className="flex items-center gap-5">
-                  <ProfileAvatar
-                    avatarUrl={profile?.avatarUrl ?? null}
-                    name={displayName}
-                    size="xl"
-                  />
-                  <div className="flex-1">
-                    <Dropzone {...avatarUpload}>
-                      <DropzoneEmptyState />
-                      <DropzoneContent />
-                    </Dropzone>
+              {/* ── Banner section ────────────────────────────────────────── */}
+              <FormSection title="Обложка профиля">
+                <div className="flex flex-col gap-3">
+                  {/* Banner preview — clickable */}
+                  <button
+                    type="button"
+                    onClick={() => bannerInputRef.current?.click()}
+                    aria-label="Изменить обложку профиля"
+                    className="relative group w-full overflow-hidden rounded-xl border border-surface2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                    style={{ height: 106 }}
+                  >
+                    {shownBannerUrl ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={shownBannerUrl}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-surface2 flex items-center justify-center">
+                        <svg
+                          className="absolute inset-0 w-full h-full"
+                          preserveAspectRatio="xMidYMid slice"
+                          style={{ opacity: 0.06 }}
+                        >
+                          <defs>
+                            <pattern
+                              id="banner-edit-pat"
+                              x="0"
+                              y="0"
+                              width="60"
+                              height="60"
+                              patternUnits="userSpaceOnUse"
+                            >
+                              <polygon
+                                points="30,4 56,30 30,56 4,30"
+                                fill="none"
+                                stroke="#2a5c45"
+                                strokeWidth="1"
+                              />
+                              <polygon
+                                points="30,14 46,30 30,46 14,30"
+                                fill="none"
+                                stroke="#8B6914"
+                                strokeWidth="0.7"
+                              />
+                              <circle cx="30" cy="30" r="3" fill="#2a5c45" />
+                            </pattern>
+                          </defs>
+                          <rect width="100%" height="100%" fill="url(#banner-edit-pat)" />
+                        </svg>
+                      </div>
+                    )}
+                    {/* Hover overlay */}
+                    <span
+                      className="absolute inset-0 flex items-center justify-center bg-dark/50 opacity-0 group-hover:opacity-100 transition-opacity"
+                      aria-hidden="true"
+                    >
+                      {PencilIcon}
+                    </span>
+                  </button>
+
+                  {/* Controls */}
+                  <div className="flex items-center gap-3">
+                    <p className="text-sm text-ash leading-snug flex-1">
+                      JPG, PNG или WebP · до 5 МБ · рекомендуем 895×212
+                    </p>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => bannerInputRef.current?.click()}
+                    >
+                      Выбрать обложку
+                    </Button>
+                    {bannerPreview && (
+                      <button
+                        type="button"
+                        onClick={handleRemoveBanner}
+                        className="text-xs text-dim hover:text-ash transition-colors whitespace-nowrap"
+                      >
+                        Удалить
+                      </button>
+                    )}
                   </div>
+
+                  <input
+                    ref={bannerInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="hidden"
+                    onChange={handleBannerFileSelect}
+                    aria-hidden="true"
+                    tabIndex={-1}
+                  />
                 </div>
               </FormSection>
 
+              {/* ── Avatar section ────────────────────────────────────────── */}
+              <FormSection title="Фото профиля">
+                <div className="flex items-center gap-5">
+                  <button
+                    type="button"
+                    onClick={() => avatarInputRef.current?.click()}
+                    aria-label="Изменить фото профиля"
+                    className="relative group shrink-0 rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+                  >
+                    <ProfileAvatar
+                      avatarUrl={shownAvatarUrl}
+                      name={displayName}
+                      size="xl"
+                    />
+                    <span
+                      className="absolute inset-0 rounded-full flex items-center justify-center bg-dark/55 opacity-0 group-hover:opacity-100 transition-opacity"
+                      aria-hidden="true"
+                    >
+                      {PencilIcon}
+                    </span>
+                  </button>
+
+                  <div className="flex flex-col gap-2">
+                    <p className="text-sm text-ash leading-snug">
+                      JPG, PNG или WebP · до 3 МБ
+                    </p>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => avatarInputRef.current?.click()}
+                      >
+                        Выбрать фото
+                      </Button>
+                      {avatarPreview && (
+                        <button
+                          type="button"
+                          onClick={handleRemoveAvatar}
+                          className="text-xs text-dim hover:text-ash transition-colors"
+                        >
+                          Удалить
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <input
+                    ref={avatarInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    className="hidden"
+                    onChange={handleAvatarFileSelect}
+                    aria-hidden="true"
+                    tabIndex={-1}
+                  />
+                </div>
+              </FormSection>
+
+              {/* ── Personal data ─────────────────────────────────────────── */}
               <FormSection title="Личные данные">
                 <div className="grid grid-cols-2 gap-4">
                   <FormField label="Имя">
@@ -158,6 +413,7 @@ export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) =>
                 </FormField>
               </FormSection>
 
+              {/* ── Location & contacts ───────────────────────────────────── */}
               <FormSection title="Местоположение и контакты">
                 <div className="grid grid-cols-2 gap-4">
                   <FormField label="Город">
@@ -193,7 +449,9 @@ export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) =>
                 </FormField>
               </FormSection>
 
-              <ErrorBanner message={error instanceof Error ? error.message : null} />
+              <ErrorBanner
+                message={uploadError ?? (error instanceof Error ? error.message : null)}
+              />
 
               <FormActions
                 submitLabel="Сохранить"
@@ -205,6 +463,32 @@ export const ProfileEditForm = memo<ProfileEditFormProps>(({ user, profile }) =>
           </div>
         </Container>
       </section>
+
+      {/* Avatar crop modal */}
+      {avatarRawSrc && (
+        <AvatarCropModal
+          open={avatarModalOpen}
+          imageSrc={avatarRawSrc}
+          onClose={handleAvatarModalClose}
+          onApply={handleAvatarApply}
+          cropShape="round"
+          aspect={1}
+          title="Редактировать фото"
+        />
+      )}
+
+      {/* Banner crop modal */}
+      {bannerRawSrc && (
+        <AvatarCropModal
+          open={bannerModalOpen}
+          imageSrc={bannerRawSrc}
+          onClose={handleBannerModalClose}
+          onApply={handleBannerApply}
+          cropShape="rect"
+          aspect={895 / 212}
+          title="Редактировать обложку"
+        />
+      )}
     </main>
   )
 })
